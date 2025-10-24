@@ -1,0 +1,201 @@
+1.1 Aşağıdaki cümlelerdeki boşlukları doldurun:
+a) Bilgisayarlar, bilgisayar programları (computer programs)  adı verilen komut dizilerinin kontrolü altında verileri işler.
+b) Bir bilgisayar klavye, ekran, fare, sabit diskler, bellek, DVD sürücüleri ve işlem birimleri gibi donanım (hardware)  olarak adlandırılan çeşitli cihazlardan oluşur.
+c) Bilgisayarlar tarafından işlenen veri kalemleri, "bit" adı verilen en basit veri kalemlerinden karakterler, alanlar vb. gibi daha zengin veri kalemlerine doğru ilerledikçe daha büyük ve daha karmaşık bir yapıya
+bürünen bir veri hiyerarşisi (data hierarchy)  oluşturur.
+d) Bilgisayarlar doğrudan yalnızca kendi makine (machine)  dillerini anlayabilir, bu dil yalnızca 1'lerden ve 0'lardan oluşur.
+e) Bölümde tartışılan üç tür bilgisayar programlama dili makine dilleri, çevirici dilleri (assembly languages) ve yüksek seviyeli (high-level) dilleridir.
+f) Yüksek seviyeli dil programlarını makine diline çeviren programlara derleyiciler (compilers)  denir.
+g) Bir çok çekirdekli (multicore)  işlemci, tek bir "mikroçip" üzerinde birkaç işlemci uygular—çift çekirdekli bir işlemcinin iki CPU'su ve dört çekirdekli bir işlemcinin dört CPU'su vardır.
+h) Windows 10, masaüstü bilgisayarlarda, dizüstü bilgisayarlarda, tabletlerde, telefonlarda, Xbox'ta ve hatta Microsoft'un yeni HoloLens artırılmış gerçeklik holografik başlığında—tümü neredeyse aynı kodu
+kullanarak—çalışan Windows uygulamaları oluşturmak için Evrensel Windows Platformu (UWP) (Universal Windows Platform - UWP)  tanıttı.
+
+1.2 Aşağıdaki cümlelerdeki boşlukları doldurun:
+a) Nesneler, ya da daha doğrusu nesnelerin geldiği sınıflar (classes), esasen yeniden kullanılabilir yazılım bileşenleridir.
+b) Bir nesneye mesajlar gönderirsiniz. Her mesaj, nesnenin bir metoduna görevini yapmasını söyleyen bir metot çağrısı (call)  olarak uygulanır.
+c) Yeni bir nesne sınıfı, kalıtım (inheritance)  yoluyla hızlı ve kolay bir şekilde oluşturulabilir; yeni sınıf, mevcut bir sınıfın özelliklerini emer, muhtemelen onları özelleştirir ve kendi benzersiz özelliklerini 
+ekler. 
+d) En iyi çözümleri oluşturmak için, projenizin gereksinimlerini (requirements)  belirlemek (yani, sistemin ne yapması gerektiğini tanımlamak) ve bunları karşılayan bir tasarım geliştirmek (yani, sistemin bunu nasıl
+yapacağına karar vermek) için ayrıntılı bir analiz sürecini izlemelisiniz. 
+e) Visual C#, olay (event)  odaklıdır. Fare tıklamalarına, tuş vuruşlarına, zamanlayıcı sürelerinin dolmasına, dokunmalara ve parmak kaydırmalarına yanıt veren programlar yazacaksınız.
+f) Java'nın temel bir hedefi, çok çeşitli bilgisayar sistemleri ve bilgisayar kontrollü cihazlarda çalışacak programlar yazabilmektir. Buna bazen "bir kez yaz, her yerde çalıştır" (write once, run anywhere)  denir.
+
+1.3 Aşağıdaki cümlelerdeki boşlukları doldurun:
+a) .NET Framework'ün Ortak Dil Çalışma Zamanı (CLR) (Common Language Runtime (CLR) of the .NET Framework).NET programlarını yürütür. 
+b) CLR, yönetilen (managed)  koda, farklı .NET dillerinde yazılmış yazılım bileşenlerini entegre etme, bu tür bileşenler arasında hata ayıklama, gelişmiş güvenlik ve daha fazlası gibi çeşitli hizmetler sağlar. 
+c) Bir programın birden fazla platformda değişiklik yapılmadan çalışabilme yeteneği, platform bağımsızlığı (independence)  olarak bilinir. 
+d) Visual Studio, C# programlarının geliştirildiği bir IDE  (Entegre Geliştirme Ortamı)'dir. 
+e) Kendi Windows Phone uygulamalarınızı Windows Mağazası (Windows Store)  satabilirsiniz.
+
+1.4 Aşağıdaki ifadelerin her birinin doğru mu yanlış mı olduğunu belirtin. Yanlışsa, nedenini açıklayın:
+
+a) Yazılım nesneleri hem soyut hem de gerçek dünyadaki şeyleri modeller. * Doğru. 
+b) En popüler veritabanı modeli, verilerin basit tablolarda saklandığı ilişkisel veritabanıdır. Bir tablo kayıtları ve alanları içerir. * Doğru.  
+c) Veritabanı, kolay erişim ve manipülasyon için düzenlenmiş bir veri koleksiyonudur. * Doğru.  
+d) İkincil depolamadaki verilere erişmek, birincil bellekteki verilere göre çok daha uzun sürer, ancak ikincil depolamanın birim başına maliyeti, birincil belleğinkinden çok daha yüksektir. * Yanlış: İkincil 
+depolamanın birim başına maliyeti, birincil belleğinkinden çok daha düşüktür. 
+e) Yüksek seviyeli diller, neredeyse günlük İngilizceye benzeyen ve yaygın olarak kullanılan matematiksel ifadeler içeren talimatlar yazmanıza olanak tanır. * Doğru.  
+f) Bir nesnenin, bir programda kullanıldığı sürece beraberinde taşıdığı nitelikleri vardır. * Doğru.  
+g) İletim Kontrol Protokolü (TCP), bayt (bytes) adı verilen sıralı numaralandırılmış parçalardan oluşan mesajların göndericiden alıcıya düzgün bir şekilde yönlendirilmesini, bozulmadan ulaşmasını ve doğru 
+sırada birleştirilmesini sağlar. * Yanlış. Parçalara paket (packets) denir. 
+h) İnternet üzerindeki iletişim hatlarının bilgi taşıma kapasitesi muazzam bir şekilde artarken, donanım maliyetleri artmıştır. * Yanlış. Donanım maliyetleri azalmıştır.
+i) C# ve Microsoft’un ASP.NET teknolojisi ile web tabanlı uygulamalar oluşturabilirsiniz. * Doğru.  
+j) Java, Mac OS X masaüstü işletim sistemi ve iPod'lar, iPhone'lar ve iPad'ler gibi tüm iOS tabanlı cihazlar için kilit programlama dili haline gelmiştir. * Yanlış. Bu dil Swift'tir (veya eskiden Objective-C idi). 
+k) Microsoft’un ASP.WEB teknolojisi, web uygulamaları oluşturmak için kullanılır. * Yanlış. Teknoloji ASP.NET'tir. 
+l) Microsoft’un Windows işletim sistemi, dünya çapında en yaygın kullanılan masaüstü işletim sistemidir. * Doğru.
+
+1.5 Bu bayt ölçümlerini en küçükten en büyüğe doğru sıralayın: terabayt, megabayt, petabayt, gigabayt ve kilobayt.
+Cevap: kilobayt, megabayt, gigabayt, terabayt, petabayt.
+
+1.6 C# kodunuzu kendi bilgisayarınızda çalıştırılmaya hazırlamak için gereken iki aşamalı çeviri sürecini açıklayın.
+Cevap: C# kodu önce MSIL'e (Microsoft Intermediate Language) derlenir ve yürütülebilir bir dosyaya yerleştirilir. Uygulama çalıştığında, CLR'deki JIT (just-in-time) adı verilen başka bir derleyici, yürütülebilir
+dosyadaki MSIL'i (belirli bir platform için) makine dili koduna çevirir.
+
+1.7 Aşağıdaki cümlelerdeki boşlukları doldurun:
+
+a) Bilgisayarlar, fiziksel görünümlerindeki farklılıklara bakılmaksızın çeşitli **mantıksal birimlere (logical units)** bölünmüş olarak tasavvur edilebilir.
+b) Akıllı telefonlar, ev aletleri, oyun kumandaları, kablolu TV set üstü kutuları ve otomobiller gibi küçük bilgisayarlar içeren sistemlere **gömülü sistemler (embedded systems)** denir.
+c) Tıpkı karakterlerin bitlerden oluşması gibi, **alanlar (fields)** da karakterlerden veya baytlardan oluşur.
+d) İkincil depolama aygıtlarındaki bilgiler **kalıcıdır (persistent)**; bilgisayarın gücü kapatıldığında bile korunur.
+e) **İşletim sistemleri (Operating systems)**, her uygulamanın diğer uygulamalarla güvenli, verimli ve eşzamanlı olarak çalışmasına izin veren hizmetler sağlar.
+f) Nesne yönelimli programlama dillerinde, görevlerini yerine getiren metotları barındırmak için **sınıf (class)** adı verilen bir program birimi oluştururuz.
+g) Programlarınızı oluştururken bir yapı taşı yaklaşımı kullanın. Tekerleği yeniden icat etmekten kaçının—mümkün olan her yerde mevcut parçaları kullanın. Bu tür yazılım **yeniden kullanımı (reuse)** nesne 
+yönelimli programlamanın temel bir faydasıdır.
+
+1.8 Aşağıdaki cümlelerdeki boşlukları doldurun:
+a) Pek çok farklı OOAD süreci mevcut olmasına rağmen, herhangi bir OOAD sürecinin sonuçlarını iletmek için tek bir grafik dili yaygın olarak kullanılmaya başlanmıştır. **UML (Birleşik Modelleme Dili)** olarak 
+bilinen bu dil, şimdi nesne yönelimli sistemleri modellemek için en yaygın kullanılan grafik şemasıdır.
+b) Tim Berners-Lee, bilgileri web üzerinde "hiper-bağlantılı" metin belgeleri aracılığıyla paylaşmak için **HTML (HyperText Markup Language)** geliştirmiştir.
+c) CLR bir **sanal (virtual)** makinedir. Programların yürütülmesini yöneten ve temel işletim sistemini ve donanımı onlardan gizleyen bir yazılımdır.
+d) Bir programı, başlangıçta tasarlandığı platformdan farklı bir platformda çalışacak şekilde dönüştürmeye **taşınabilirlik (porting)** denir.
+e) Microsoft’un Windows **Azure**, uygulamalarınızı bulutta geliştirmenize, yönetmenize ve dağıtmanıza olanak tanıyan bir bulut bilişim platformudur.
+f) Nesne olan mevcut kontrolleri kullanarak, tüm kodu kendiniz yazmak zorunda kalacağınızdan çok daha hızlı bir şekilde güçlü uygulamalar oluşturabilirsiniz. Bu, yazılım **yeniden kullanımının (reuse)** temel 
+bir faydasıdır.
+
+1.9 Aşağıdaki ifadelerin her birinin doğru mu yanlış mı olduğunu belirtin. Yanlışsa, nedenini açıklayın:
+
+a) Bir bilgisayardaki en küçük veri birimi 1 veya 2 değerini alabilir. Böyle bir veri birimine bit denir (iki değerden birini alabilen bir rakam olan "ikili rakam"ın kısaltması).
+    * **Yanlış.** Bir bit 0 veya 1 değerini alabilir.
+
+b) Unicode karakter seti, büyük ve küçük harfleri, rakamları ve bazı yaygın özel karakterleri temsil eden popüler bir ASCII alt kümesidir.
+    * **Yanlış.** ASCII karakter seti, Unicode'un popüler bir alt kümesidir.
+
+c) Merkezi İşlem Birimi (CPU), giriş birimi, çıkış birimi, ALU vb. gibi diğer bölümlerin çalışmasını koordine eden ve denetleyen "idari" bir bölüm gibi davranır.
+    * **Doğru.**
+
+d) Yeniden kullanım, daha güvenilir ve etkili sistemler kurmanıza yardımcı olur, çünkü mevcut sınıflar ve bileşenler genellikle kapsamlı test, hata ayıklama ve performans ayarından geçmiştir.
+    * **Doğru.**
+
+e) W3C'nin temel hedeflerinden biri, engellilik, dil veya kültür gözetmeksizin web'i evrensel olarak herkesin erişimine açmaktır.
+    * **Doğru.**
+
+f) C# yalnızca Microsoft Windows'ta mevcuttur.
+    * **Yanlış.** C#, Mono Project ve .NET Core aracılığıyla Windows dışı platformlarda (Linux, OS X) da kullanılabilir.
+
+g) C# uygulamaları yalnızca masaüstü ortamları için geliştirilebilir.
+    * **Yanlış.** C#; mobil uygulamalar, web tabanlı uygulamalar (ASP.NET) ve bulut tabanlı uygulamalar oluşturmak için kullanılır.
+
+h) .NET programları herhangi bir platformda çalışabilir.
+    * **Yanlış.** Bir .NET programı, .NET Framework (veya .NET Core gibi uyumlu bir sürüm) *kurulu* olan herhangi bir platformda çalışabilir.
+
+i) Evrensel Windows Platformu (UWP), kişisel bilgisayarlar, akıllı telefonlar, tabletler ve Xbox Live dahil tüm cihazlarınızda ortak bir platform (uygulamaların üzerinde çalıştığı temel sistem) ve kullanıcı 
+deneyimi sağlamak için tasarlanmıştır.
+
+*1.10 Yorumlayıcıların (interpreters) derleyicilere (compilers) göre temel avantajı nedir? Temel dezavantajı nedir?**
+
+* **Avantaj:** Yorumlanan bir program, (internetten) indirildiği anda derlenmeye gerek kalmadan çalışmaya başlayabilir.
+* **Dezavantaj:** Yorumlanan programlar genellikle derlenmiş programlardan daha yavaş çalışır.
+
+**1.11 Eski tip çoklu iş parçacığı (multithreading) yerine yeni `async` özelliğini kullanmanın temel avantajı nedir?**
+
+* `async` ve `await` özellikleri, asenkron programlamayı büyük ölçüde *basitleştirir*, karmaşıklığı gizler ve hataları azaltır.
+
+**1.12 Moore Yasası bilgisayarları nasıl daha yetenekli hale getirdi?**
+
+* Moore Yasası, bilgisayarların kapasitelerinin (bellek, ikincil depolama) ve işlemci hızlarının her yıl veya iki yılda bir yaklaşık olarak ikiye katlanmasını ifade eder. Bu artan kapasiteler, donanım
+maliyetleri düşerken bilgisayarları daha yetenekli hale getirmiştir.
+
+**1.13 Kendi bilgisayarınız için tüm donanımı satın almak yerine bulut bilişim kaynaklarını kullanmak neden bazen tercih edilir?**
+
+* Bulut bilişim, kaynakları (yazılım, donanım) ihtiyaca göre artırmanıza veya azaltmanıza olanak tanır. Bu, en yüksek ihtiyaç seviyesini karşılamak için pahalı donanımlar satın almaktan daha uygun maliyetli
+olabilir. Ayrıca, bu uygulamaları yönetme yükünü işletmeden hizmet sağlayıcıya kaydırarak zaman ve emekten tasarruf sağlar.
+
+**1.14 Aşağıdakilerden hangisi donanım, yazılım veya her ikisinin birleşimi sınıfına girer?**
+
+* a) Bellek Birimi (Memory Unit): **Donanım**.
+* b) World Wide Web: **Her ikisinin birleşimi** (İnternet ile ilişkili donanım ve yazılımların bir koleksiyonudur).
+* c) .NET Framework Sınıf Kütüphanesi: **Yazılım**.
+* d) ALU (Aritmetik ve Mantık Birimi): **Donanım**.
+* e) OS (İşletim Sistemi): **Yazılım**.
+
+**1.15 .NET uygulamaları C#, Visual Basic, Visual C++ gibi .NET uyumlu diller kullanılarak oluşturulabilir. Bu bağlamda aşağıdaki ifadelerin Doğru veya Yanlış olduğunu belirtin:**
+
+* a) .NET Framework Sınıf Kütüphanesi, birçok C# uygulamasını hızlı ve kolay bir şekilde oluşturmak için kullanılabilecek birçok yeteneğe sahiptir.
+    * **Doğru.**
+* b) .NET Framework sınıf kütüphanesi, performansı en üst düzeye çıkarmak için test edilmiş ve ayarlanmış çok az sayıda değerli, önceden oluşturulmuş sınıf içerir.
+    * **Yanlış.** Kütüphane *binlerce* değerli, önceden oluşturulmuş sınıf içerir.
+* c) .NET, .NET programlarını yürüten ve geliştirmeyi ve hata ayıklamayı kolaylaştıran işlevsellik sağlayan bir JIT Derleyicisine sahiptir.
+    * **Yanlış.** Bu işlevi yapan **CLR**'dir (Common Language Runtime). JIT derleyicisi, CLR'nin *bir parçasıdır*.
+* d) .NET Framework sınıfları, yazılım geliştirme sürecini hızlandırmak için yeniden kullanılır.
+    * **Doğru.**
+
+**1.16 Aşağıdaki kısaltmaların tam adlarını yazın:**
+
+* a) ASCII: **American Standard Code for Information Interchange** (Amerikan Standart Bilgi Değişim Kodu).
+* b) JITC: **Just-In-Time Compiler** (Tam Zamanında Derleyici).
+* c) TCP/IP: **Transmission Control Protocol/Internet Protocol** (İletim Kontrol Protokolü/İnternet Protokolü).
+* d) OOAD: **Object-Oriented Analysis and Design** (Nesne Yönelimli Analiz ve Tasarım).
+* e) UWP: **Universal Windows Platform** (Evrensel Windows Platformu).
+* f) GPS: **Global Positioning System** (Küresel Konumlandırma Sistemi).
+
+**1.17 .NET Framework ve CLR'nin temel faydaları nelerdir? Dezavantajları nelerdir?**
+
+* **Faydaları (.NET Framework):** Binlerce önceden oluşturulmuş sınıf içeren zengin Sınıf Kütüphanesi. Dil Birlikte Çalışabilirliği (Language Interoperability) sağlar.
+* **Faydaları (CLR):** Programları yürütür, farklı .NET dillerinde yazılmış bileşenleri entegre eder, hata işlemeyi yönetir, güvenliği artırır ve otomatik bellek yönetimi sağlar.
+* **Dezavantajları:** (Kitapta bu bölümde açıkça bir dezavantaj listelenmemiştir, faydalara odaklanılmıştır).
+
+**1.18 OOAD (Nesne Yönelimli Analiz ve Tasarım), büyük ve karmaşık sistemlerin tasarlanmasına nasıl yardımcı olur?**
+
+* OOAD, kod yazmaya başlamadan *önce*, sistemin **gereksinimlerini** (ne yapması gerektiğini) belirlemek ve bu gereksinimleri karşılayan bir **tasarım** (bunu nasıl yapacağını) geliştirmek için ayrıntılı bir
+analiz süreci sağlar.
+
+**1.19 Gerçek hayattaki bir arabayı gözlemlerken... Nitelikleri ve davranışları nelerdir?**
+
+* **Sınıf (Class):** `Otomobil` (Automobile).
+* **Nesneler (Objects):** Belirli bir araba (örn. 'benim arabam'), `Otomobil` sınıfının bir *örneğidir (instance)*.
+* **Nitelikler (Attributes/Instance Variables):** Arabanın rengi, kapı sayısı, deposundaki benzin miktarı, mevcut hızı, kilometre sayacı (odometre okuması).
+* **Davışlar (Behaviors/Methods):** Hızlanmak (gaz pedalına basarak), yavaşlamak (fren pedalına basarak), dönmek (direksiyonu çevirerek).
+
+**1.20 UML'in temel başarısı nedir?**
+
+* Nesne yönelimli sistemleri modellemek için en yaygın kullanılan *grafiksel şema* haline gelmiş olmasıdır. Farklı OOAD süreçlerinin sonuçlarını iletmek için standart bir grafik dili sağlar.
+
+**1.21 İlk internetin temel faydası ne oldu?**
+
+* Temel faydasının, elektronik posta (e-posta) yoluyla hızlı ve kolay iletişim yeteneği olduğu kanıtlanmıştır.
+
+**1.22 Web'in temel yeteneği nedir?**
+
+* Bilgisayar kullanıcılarının hemen hemen her konuda multimedya tabanlı belgelere (metin, grafik, animasyon, ses ve video kombinasyonları) erişmesine ve bunları görüntülemesine olanak tanımasıdır.
+
+**1.23 Microsoft'un .NET girişiminin temel vizyonu nedir?**
+
+* Yazılımların geliştirilmesinde, mühendisliğinde, dağıtımında ve kullanımında İnternet ve web'i kullanmaya yönelik geniş bir vizyondur.
+
+**1.24 .NET Framework Sınıf Kütüphanesi, .NET uygulamalarının geliştirilmesini nasıl kolaylaştırır?**
+
+* Geliştiricilerin hızlı bir şekilde uygulama oluşturmak için kullanabileceği, performansı en üst düzeye çıkarmak için test edilmiş ve ayarlanmış *binlerce* değerli, önceden oluşturulmuş sınıf sağlar.
+
+**1.25 OOP'nin sağladığı bariz yeniden kullanılabilirlik faydalarının yanı sıra, birçok kuruluşun bildirdiği diğer önemli fayda nedir?**
+
+* Nesne yönelimli programların genellikle anlaşılmasının, düzeltilmesinin ve değiştirilmesinin *daha kolay* olması.
+
+
+
+**Not:** Bu bölümdeki alıştırmalar (1.26, 1.27, 1.28 ve 1.29) kodlama sorusu değildir.
+
+Bu görevler, ileriki bölümlerde yazılacak programlara hazırlık yapmak amacıyla tasarlanmış araştırma, analiz ve "test sürüşü" (Test Drive) alıştırmalarıdır:
+
+* **1.26 (Karbon Ayak İzi)** ve **1.27 (Vücut Kitle İndeksi)**: Verilen web sitelerini kullanarak ve gelecekteki programlar için formülleri *araştırarak* tamamlanması gereken "Test Sürüşü" görevleridir.
+* **1.28 (Hibrit Araçlar)**: Nesne yönelimli programlamadaki "nitelik" (attribute) kavramını anlamak için hibrit araç özelliklerini *araştırmayı* ve *listelemeyi* gerektirir.
+* **1.29 (Cinsiyet Tarafsızlığı)**: Bir program yazmayı değil, bir metin işleme görevi için kullanılacak *prosedürün (algoritmanın) adımlarını açıklamayı* ister.
