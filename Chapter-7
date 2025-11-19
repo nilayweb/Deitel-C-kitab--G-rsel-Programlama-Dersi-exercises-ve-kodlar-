@@ -1,0 +1,771 @@
+BÖLÜM 7: Metotlar
+7.7 Math Metotları Sonuçları
+Aşağıdaki ifadeler çalıştırıldıktan sonra x değişkeninin değeri ne olur?
+
+a) x = Math.Abs(7.5); -> 7.5
+
+b) x = Math.Floor(7.5); -> 7.0
+
+c) x = Math.Abs(0.0); -> 0.0
+
+d) x = Math.Ceiling(0.0); -> 0.0
+
+e) x = Math.Abs(-6.4); -> 6.4
+
+f) x = Math.Ceiling(-6.4); -> -6.0
+
+g) x = Math.Ceiling(-Math.Abs(-8 + Math.Floor(-5.5))); -> -14.0
+
+Adım adım: Math.Floor(-5.5) -> -6.0
+
+-8 + -6.0 -> -14.0
+
+Math.Abs(-14.0) -> 14.0
+
+-14.0
+
+Math.Ceiling(-14.0) -> -14.0
+
+7.8 Taksi Ücreti Hesaplayıcı (Hire Charges)
+Bir taksi, ilk 5 km için minimum 13.00$ ücret alır. 5 km'den sonraki her km (veya parçası) için 1.68$ ek ücret alır. Ayrıca bekleme süresi için saatlik 30$ alır. Dünkü her müşteri için ücreti hesaplayan ve toplam kazancı gösteren bir uygulama yazın.
+
+using System;
+
+class TaxiFare
+{
+    static void Main()
+    {
+        decimal totalEarnings = 0;
+        
+        // Örnek olarak 3 müşteri için döngü
+        for (int i = 1; i <= 3; i++)
+        {
+            Console.Write($"Enter km travelled for customer {i}: ");
+            double km = double.Parse(Console.ReadLine());
+
+            Console.Write($"Enter waiting time (hours) for customer {i}: ");
+            double waitHours = double.Parse(Console.ReadLine());
+
+            decimal fare = FindCabFare(km, waitHours);
+            totalEarnings += fare;
+
+            Console.WriteLine($"Customer {i} Fare: {fare:C}");
+            Console.WriteLine($"Running Total Earnings: {totalEarnings:C}\n");
+        }
+    }
+
+    static decimal FindCabFare(double km, double waitHours)
+    {
+        decimal fare = 13.00m; // Minimum ücret (İlk 5 km dahil)
+
+        if (km > 5)
+        {
+            // 5 km'den fazla olan kısım için (Math.Ceiling ile yukarı yuvarlanır - "part thereof")
+            double extraKm = Math.Ceiling(km - 5); 
+            fare += (decimal)extraKm * 1.68m;
+        }
+
+        // Bekleme ücreti
+        fare += (decimal)waitHours * 30.00m;
+
+        return fare;
+    }
+}
+7.9 Sin(x) HesaplamaKullanıcıdan derece cinsinden bir açı alan, bunu radyana çeviren ve sinüs ile kosekant (1/sin) değerlerini hesaplayıp bir ondalık basamağa yuvarlayarak gösteren bir uygulama yazın.
+using System;
+
+class SineCalculator
+{
+    static void Main()
+    {
+        Console.Write("Enter angle in degrees: ");
+        double degrees = double.Parse(Console.ReadLine());
+
+        // Radyana çevirme
+        double radians = degrees * Math.PI / 180.0;
+
+        // Sinüs hesaplama ve yuvarlama
+        double sineValue = Math.Round(Math.Sin(radians), 1);
+        
+        // Kosekant hesaplama (1 / sin)
+        double cosecantValue = Math.Round(1.0 / Math.Sin(radians), 1);
+
+        Console.WriteLine($"Sine: {sineValue}");
+        Console.WriteLine($"Cosecant: {cosecantValue}");
+    }
+}
+7.10 Yuvarlama Metotları (Rounding to a Specific Decimal Place)Bir sayıyı tam sayıya, onda birler, yüzde birler ve binde birler basamağına yuvarlayan dört farklı metot yazın.
+using System;
+
+class Rounding
+{
+    static void Main()
+    {
+        Console.Write("Enter a number: ");
+        double number = double.Parse(Console.ReadLine());
+
+        Console.WriteLine($"Original: {number}");
+        Console.WriteLine($"To Integer: {RoundToInteger(number)}");
+        Console.WriteLine($"To Tenths: {RoundToTenths(number)}");
+        Console.WriteLine($"To Hundredths: {RoundToHundredths(number)}");
+        Console.WriteLine($"To Thousandths: {RoundToThousandths(number)}");
+    }
+
+    static double RoundToInteger(double number) => Math.Floor(number + 0.5);
+    static double RoundToTenths(double number) => Math.Floor(number * 10 + 0.5) / 10;
+    static double RoundToHundredths(double number) => Math.Floor(number * 100 + 0.5) / 100;
+    static double RoundToThousandths(double number) => Math.Floor(number * 1000 + 0.5) / 1000;
+}
+7.11 - 7.13: Random Kavramsal Sorular ve İfadeler7.
+a) "Rastgele" (At Random): Bir sayı grubundan seçilen her sayının seçilme olasılığının eşit olmasıdır.
+b) Oyun Simülasyonu: Şans oyunları (zar, kart vb.) tahmin edilemezlik üzerine kuruludur. Random sınıfı bu tahmin edilemezliği taklit eder.
+c) Ölçekleme/Kaydırma (Scaling/Shifting): Random.Next() varsayılan olarak 0 ile pozitif tamsayılar üretir. Belirli bir aralık (örn. 1-6 arası zar) istendiğinde, üretilen sayıyı o aralığa sığdırmak için kaydırma (başlangıç noktasını değiştirme) ve ölçekleme (aralık genişliğini ayarlama) gerekir.
+d) Simülasyon: Gerçek dünya sistemlerini (örn. hava durumu, trafik) analiz etmek pahalı veya tehlikeli olabilir. Bilgisayar simülasyonu güvenli ve ucuz bir analiz ortamı sağlar.
+7.12 Rastgele Tamsayı Atama İfadeleri
+:a) 1 <= n <= 2: n = randomNumbers.Next(1, 3);
+b) 1 <= n <= 100: n = randomNumbers.Next(1, 101);
+c) 0 <= n <= 9: n = randomNumbers.Next(0, 10); (veya sadece Next(10))
+d) 1000 <= n <= 1112: n = randomNumbers.Next(1000, 1113);e) -1 <= n <= 1: n = randomNumbers.Next(-1, 2);f) -3 <= n <= 11: n = randomNumbers.Next(-3, 12);
+7.13 Belirli Kümelerden Rastgele Seçim:
+a) 11, 21, ..., 81: n = 11 + 10 * randomNumbers.Next(0, 8)
+;b) 5, 10, ..., 35: n = 5 + 5 * randomNumbers.Next(0, 7);
+c) 100, 103, 106, 109: n = 100 + 3 * randomNumbers.Next(0, 4);
+
+7.14 Üs Alma (Exponentiation)Math.Pow kullanmadan, taban ve üs değerini alıp sonucu hesaplayan IntegerPower metodunu yazın.C#using System;
+
+class Exponentiation
+{
+    static void Main()
+    {
+        Console.Write("Enter base: ");
+        int baseVal = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter exponent: ");
+        int exponent = int.Parse(Console.ReadLine());
+
+        Console.WriteLine($"{baseVal}^{exponent} = {IntegerPower(baseVal, exponent)}");
+    }
+
+    static long IntegerPower(int baseVal, int exponent)
+    {
+        long result = 1;
+        for (int i = 0; i < exponent; i++)
+        {
+            result *= baseVal;
+        }
+        return result;
+    }
+}
+7.15 Hipotenüs Hesaplama (Hypotenuse)Dik üçgenin iki kenarını alıp hipotenüsü hesaplayan Hypotenuse metodunu yazın. (Formül: $c = \sqrt{a^2 + b^2}$)C#using System;
+
+class HypotenuseCalc
+{
+    static void Main()
+    {
+        Console.WriteLine($"Triangle 1: {Hypotenuse(3.0, 4.0)}");
+        Console.WriteLine($"Triangle 2: {Hypotenuse(5.0, 12.0)}");
+        Console.WriteLine($"Triangle 3: {Hypotenuse(8.0, 15.0)}");
+    }
+
+    static double Hypotenuse(double side1, double side2) =>
+        Math.Sqrt(Math.Pow(side1, 2) + Math.Pow(side2, 2));
+}
+7.16 Katlar (Multiples)İkinci sayının birincinin katı olup olmadığını belirleyen Multiple metodunu yazın.
+using System;
+
+class MultiplesCheck
+{
+    static void Main()
+    {
+        // Test için döngü
+        for (int i = 0; i < 3; i++)
+        {
+            Console.Write("Enter first integer: ");
+            int n1 = int.Parse(Console.ReadLine());
+            Console.Write("Enter second integer: ");
+            int n2 = int.Parse(Console.ReadLine());
+
+            if (Multiple(n1, n2))
+                Console.WriteLine($"{n2} is a multiple of {n1}\n");
+            else
+                Console.WriteLine($"{n2} is NOT a multiple of {n1}\n");
+        }
+    }
+
+    static bool Multiple(int first, int second) => second % first == 0;
+}
+7.17 Pozitif, Negatif veya Sıfır (Positive, Negative or Zero)Math.Abs kullanarak sayının işaretini belirleyen FindIntType metodunu yazın. (Pozitif için 1, negatif için -1, sıfır için 0 döndürsün).
+
+using System;
+
+class SignCheck
+{
+    static void Main()
+    {
+        Console.Write("Enter a number: ");
+        int n = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Result: {FindIntType(n)}");
+    }
+
+    static int FindIntType(int num)
+    {
+        if (num == 0) return 0;
+        // Sayıyı mutlak değerine bölersek işareti buluruz (Örn: -5 / 5 = -1)
+        return num / Math.Abs(num); 
+    }
+}
+7.18 Yıldızlardan Üçgen (Triangle of Asterisks)Kenar uzunluğu verilen bir dik üçgeni yıldızlarla çizen metodu yazın.
+
+using System;
+
+class AsteriskTriangle
+{
+    static void Main()
+    {
+        Console.Write("Enter size: ");
+        int size = int.Parse(Console.ReadLine());
+        TriangleOfAsterisks(size);
+    }
+
+    static void TriangleOfAsterisks(int len)
+    {
+        for (int i = 1; i <= len; i++)
+        {
+            for (int j = 1; j <= i; j++)
+                Console.Write("*");
+            Console.WriteLine();
+        }
+    }
+}
+7.19 Herhangi Bir Karakterden Üçgen (Triangle of Any Character)7.18'i geliştirerek kullanıcının belirlediği karakterle üçgen çizen metodu yazın.
+
+using System;
+
+class CharTriangle
+{
+    static void Main()
+    {
+        Console.Write("Enter size: ");
+        int size = int.Parse(Console.ReadLine());
+        
+        Console.Write("Enter fill character: ");
+        char fill = char.Parse(Console.ReadLine());
+
+        TriangleOfChars(size, fill);
+    }
+
+    static void TriangleOfChars(int len, char fillCharacter = '*')
+    {
+        for (int i = 1; i <= len; i++)
+        {
+            for (int j = 1; j <= i; j++)
+                Console.Write(fillCharacter);
+            Console.WriteLine();
+        }
+    }
+}
+7.20 Silindir Hacmi (Cylinder Volume)Kullanıcıdan yükseklik ve yarıçap isteyerek silindir hacmini hesaplayan CylinderVolume metodunu yazın. ($V = \pi r^2 h$)
+
+using System;
+
+class Cylinder
+{
+    static void Main()
+    {
+        Console.Write("Enter radius: ");
+        double r = double.Parse(Console.ReadLine());
+        Console.Write("Enter height: ");
+        double h = double.Parse(Console.ReadLine());
+
+        Console.WriteLine($"Volume: {CylinderVolume(r, h):F2}");
+    }
+
+    static double CylinderVolume(double radius, double height) =>
+        Math.PI * Math.Pow(radius, 2) * height;
+}
+7.21 Rakamları Ayırma (Separating Digits)a ve b tamsayıları için bölümün tamsayı kısmını ve kalanı bulan kod parçalarını yazın. Bunları kullanarak bir sayının (1-99999 arası) rakamlarını aralarında iki boşluk bırakarak yazdıran DisplayDigits metodunu oluşturun.
+
+using System;
+
+class SeparateDigits
+{
+    static void Main()
+    {
+        Console.Write("Enter an integer (1-99999): ");
+        int n = int.Parse(Console.ReadLine());
+        DisplayDigits(n);
+    }
+
+    static void DisplayDigits(int number)
+    {
+        // Bölüm (Quotient) işlemi: a / b
+        // Kalan (Remainder) işlemi: a % b
+        
+        // 99999 gibi bir sayı için en büyük basamaktan (10000'ler) başlamalıyız.
+        // Ancak sayının kaç basamaklı olduğunu dinamik bulmak daha iyidir.
+        
+        int divisor = 1;
+        int temp = number;
+        while (temp >= 10)
+        {
+            temp /= 10;
+            divisor *= 10;
+        }
+
+        while (divisor >= 1)
+        {
+            int digit = number / divisor; // Tamsayı bölümü ile rakamı al
+            Console.Write($"{digit}  ");
+            number %= divisor; // Kalanı alarak sayıyı güncelle
+            divisor /= 10; // Böleni küçült
+        }
+        Console.WriteLine();
+    }
+}
+7.22 Sıcaklık Dönüşümleri (Temperature Conversions)Celsius ve Fahrenheit dönüşümleri yapan metotları yazın ve kullanıcıya seçim sunun.
+
+using System;
+
+class TempConv
+{
+    static void Main()
+    {
+        Console.WriteLine("1. Fahrenheit to Celsius");
+        Console.WriteLine("2. Celsius to Fahrenheit");
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            Console.Write("Enter Fahrenheit: ");
+            double f = double.Parse(Console.ReadLine());
+            Console.WriteLine($"Celsius: {Celsius(f):F2}");
+        }
+        else
+        {
+            Console.Write("Enter Celsius: ");
+            double c = double.Parse(Console.ReadLine());
+            Console.WriteLine($"Fahrenheit: {Fahrenheit(c):F2}");
+        }
+    }
+
+    static double Celsius(double f) => 5.0 / 9.0 * (f - 32);
+    static double Fahrenheit(double c) => 9.0 / 5.0 * c + 32;
+}
+7.23 En Küçüğü Bulma (Find the Minimum)Üç kayan noktalı sayıdan en küçüğünü Math.Min kullanarak bulan Minimum3 metodunu yazın.
+
+using System;
+
+class FindMin
+{
+    static void Main()
+    {
+        Console.WriteLine("Enter three numbers:");
+        double n1 = double.Parse(Console.ReadLine());
+        double n2 = double.Parse(Console.ReadLine());
+        double n3 = double.Parse(Console.ReadLine());
+
+        Console.WriteLine($"Minimum is: {Minimum3(n1, n2, n3)}");
+    }
+
+    static double Minimum3(double a, double b, double c)
+    {
+        return Math.Min(a, Math.Min(b, c));
+    }
+}
+7.24 Dost Sayılar (Amicable Numbers)İki sayının "Dost Sayı" olup olmadığını kontrol eden CheckAmicable metodunu yazın. (Bir sayının kendisi hariç bölenlerinin toplamı diğer sayıya eşitse).
+
+using System;
+
+class AmicableNumbers
+{
+    static void Main()
+    {
+        Console.Write("Enter first number: ");
+        int n1 = int.Parse(Console.ReadLine());
+        Console.Write("Enter second number: ");
+        int n2 = int.Parse(Console.ReadLine());
+
+        if (CheckAmicable(n1, n2))
+            Console.WriteLine("They are Amicable Numbers.");
+        else
+            Console.WriteLine("They are NOT Amicable Numbers.");
+    }
+
+    static bool CheckAmicable(int num1, int num2)
+    {
+        return SumOfFactors(num1) == num2 && SumOfFactors(num2) == num1;
+    }
+
+    static int SumOfFactors(int n)
+    {
+        int sum = 0;
+        for (int i = 1; i <= n / 2; i++)
+        {
+            if (n % i == 0) sum += i;
+        }
+        return sum;
+    }
+}
+7.25 Asal Sayılar (Prime Numbers)Bir sayının asal olup olmadığını belirleyen metodu yazın ve 10.000'den küçük tüm asal sayıları listeleyin.
+
+using System;
+
+class Primes
+{
+    static void Main()
+    {
+        Console.WriteLine("Primes less than 10,000:");
+        int count = 0;
+        for (int i = 2; i < 10000; i++)
+        {
+            if (IsPrime(i))
+            {
+                Console.Write($"{i} ");
+                count++;
+                if (count % 10 == 0) Console.WriteLine();
+            }
+        }
+    }
+
+    static bool IsPrime(int number)
+    {
+        if (number <= 1) return false;
+        // n'in kareköküne kadar kontrol etmek yeterlidir (Performans artışı)
+        for (int i = 2; i <= Math.Sqrt(number); i++)
+        {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+}
+7.26 Rakamları Ters Çevirme (Reversing Digits)Bir tamsayıyı alıp rakamları ters çevrilmiş halini döndüren metodu yazın. (Örn: 7631 -> 1367)
+
+using System;
+
+class ReverseDigitsApp
+{
+    static void Main()
+    {
+        Console.Write("Enter an integer: ");
+        int n = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Reversed: {ReverseDigits(n)}");
+    }
+
+    static int ReverseDigits(int number)
+    {
+        int reversed = 0;
+        while (number > 0)
+        {
+            int digit = number % 10;
+            reversed = reversed * 10 + digit;
+            number /= 10;
+        }
+        return reversed;
+    }
+}
+7.27 En Küçük Ortak Kat (Lowest Common Multiple - LCM)İki sayının EKOK'unu (LCM) hesaplayan Lcm metodunu yazın.
+
+using System;
+
+class LCMCalc
+{
+    static void Main()
+    {
+        Console.Write("Enter number 1: ");
+        int n1 = int.Parse(Console.ReadLine());
+        Console.Write("Enter number 2: ");
+        int n2 = int.Parse(Console.ReadLine());
+
+        Console.WriteLine($"LCM: {Lcm(n1, n2)}");
+    }
+
+    static int Lcm(int a, int b)
+    {
+        return (a * b) / Gcd(a, b);
+    }
+
+    // En Büyük Ortak Bölen (EBOB) yardımcı metodu
+    static int Gcd(int a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+7.28 Not Ortalaması Dönüştürme (Quality Points)Öğrencinin ortalamasını alıp 4'lük sisteme çeviren metodu yazın (90-100 -> 4, 80-89 -> 3 vb.).
+
+using System;
+
+class GPACalc
+{
+    static void Main()
+    {
+        Console.Write("Enter average: ");
+        int avg = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Quality Point: {QualityPoints(avg)}");
+    }
+
+    static int QualityPoints(int average)
+    {
+        if (average >= 90) return 4;
+        if (average >= 80) return 3;
+        if (average >= 70) return 2;
+        if (average >= 60) return 1;
+        return 0;
+    }
+}
+7.29 Yazı Tura Simülasyonu (Coin Tossing)Flip metodu ile yazı tura atışını simüle edin ve her birinin kaç kez geldiğini sayın.
+
+using System;
+
+class CoinToss
+{
+    static Random rand = new Random();
+
+    static void Main()
+    {
+        int heads = 0, tails = 0;
+        
+        Console.WriteLine("Tossing coin 1000 times...");
+        for (int i = 0; i < 1000; i++)
+        {
+            if (Flip()) heads++;
+            else tails++;
+        }
+
+        Console.WriteLine($"Heads: {heads}, Tails: {tails}");
+    }
+
+    static bool Flip()
+    {
+        // 0 veya 1 döndürür. 1 ise True (Yazı), 0 ise False (Tura) diyelim.
+        return rand.Next(0, 2) == 1; 
+    }
+}
+7.30 Sayı Tahmin Oyunu (Guess-the-Number Game)1 ile 1000 arasında rastgele bir sayı tutun. Kullanıcıya "Too high" (Çok yüksek) veya "Too low" (Çok düşük) ipuçları vererek sayıyı buldurun.
+
+using System;
+
+class GuessNumber
+{
+    static void Main()
+    {
+        Random rand = new Random();
+        char playAgain = 'y';
+
+        while (playAgain == 'y')
+        {
+            int number = rand.Next(1, 1001);
+            int guess = 0;
+            Console.WriteLine("Guess a number between 1 and 1000.");
+
+            while (guess != number)
+            {
+                guess = int.Parse(Console.ReadLine());
+
+                if (guess > number) Console.WriteLine("Too high. Try again.");
+                else if (guess < number) Console.WriteLine("Too low. Try again.");
+                else Console.WriteLine("Congratulations. You guessed the number!");
+            }
+
+            Console.Write("Play again? (y/n): ");
+            playAgain = char.Parse(Console.ReadLine());
+        }
+    }
+}
+7.31 Gelişmiş Sayı Tahmin Oyunu7.30'u geliştirin. 10 tahminden azsa "Şanslısın", 10 ise "Sırrı biliyorsun", 10'dan fazlaysa "Daha iyisini yapabilirsin" deyin.
+
+// 7.30'daki while döngüsüne sayaç ekleyin:
+int count = 0;
+while (guess != number) {
+   count++;
+   // ... tahmin kodları ...
+}
+
+if (count < 10) Console.WriteLine("Either you know the secret or you got lucky!");
+else if (count == 10) Console.WriteLine("Aha! You know the secret!");
+else Console.WriteLine("You should be able to do better!");
+7.32 İki Nokta Arası Mesafe (Distance Between Two Points)İki nokta (x1, y1) ve (x2, y2) arasındaki mesafeyi hesaplayan metodu yazın.Formül: $\sqrt{(x2-x1)^2 + (y2-y1)^2}$
+
+using System;
+
+class DistanceCalc
+{
+    static void Main()
+    {
+        Console.Write("Enter x1 y1: ");
+        double x1 = double.Parse(Console.ReadLine());
+        double y1 = double.Parse(Console.ReadLine());
+
+        Console.Write("Enter x2 y2: ");
+        double x2 = double.Parse(Console.ReadLine());
+        double y2 = double.Parse(Console.ReadLine());
+
+        Console.WriteLine($"Distance: {Distance(x1, y1, x2, y2):F2}");
+    }
+
+    static double Distance(double x1, double y1, double x2, double y2)
+    {
+        return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+    }
+}
+7.33 Craps Oyunu Bahis Eklentisi (Craps Game Modification)Craps oyununa (Fig 7.8) bahis sistemi ekleyin. Başlangıçta 1000$ bakiye verin. Kazanırsa bahis miktarını ekleyin, kaybederse çıkarın. Bakiye sıfırsa "Busted!" deyin.
+// Craps mantığına ek olarak:
+int balance = 1000;
+// Döngü başı:
+Console.Write($"Balance: {balance}. Enter wager: ");
+int wager = int.Parse(Console.ReadLine());
+while (wager > balance) { /* Hata ver, tekrar iste */ }
+
+// Oyun sonucu:
+if (gameStatus == Status.WON) {
+    balance += wager;
+    Console.WriteLine("You won!");
+} else {
+    balance -= wager;
+    Console.WriteLine("You lost.");
+    if (balance == 0) Console.WriteLine("Sorry. You busted!");
+}
+7.34 Sayı Sistemleri (Binary, Octal, Hexadecimal)1-256 arası sayıların Binary (2'lik), Octal (8'lik) ve Hexadecimal (16'lık) karşılıklarını tablo olarak yazdırın.
+using System;
+
+class NumberSystems
+{
+    static void Main()
+    {
+        Console.WriteLine("Dec\tBinary\tOctal\tHex");
+        for (int i = 1; i <= 256; i++)
+        {
+            string binary = Convert.ToString(i, 2);
+            string octal = Convert.ToString(i, 8);
+            string hex = Convert.ToString(i, 16).ToUpper();
+            Console.WriteLine($"{i}\t{binary}\t{octal}\t{hex}");
+        }
+    }
+}
+7.35 Rekürsif Basamak Toplamı (Recursive Sum Calculation)Bir sayının rakamları toplamını bulan rekürsif SumOfDigits metodunu yazın.
+using System;
+
+class RecursiveDigitSum
+{
+    static void Main()
+    {
+        Console.Write("Enter number: ");
+        int n = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Sum of digits: {SumOfDigits(n)}");
+    }
+
+    static int SumOfDigits(int number)
+    {
+        if (number < 10) // Temel Durum (Base Case)
+            return number;
+        
+        // Rekürsif Adım: Son basamak + Kalanın toplamı
+        return (number % 10) + SumOfDigits(number / 10);
+    }
+}
+7.36 Hanoi Kuleleri (Towers of Hanoi)Klasik Hanoi Kuleleri problemini rekürsif olarak çözen ve adımları yazdıran program.
+using System;
+
+class Hanoi
+{
+    static void Main()
+    {
+        Console.Write("Enter number of disks: ");
+        int n = int.Parse(Console.ReadLine());
+        
+        // 1. kuleden 3. kuleye, 2. kuleyi yardımcı kullanarak taşı
+        SolveHanoi(n, 1, 3, 2);
+    }
+
+    static void SolveHanoi(int n, int startPeg, int endPeg, int tempPeg)
+    {
+        if (n == 1)
+        {
+            Console.WriteLine($"{startPeg} --> {endPeg}");
+            return;
+        }
+
+        // n-1 diski yardımcı kuleye taşı
+        SolveHanoi(n - 1, startPeg, tempPeg, endPeg);
+        
+        // En büyük diski hedefe taşı
+        Console.WriteLine($"{startPeg} --> {endPeg}");
+        
+        // n-1 diski yardımcı kuleden hedefe taşı
+        SolveHanoi(n - 1, tempPeg, endPeg, startPeg);
+    }
+}
+7.37 Kod Ne Yapar?C#static int Mystery(int a, int b)
+{
+   if (b == 1) return a;
+   else return a + Mystery(a, b - 1);
+}
+Cevap: Bu kod, a sayısını b kez kendisiyle toplar. Yani aslında çarpma işlemi (a * b) yapar. (Örn: Mystery(3, 4) -> 3+3+3+3 = 12).7.38 Hatayı Bul (Find the Error)C#static int Sum(int n)
+{
+   if (n == 0) return 0;
+   else return n + Sum(n); // HATA: Sum(n) sonsuz özyineleme yapar.
+}
+Düzeltme: return n + Sum(n - 1); olmalıdır.7.39 & 7.40 Bilgisayar Destekli Öğretim (Computer-Assisted Instruction)Çarpım tablosu öğreten, rastgele sorular soran ve cevaplara göre farklı (rastgele) tebrik/hata mesajları veren program.
+
+using System;
+
+class CAI
+{
+    static Random rand = new Random();
+
+    static void Main()
+    {
+        while (true)
+        {
+            int n1 = rand.Next(1, 10); // 1-9
+            int n2 = rand.Next(1, 10);
+            int answer = n1 * n2;
+            int guess = -1;
+
+            while (guess != answer)
+            {
+                Console.Write($"How much is {n1} times {n2}? ");
+                guess = int.Parse(Console.ReadLine());
+
+                if (guess == answer)
+                {
+                    GiveConstructiveFeedback(true);
+                }
+                else
+                {
+                    GiveConstructiveFeedback(false);
+                }
+            }
+        }
+    }
+
+    static void GiveConstructiveFeedback(bool isCorrect)
+    {
+        int type = rand.Next(1, 5);
+        if (isCorrect)
+        {
+            switch (type)
+            {
+                case 1: Console.WriteLine("Very good!"); break;
+                case 2: Console.WriteLine("Excellent!"); break;
+                case 3: Console.WriteLine("Nice work!"); break;
+                case 4: Console.WriteLine("Keep up the good work!"); break;
+            }
+        }
+        else
+        {
+            switch (type)
+            {
+                case 1: Console.WriteLine("No. Please try again."); break;
+                case 2: Console.WriteLine("Wrong. Try once more."); break;
+                case 3: Console.WriteLine("Don't give up!"); break;
+                case 4: Console.WriteLine("No. Keep trying."); break;
+            }
+        }
+    }
+}
