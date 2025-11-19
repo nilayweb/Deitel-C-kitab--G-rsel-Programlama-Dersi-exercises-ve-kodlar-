@@ -1,0 +1,432 @@
+4.9 Account Sınıfına Para Çekme Metodu EklemeAccount sınıfına, bakiyeden para çeken (Debit) bir Withdraw metodu ekleyin. Çekilmek istenen miktar bakiyeden büyükse çekime izin verilmemeli ve bir mesaj görüntülenmelidir.Dosya 1: Account.csC#using System;
+
+class Account
+{
+    public string Name { get; set; }
+    private decimal balance;
+
+    public Account(string accountName, decimal initialBalance)
+    {
+        Name = accountName;
+        Balance = initialBalance;
+    }
+
+    public decimal Balance
+    {
+        get { return balance; }
+        private set 
+        { 
+            // Bakiyenin sıfırdan küçük olmamasını sağlar
+            if (value > 0.0m) 
+            {
+                balance = value;
+            }
+        }
+    }
+
+    public void Deposit(decimal depositAmount)
+    {
+        if (depositAmount > 0.0m)
+        {
+            Balance = Balance + depositAmount;
+        }
+    }
+
+    // YENİ METOT: Para Çekme
+    public void Withdraw(decimal withdrawAmount)
+    {
+        if (withdrawAmount > 0.0m)
+        {
+            if (withdrawAmount > Balance)
+            {
+                Console.WriteLine("Withdrawal amount exceeded account balance.");
+            }
+            else
+            {
+                Balance = Balance - withdrawAmount;
+            }
+        }
+    }
+}
+Dosya 2: AccountTest.cs (veya Program.cs içindeki Main metodu)C#using System;
+
+class AccountTest
+{
+    static void Main()
+    {
+        Account account1 = new Account("Jane Green", 50.00m);
+        
+        Console.WriteLine($"Hesap 1: {account1.Name}, Bakiye: {account1.Balance:C}");
+
+        // Başarılı Çekim
+        Console.WriteLine("\n5.00 çeki̇li̇yor...");
+        account1.Withdraw(5.00m);
+        Console.WriteLine($"Hesap 1: {account1.Name}, Yeni Bakiye: {account1.Balance:C}");
+        
+        // Başarısız Çekim
+        Console.WriteLine("\n100.00 çeki̇li̇yor...");
+        account1.Withdraw(100.00m); // Hata mesajı verir
+        Console.WriteLine($"Hesap 1: {account1.Name}, Bakiye: {account1.Balance:C}");
+    }
+}
+4.10 Student SınıfıÖğrenci kimliği, adı, üç sınav notu (score1, score2, score3), yüzde ve toplam puanı hesaplayan bir Student sınıfı oluşturun. Sınav notları için sıfırdan küçük değer kabul edilmemesini sağlayan özellikler (Property) kullanın.Dosya 1: Student.csC#using System;
+
+class Student
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    
+    // Özel Alanlar
+    private decimal score1;
+    private decimal score2;
+    private decimal score3;
+
+    // Constructor
+    public Student(string id, string name, decimal s1, decimal s2, decimal s3)
+    {
+        Id = id;
+        Name = name;
+        // Properties (Özellikler) aracılığıyla atama
+        Score1 = s1; 
+        Score2 = s2;
+        Score3 = s3;
+    }
+
+    // Properties (Notların negatif olmamasını sağlar)
+    public decimal Score1
+    {
+        get { return score1; }
+        set { if (value >= 0) score1 = value; }
+    }
+
+    public decimal Score2
+    {
+        get { return score2; }
+        set { if (value >= 0) score2 = value; }
+    }
+
+    public decimal Score3
+    {
+        get { return score3; }
+        set { if (value >= 0) score3 = value; }
+    }
+
+    // Metotlar
+    public decimal GetAggregate() => Score1 + Score2 + Score3;
+
+    public decimal GetPercentage()
+    {
+        // Maksimum toplam puan 150 varsayılır (her not 50 üzerinden olabilir)
+        return (GetAggregate() / 150m) * 100;
+    }
+}
+Dosya 2: StudentTest.csC#using System;
+
+class StudentTest
+{
+    static void Main()
+    {
+        // Not: 45, 40, 50 (Toplam: 135)
+        Student student1 = new Student("S101", "Ali Yilmaz", 45m, 40m, 50m);
+        
+        Console.WriteLine($"Öğrenci: {student1.Name} ({student1.Id})");
+        Console.WriteLine($"Notlar: {student1.Score1}, {student1.Score2}, {student1.Score3}");
+        Console.WriteLine($"Toplam Puan: {student1.GetAggregate()}");
+        Console.WriteLine($"Yüzde: {student1.GetPercentage():F2}%");
+
+        // Geçersiz not denemesi (Görüntülenen not 45 kalır)
+        student1.Score1 = -10m; 
+        Console.WriteLine($"Not 1 (Geçersiz Giriş Sonrası): {student1.Score1}");
+    }
+}
+4.11 Asset Sınıfı (Varlık/Mülk)Asset adı altında bir varlık türü, değeri ve amortisman oranı (depreciation rate) içeren bir sınıf oluşturun. Değerin ve oranın negatif olmamasını sağlayın.Dosya 1: Asset.csC#using System;
+
+class Asset
+{
+    public string Name { get; set; }
+    private decimal assetValue;
+    private decimal depreciationRate;
+
+    // Constructor
+    public Asset(string name, decimal value, decimal rate)
+    {
+        Name = name;
+        // Properties (Özellikler) aracılığıyla atama
+        AssetValue = value;
+        DepreciationRate = rate;
+    }
+
+    // Özellikler (Negatif değer kontrolü ile)
+    public decimal AssetValue
+    {
+        get { return assetValue; }
+        set { if (value >= 0) assetValue = value; }
+    }
+
+    public decimal DepreciationRate
+    {
+        get { return depreciationRate; }
+        set { if (value >= 0) depreciationRate = value; }
+    }
+}
+4.12 Coaching Sınıfı (Eğitim/Koçluk)Coaching adı altında bir eğitim türü, oyuncu sayısı, ders zamanlaması ve ücretleri içeren bir sınıf oluşturun. Bu sınıf, detayları görüntüleyen bir DisplayDetails metoduna sahip olmalıdır.Dosya 1: Coaching.csC#using System;
+
+class Coaching
+{
+    public string Type { get; set; }
+    public int Players { get; set; }
+    public string ClassTimings { get; set; }
+    public decimal Charges { get; set; }
+
+    // Constructor
+    public Coaching(string type, int players, string timings, decimal charges)
+    {
+        Type = type;
+        Players = players;
+        ClassTimings = timings;
+        Charges = charges;
+    }
+
+    // Metot: Detayları düzenli bir şekilde gösterir
+    public void DisplayDetails()
+    {
+        Console.WriteLine($"Type: {Type}");
+        Console.WriteLine($"Players: {Players}");
+        Console.WriteLine($"Timings: {ClassTimings}");
+        Console.WriteLine($"Charges: {Charges:C}");
+    }
+}
+Dosya 2: CoachingTest.csC#using System;
+
+class CoachingTest
+{
+    static void Main()
+    {
+        Coaching basketball = new Coaching("Basketball", 15, "Mon/Wed 17:00", 250.00m);
+        Coaching tennis = new Coaching("Tennis", 6, "Tue/Thu 18:30", 350.00m);
+        
+        Console.WriteLine("--- Basketball Coaching ---");
+        basketball.DisplayDetails();
+
+        Console.WriteLine("\n--- Tennis Coaching ---");
+        tennis.DisplayDetails();
+    }
+}
+4.13 Tekrarlanan Kodu Kaldırma (Eliminating Repeated Code)Fig. 4.9'daki AccountTest.cs dosyasında, her bir hesabın adını ve bakiyesini görüntüleyen kod tekrarını (Console.WriteLine(...)) kaldırın ve bunun yerine bu görevi gerçekleştiren yeni bir metot oluşturun.Dosya 1: AccountTest.cs (Metot Eklendi)C#using System;
+
+class AccountTest
+{
+    static void Main()
+    {
+        Account account1 = new Account("Jane Green", 50.00m);
+        Account account2 = new Account("John Blue", -7.53m); // Negatif bakiye sıfırlanır
+
+        // Yeni metot kullanılarak tekrar kaldırıldı
+        DisplayAccount(account1);
+        DisplayAccount(account2);
+        
+        // Örnek işlemler...
+        account1.Deposit(25.00m);
+        DisplayAccount(account1); 
+    }
+
+    // YENİ METOT: Hesap bilgilerini görüntüleme görevini üstlenir
+    static void DisplayAccount(Account accountToDisplay)
+    {
+        Console.WriteLine($"{accountToDisplay.Name}'s balance: {accountToDisplay.Balance:C}");
+    }
+}
+4.14 Target-Heart-Rate CalculatorKişinin adı, soyadı ve doğum yılını tutan bir HeartRates sınıfı oluşturun. Sınıfın ayrıca:Mevcut yaşı,Maksimum kalp atış hızını ($\text{Maksimum} = 220 - \text{Yaş}$),Hedef Kalp Atış Hızı Aralığını ($\text{Maksimumun } 50\text{\%} - 85\text{\%}\text{'i}$) hesaplayan Properties içermesini sağlayın.Dosya 1: HeartRates.csC#using System;
+
+class HeartRates
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public int BirthYear { get; set; }
+    
+    // Constructor
+    public HeartRates(string first, string last, int birth)
+    {
+        FirstName = first;
+        LastName = last;
+        BirthYear = birth;
+    }
+
+    // Yaş Özelliği
+    public int Age => DateTime.Now.Year - BirthYear;
+
+    // Maksimum Kalp Atış Hızı Özelliği
+    public int MaxHeartRate => 220 - Age;
+
+    // Hedef Kalp Atış Hızı Aralığı Özelliği (string döndürür)
+    public string TargetHeartRate
+    {
+        get
+        {
+            int lowerBound = (int)(MaxHeartRate * 0.50);
+            int upperBound = (int)(MaxHeartRate * 0.85);
+            return $"{lowerBound} - {upperBound} beats per minute";
+        }
+    }
+}
+Dosya 2: HeartRatesTest.csC#using System;
+
+class HeartRatesTest
+{
+    static void Main()
+    {
+        Console.Write("First Name: ");
+        string fName = Console.ReadLine();
+        Console.Write("Last Name: ");
+        string lName = Console.ReadLine();
+        Console.Write("Birth Year: ");
+        int bYear = int.Parse(Console.ReadLine());
+
+        HeartRates hr = new HeartRates(fName, lName, bYear);
+        
+        Console.WriteLine($"\n--- {hr.FirstName} {hr.LastName} Health Report ---");
+        Console.WriteLine($"Age: {hr.Age}");
+        Console.WriteLine($"Maximum Heart Rate: {hr.MaxHeartRate} beats per minute");
+        Console.WriteLine($"Target Heart Rate: {hr.TargetHeartRate}");
+    }
+}
+4.15 HealthProfile SınıfıHealthProfile sınıfı oluşturun. Bu sınıf, 4.14'teki tüm özellikleri içermeli ve ayrıca kişinin boyunu (inç) ve ağırlığını (pound) tutmalıdır.Vücut Kitle İndeksini (BMI) hesaplayan bir özellik ekleyin.$\text{BMI} = (\text{Ağırlık} \times 703) / (\text{Boy}^2)$Dosya 1: HealthProfile.csC#using System;
+
+class HealthProfile
+{
+    // 4.14'ten devralınan alanlar
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public int BirthYear { get; set; }
+    public double Height { get; set; } // inç
+    public double Weight { get; set; } // pound
+
+    // Constructor
+    public HealthProfile(string first, string last, int birth, double height, double weight)
+    {
+        FirstName = first;
+        LastName = last;
+        BirthYear = birth;
+        Height = height;
+        Weight = weight;
+    }
+
+    // 4.14'ten devralınan hesaplamalar
+    public int Age => DateTime.Now.Year - BirthYear;
+    public int MaxHeartRate => 220 - Age;
+    public string TargetHeartRate => $"{(int)(MaxHeartRate * 0.50)} - {(int)(MaxHeartRate * 0.85)} bpm";
+
+    // YENİ ÖZELLİK: Vücut Kitle İndeksi (BMI)
+    public double BMI
+    {
+        get
+        {
+            // Boy 0'dan büyük olmalı
+            if (Height > 0)
+            {
+                return (Weight * 703) / (Height * Height);
+            }
+            return 0;
+        }
+    }
+
+    // Ek Metot: BMI Kategori Yorumu (İsteğe bağlı, ek bilgi)
+    public string GetBMICategory()
+    {
+        double bmi = BMI;
+        if (bmi < 18.5) return "Underweight (Zayıf)";
+        if (bmi < 25) return "Normal";
+        if (bmi < 30) return "Overweight (Fazla Kilolu)";
+        return "Obese (Obez)";
+    }
+}
+Dosya 2: HealthProfileTest.csC#using System;
+
+class HealthProfileTest
+{
+    static void Main()
+    {
+        // Örnek Veri: 1980 doğumlu, 70 inç boyunda, 170 pound ağırlığında (Normal BMI)
+        HealthProfile person = new HealthProfile("Merve", "Kara", 1980, 70.0, 170.0);
+
+        Console.WriteLine($"--- {person.FirstName} {person.LastName} Sağlık Profili ---");
+        Console.WriteLine($"Age: {person.Age}");
+        Console.WriteLine($"Max HR: {person.MaxHeartRate} bpm");
+        Console.WriteLine($"Target HR Range: {person.TargetHeartRate}");
+        Console.WriteLine($"\nWeight (lbs): {person.Weight}, Height (in): {person.Height}");
+        Console.WriteLine($"BMI: {person.BMI:F2}");
+        Console.WriteLine($"BMI Category: {person.GetBMICategory()}");
+    }
+}
+
+
+
+Haklısın, öncelikle Öz Değerlendirme Alıştırmaları (Self-Review Exercises) ve kısa cevaplı soruların çözümlerini GitHub'a kolayca yapıştırabileceğin formatta hazırlıyorum. Kitapta bu cevapların çoğu zaten var (Sayfa 179), ben sadece toparlıyorum.
+
+BÖLÜM 4: ÖZ DEĞERLENDİRME VE KISA CEVAPLI SORULAR
+4.1 Boşluk Doldurma (Fill in the blanks)
+a) Parasal formatta değerleri görüntülemek için **C** format belirleyicisi kullanılır.
+b) Her sınıf bildirimi, hemen ardından sınıfın adının geldiği **class** anahtar kelimesini içerir.
+c) **new** operatörü, anahtar kelimenin sağında belirtilen sınıfa ait bir nesne oluşturur.
+d) Her parametre hem bir **tip (type)** hem de bir **isim (name)** belirtmelidir.
+e) **void** geri dönüş tipi, bir metodun görevini tamamladığında herhangi bir bilgi döndürmeyeceğini belirtir.
+f) Bir sınıfın her nesnesi kendi nitelik kopyasını sürdürdüğünde, bu nitelik **örnek değişkeni (instance variable)** olarak bilinir.
+g) Bir **otomatik uygulanan özellik (auto-implemented property)** için derleyici, otomatik olarak özel bir örnek değişkeni ve `set` ile `get` erişimcilerini üretir.
+h) **decimal** tipindeki değişkenler genellikle parasal miktarları temsil etmek için kullanılır.
+i) `decimal` metodlarından **Parse**, bir dizeyi (`string`) bir `decimal` değere dönüştürür.
+j) `public` anahtar kelimesi bir **erişim değiştiricisidir (access modifier)**. 
+
+4.2 Doğru mu Yanlış mı? (True or false)
+Aşağıdaki ifadelerin her birinin doğru mu yanlış mı olduğunu belirtin ve yanlışsa nedenini açıklayın.
+a) Kural olarak, metot adları küçük harfle başlar ve adındaki sonraki tüm kelimeler büyük harfle başlar.
+    * YANLIŞ. Kurala göre, metot adları **büyük harfle** (PascalCase) başlar ve sonraki tüm kelimeler de büyük harfle başlar (örn. CalculateInterest).
+
+b) Bir özelliğin `get` erişimcisi, bir istemcinin özellikle ilişkili örnek değişkeninin değerini değiştirmesini sağlar.
+    * YANLIŞ. `get` erişimcisi sadece değeri **almayı (retrieve)** sağlar. Değeri **değiştirmeyi** sağlayan `set` erişimcisidir.
+
+c) Tüm örnek değişkenleri varsayılan olarak `null` ile başlatılır.
+    * YANLIŞ. Basit sayısal tipler (`int`, `decimal` vb.) 0 ile, `bool` tipleri `false` ile ve diğer referans tipleri (`string` vb.) `null` ile başlatılır.
+
+d) Bir metot bildiriminde metot adını takip eden boş parantezler, metodun görevini yerine getirmek için herhangi bir parametre gerektirmediğini gösterir.
+    * DOĞRU.
+
+e) Metot çağrısındaki argüman sayısı, metot bildirimindeki parametre listesindeki gerekli parametre sayısıyla eşleşmelidir.
+    * DOĞRU.
+
+f) `private` erişim değiştiricisi ile bildirilen değişkenlere veya metotlara yalnızca bildirildikleri sınıfın üyeleri erişebilir.
+    * DOĞRU.
+
+g) Belirli bir metodun gövdesinde bildirilen değişkenler, örnek değişkenleri olarak bilinir ve sınıfın tüm metotlarında kullanılabilir.
+    * YANLIŞ. Bu değişkenlere **yerel değişkenler (local variables)** denir ve yalnızca bildirildikleri metot içinde kullanılabilirler.
+
+h) Bir özellik bildirimi hem bir `get` erişimcisi hem de bir `set` erişimcisi içermelidir.
+    * YANLIŞ. Bir özellik, yalnızca bir `get` erişimcisi (salt okunur), yalnızca bir `set` erişimcisi (salt yazılır) veya her ikisini de içerebilir.
+
+i) Herhangi bir metot veya özelliğin gövdesi, sol ve sağ küme parantezleriyle sınırlandırılmıştır.
+    * DOĞRU.
+
+j) Yerel değişkenler varsayılan olarak başlatılır.
+    * YANLIŞ. **Yerel** değişkenler varsayılan olarak başlatılmaz, bu görevi programcı yapmalıdır. **Örnek** değişkenleri (instance variables) ise varsayılan olarak başlatılır.
+
+4.3 Yerel değişken ile örnek değişkeni arasındaki fark nedir?
+    * Yerel Değişken: Bir **metot** gövdesinde bildirilir ve yalnızca bu metot içinde kullanılabilir.
+    * Örnek Değişkeni: Bir **sınıf** içinde, ancak metotların dışında bildirilir. Sınıfın her nesnesi bu değişkenin kendi kopyasına sahiptir ve sınıfın tüm metotları tarafından erişilebilir (erişim değiştiricisi uygunsa).
+
+4.4 Bir metot parametresinin amacı nedir? Parametre ve argüman arasındaki fark nedir?
+    * Amaç: Bir metot parametresi, metodun görevini yerine getirmesi için ihtiyaç duyduğu **ek bilgiyi** temsil eder.
+    * Fark: **Parametre**, metot bildiriminde yer alan ve beklenen veri tipini/adını belirten yer tutucudur (örn: `(int miktar)`). **Argüman** ise metot çağrıldığında parametreye **gerçekten iletilen** değerdir (örn: `yatir(50)`).
+
+4.5 new operatörünün amacı nedir? Bu anahtar kelime bir uygulamada kullanıldığında ne olur?
+    * Amaç: `new` operatörü, belirtilen sınıfa ait **yeni bir nesne (object veya instance)** oluşturmak için kullanılır.
+    * Ne Olur: `new` kullanıldığında, bilgisayarın belleğinde nesne için yeterli alan ayrılır. Nesnenin **constructor** metodu çağrılır ve nesnenin örnek değişkenleri başlatılır. Bellekteki bu yeni nesnenin referansı geri döndürülür.
+
+4.6 Varsayılan kurucu metot (default constructor) nedir? Bir sınıfın yalnızca varsayılan bir kurucu metodu varsa, nesnenin örnek değişkenleri nasıl başlatılır?
+    * Varsayılan Kurucu Metot: Açıkça herhangi bir kurucu metot bildirilmezse, derleyicinin otomatik olarak sınıf için oluşturduğu, **parametresiz** kurucu metottur.
+    * Başlatma: Bu kurucu metot çağrıldığında, örnek değişkenleri C#'ın standart varsayılan değerleriyle başlatılır (sayısal tipler 0, `bool` tipleri `false`, referans tipleri `null`).
+
+4.7 Metotların amacını ve çağrılmasını açıklayın.
+    * Amaç: Metotlar, bir sınıfın **davranışlarını** temsil eder. Tekrar eden veya karmaşık görevleri kapsülleyerek kodun yeniden kullanılabilirliğini ve okunabilirliğini artırırlar.
+    * Çağırma: Bir metot, ait olduğu **nesne** üzerinde **üye erişim operatörü (`.`)** kullanılarak çağrılır (örn: `account1.Deposit(100)`). Eğer metot `static` ise (örn: `Main`), sınıf adı üzerinden çağrılır (örn: `Console.WriteLine()`).
+
+4.8 UML sınıf diyagramları nelerdir?
+    * UML (Unified Modeling Language - Birleşik Modelleme Dili) sınıf diyagramları, yazılım sistemlerinin **yapısal tasarımını** görsel olarak temsil etmek için kullanılan bir standarttır. Bir sınıftaki örnek değişkenlerini (nitelikleri), metotları (işlemleri) ve bunlar arasındaki ilişkileri gösterir.
