@@ -1,0 +1,296 @@
+**2.3 Aşağıdaki cümlelerdeki boşlukları doldurun:**
+
+a) Bir özellik penceresinde (Properties window) bir üç nokta düğmesine (...) tıklandığında, bir **iletişim kutusu (dialog box)** görüntülenir.
+b) **Bağlama duyarlı yardım (Context-sensitive help)** kullanmak, hemen ilgili bir yardım makalesini görüntüler.
+c) Bir özelliği seçtiğinizde, kısa açıklaması **Özellikler (Properties)** penceresinin altında görüntülenir.
+d) **Image** özelliği, bir PictureBox'ın hangi resmi görüntüleyeceğini belirtir.
+e) **Window** menüsü, pencereleri düzenlemek ve görüntülemek için komutlar içerir.
+
+---
+
+**2.4 Aşağıdaki ifadelerin her birinin doğru mu yanlış mı olduğunu belirtin. Yanlışsa, nedenini açıklayın:**
+
+a) Araç Kutusu'ndaki (Toolbox) kontrol simgesine çift tıklayarak bir Forma kontrol ekleyebilirsiniz.
+   * **Doğru.** (Bu işlem kontrolü formun varsayılan bir konumuna ekler.)
+
+b) Form, Label ve PictureBox aynı özelliklere sahiptir.
+   * **Yanlış.** Hepsi `Control` sınıfından miras aldıkları bazı ortak özelliklere (örn. `BackColor`, `Enabled`) sahip olsalar da, her birinin kendine özgü özellikleri vardır (örneğin PictureBox'ın `Image` özelliği vardır, Label'ın `AutoSize` özelliği vardır, Form'un `Text` özelliği başlığı belirlerken diğerlerinde içeriği belirler).
+
+c) Makineniz internete bağlıysa, Visual Studio IDE içinden web sitelerine göz atabilirsiniz.
+   * **Doğru.** (View > Other Windows > Web Browser seçeneği ile).
+
+d) Visual C# uygulama geliştiricileri genellikle hiç kod yazmadan karmaşık uygulamalar oluştururlar.
+   * **Yanlış.** Görsel programlama (Visual Programming) arayüz oluşturmayı çok kolaylaştırsa da, karmaşık iş mantığı ve olay yönetimi (event handling) için C# kodu yazmak gerekir.
+
+e) Bir düğümün solundaki oka tıklamak o düğümü genişletir veya daraltır (Solution Explorer vb. pencerelerde).
+   * **Doğru.**
+
+---
+
+**2.5 Visual Studio genelinde görünen bazı özellikler (üç nokta düğmeleri, aşağı ok düğmeleri ve araç ipuçları gibi) farklı bağlamlarda benzer eylemler gerçekleştirir. Bunların nasıl davrandığını açıklayın ve örnek verin. Sizce Visual Studio IDE neden bu şekilde tasarlanmıştır?**
+
+* **Cevap:**
+    * **Üç Nokta Düğmeleri (...):** Genellikle bir özelliğin tek bir satırda girilemeyecek kadar karmaşık olduğunu ve bir **İletişim Kutusu (Dialog Box)** açılacağını gösterir (Örn: `Font` veya `Collection` özellikleri).
+    * **Aşağı Ok Düğmeleri:** Kullanıcının seçebileceği önceden tanımlı değerlerin bulunduğu bir liste açar (Örn: `BackColor` veya `BorderStyle`).
+    * **Araç İpuçları (Tool Tips):** Fare ile bir öğenin üzerine gelindiğinde o öğenin ne işe yaradığını açıklayan kısa metinlerdir.
+    * **Neden böyle tasarlandı?** Bu tasarım, kullanıcı arayüzünde **tutarlılık (consistency)** sağlar. Kullanıcı bir kez bu görsel ipuçlarını öğrendiğinde, IDE'nin diğer bölümlerini daha hızlı kullanabilir ve öğrenebilir (Discoverability).
+
+---
+
+**2.6 Aşağıdaki terimlerin her birini kısaca tanımlayın:**
+
+a) **Project (Proje):** Bir uygulamayı oluşturmak için gerekli olan dosyaların (kod, resim, ayar dosyaları vb.) mantıksal bir grubudur.
+b) **IDE (Entegre Geliştirme Ortamı):** Yazılım geliştirmek için gereken araçları (editör, derleyici, hata ayıklayıcı, görsel tasarımcı) tek bir arayüzde sunan yazılım (Örn: Visual Studio).
+c) **Debug (Hata Ayıklama):** Bir programdaki hataları (bug) bulma ve düzeltme süreci.
+d) **Properties Window (Özellikler Penceresi):** Seçili olan nesnenin (Form veya kontrol) tasarım zamanındaki özelliklerini (renk, boyut, metin vb.) görüntülemek ve değiştirmek için kullanılan pencere.
+e) **Dialogs (İletişim Kutuları):** Kullanıcı ile bilgisayar arasındaki etkileşimi kolaylaştıran, bilgi girmek veya seçim yapmak için açılan pencereler.
+f) **Visual Studio:** Microsoft'un C#, Visual Basic gibi dillerle uygulama geliştirmek için sunduğu popüler IDE.
+
+---
+
+### Not: 2.7 - 2.11 Arasındaki Sorular (GUI Tasarımı)
+
+Bu sorular sizden Visual Studio'yu kullanarak belirli ekran tasarımlarını (GUI) yapmanızı istemektedir. K
+**2.7 (Kronometre Arayüzü - Stop Watch GUI):**
+* **Form:** `Text` özelliğini "Stop_Watch_Form" yapın.
+* **MenuStrip:** Forma bir MenuStrip ekleyin. Menüye "Start", "Stop", "Lap", "Reset" ve "Exit" öğelerini yazın.
+* **Labels:** Ana sayaç ve tur sayacı için Label'lar ekleyin. Yazı tiplerini (Font) `Segoe UI` olarak ayarlayın (Ana sayaç için 18pt, tur için 11pt).
+* **RichTextBox:** Tur detaylarını göstermek için bir RichTextBox ekleyin.
+
+// Form Ayarları
+this.Text = "Stop_Watch_Form";
+this.StartPosition = FormStartPosition.CenterScreen;
+this.Size = new System.Drawing.Size(400, 500);
+
+// Menü Şeridi Oluşturma
+MenuStrip menuStrip1 = new MenuStrip();
+menuStrip1.Items.Add("Start");
+menuStrip1.Items.Add("Stop");
+menuStrip1.Items.Add("Lap");
+menuStrip1.Items.Add("Reset");
+menuStrip1.Items.Add("Exit");
+this.Controls.Add(menuStrip1);
+
+// Ana Sayaç Etiketi
+Label lblMainTimer = new Label();
+lblMainTimer.Text = "00:00:00";
+lblMainTimer.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+lblMainTimer.Location = new System.Drawing.Point(130, 50);
+lblMainTimer.AutoSize = true;
+this.Controls.Add(lblMainTimer);
+
+// Butonlar
+Button btnStart = new Button();
+btnStart.Text = "Start";
+btnStart.BackColor = System.Drawing.Color.LightGreen;
+btnStart.Location = new System.Drawing.Point(50, 100);
+this.Controls.Add(btnStart);
+
+Button btnStop = new Button();
+btnStop.Text = "Stop";
+btnStop.BackColor = System.Drawing.Color.Salmon;
+btnStop.Location = new System.Drawing.Point(150, 100);
+this.Controls.Add(btnStop);
+
+Button btnLap = new Button();
+btnLap.Text = "Lap";
+btnLap.BackColor = System.Drawing.Color.LightBlue;
+btnLap.Location = new System.Drawing.Point(250, 100);
+this.Controls.Add(btnLap);
+
+// Tur Detayları için Kutu
+RichTextBox rtbLaps = new RichTextBox();
+rtbLaps.Location = new System.Drawing.Point(50, 150);
+rtbLaps.Size = new System.Drawing.Size(280, 200);
+rtbLaps.Text = "Lap Details...";
+this.Controls.Add(rtbLaps);
+
+
+**2.8 (Giriş Ekranı - Login Form GUI):**
+* **Form:** `Text` özelliğini "User Login Form" yapın. Arka plan rengini (`BackColor`) değiştirin.
+* **Labels:** "User ID" ve "Password" için Label ekleyin. Font: `Bookman Old Style`, 14.25pt.
+* **TextBoxes:** İki adet TextBox ekleyin. Şifre kutusu için `PasswordChar` özelliğini '*' yapın (böylece yazılanlar gizlenir).
+* **Buttons:** "New User", "Login" ve "Forgot Password" metinlerine sahip butonlar ekleyin. Renklerini ayarlayın.
+
+// Form Ayarları
+this.Text = "User Login Form";
+this.BackColor = System.Drawing.Color.LightBlue;
+this.Size = new System.Drawing.Size(350, 250);
+
+// Kullanıcı Adı
+Label lblUser = new Label();
+lblUser.Text = "User ID:";
+lblUser.Font = new System.Drawing.Font("Bookman Old Style", 12F);
+lblUser.Location = new System.Drawing.Point(30, 30);
+lblUser.AutoSize = true;
+this.Controls.Add(lblUser);
+
+TextBox txtUser = new TextBox();
+txtUser.Location = new System.Drawing.Point(140, 30);
+this.Controls.Add(txtUser);
+
+// Şifre
+Label lblPass = new Label();
+lblPass.Text = "Password:";
+lblPass.Font = new System.Drawing.Font("Bookman Old Style", 12F);
+lblPass.Location = new System.Drawing.Point(30, 70);
+lblPass.AutoSize = true;
+this.Controls.Add(lblPass);
+
+TextBox txtPass = new TextBox();
+txtPass.Location = new System.Drawing.Point(140, 70);
+txtPass.PasswordChar = '*'; // Şifreyi gizler
+this.Controls.Add(txtPass);
+
+// Butonlar
+Button btnLogin = new Button();
+btnLogin.Text = "Login";
+btnLogin.BackColor = System.Drawing.Color.Silver;
+btnLogin.Location = new System.Drawing.Point(140, 110);
+this.Controls.Add(btnLogin);
+
+Button btnForgot = new Button();
+btnForgot.Text = "Forgot Password";
+btnForgot.Location = new System.Drawing.Point(30, 150);
+btnForgot.Width = 120;
+this.Controls.Add(btnForgot);
+
+**2.9 (Hesap Makinesi - Calculator GUI):**
+* Bu alıştırmada, hesap makinesi tuşlarını gruplamak için **Panel** kontrolünü kullanmanız istenir.
+* Tuşlar için (0-9, +, -, *, / vb.) butonlar ekleyin ve bunları Panellerin içine yerleştirin.
+* `Fixed3D` kenarlık stili kullanarak panellere derinlik katın.
+
+// Form Ayarları
+this.Text = "Calculator";
+this.Size = new System.Drawing.Size(300, 400);
+
+// Ekran
+TextBox txtDisplay = new TextBox();
+txtDisplay.Location = new System.Drawing.Point(20, 20);
+txtDisplay.Width = 240;
+txtDisplay.TextAlign = HorizontalAlignment.Right;
+txtDisplay.Text = "0";
+this.Controls.Add(txtDisplay);
+
+// Tuşlar Paneli
+Panel pnlKeys = new Panel();
+pnlKeys.Location = new System.Drawing.Point(20, 60);
+pnlKeys.Size = new System.Drawing.Size(150, 200);
+pnlKeys.BorderStyle = BorderStyle.Fixed3D;
+this.Controls.Add(pnlKeys);
+
+// Örnek Tuşlar (1, 2, 3)
+Button btn1 = new Button() { Text = "1", Location = new Point(10, 10), Width = 40, Height = 40 };
+Button btn2 = new Button() { Text = "2", Location = new Point(55, 10), Width = 40, Height = 40 };
+Button btn3 = new Button() { Text = "3", Location = new Point(100, 10), Width = 40, Height = 40 };
+pnlKeys.Controls.Add(btn1);
+pnlKeys.Controls.Add(btn2);
+pnlKeys.Controls.Add(btn3);
+
+// İşlemler Paneli
+Panel pnlOps = new Panel();
+pnlOps.Location = new System.Drawing.Point(180, 60);
+pnlOps.Size = new System.Drawing.Size(80, 200);
+pnlOps.BorderStyle = BorderStyle.Fixed3D;
+this.Controls.Add(pnlOps);
+
+Button btnPlus = new Button() { Text = "+", Location = new Point(10, 10), Width = 60, Height = 40 };
+pnlOps.Controls.Add(btnPlus);
+
+**2.10 (Çalar Saat - Alarm Clock GUI):**
+* **GroupBox:** "AM/PM" seçimi için bir GroupBox ekleyin.
+* **RadioButtons:** GroupBox içine "AM" ve "PM" için iki adet RadioButton koyun (Böylece sadece biri seçilebilir olur).
+* **Label:** Saati göstermek için bir Label ekleyin, kenarlığını `Fixed3D`, arka planını `Black`, yazı rengini `Silver` yapın.
+
+// Form Ayarları
+this.Text = "Alarm Clock";
+
+// Saat Göstergesi
+Label lblTime = new Label();
+lblTime.Text = "12:00:00";
+lblTime.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Bold);
+lblTime.BackColor = System.Drawing.Color.Black;
+lblTime.ForeColor = System.Drawing.Color.Silver;
+lblTime.BorderStyle = BorderStyle.Fixed3D;
+lblTime.Location = new System.Drawing.Point(50, 30);
+lblTime.AutoSize = true;
+this.Controls.Add(lblTime);
+
+// AM/PM Seçimi (GroupBox)
+GroupBox grpAmPm = new GroupBox();
+grpAmPm.Text = "AM/PM";
+grpAmPm.Location = new System.Drawing.Point(50, 100);
+grpAmPm.Size = new System.Drawing.Size(100, 80);
+this.Controls.Add(grpAmPm);
+
+RadioButton radAM = new RadioButton() { Text = "AM", Location = new Point(10, 20) };
+RadioButton radPM = new RadioButton() { Text = "PM", Location = new Point(10, 45) };
+grpAmPm.Controls.Add(radAM);
+grpAmPm.Controls.Add(radPM);
+
+// Ertele Butonu
+Button btnSnooze = new Button();
+btnSnooze.Text = "Snooze";
+btnSnooze.Location = new System.Drawing.Point(180, 120);
+btnSnooze.Size = new System.Drawing.Size(80, 40);
+this.Controls.Add(btnSnooze);
+
+**2.11 (Radyo - Radio GUI):**
+* **GroupBox:** "Pre-set Stations" (Kayıtlı kanallar), "Speakers" (Hoparlörler), "Volume" (Ses) ve "Tuning" (Frekans) için ayrı GroupBox'lar oluşturun.
+* **CheckBoxes:** Hoparlörler (Front/Rear) ve Mute (Sessiz) seçenekleri için CheckBox kullanın (Birden fazla seçilebilir).
+* **RadioButtons:** AM/FM seçimi için RadioButton kullanın (Sadece biri seçilebilir).
+* **PictureBox:** Bir müzik notası resmi eklemek için PictureBox kullanın ve `SizeMode` özelliğini `StretchImage` yapın.
+
+// Form Ayarları
+this.Text = "Radio";
+this.Size = new System.Drawing.Size(500, 300);
+
+// Ön Ayarlı Kanallar (GroupBox)
+GroupBox grpStations = new GroupBox();
+grpStations.Text = "Pre-set Stations";
+grpStations.Location = new System.Drawing.Point(20, 20);
+grpStations.Size = new System.Drawing.Size(180, 60);
+this.Controls.Add(grpStations);
+
+Button btnSt1 = new Button() { Text = "1", Width = 25, Location = new Point(10, 20) };
+Button btnSt2 = new Button() { Text = "2", Width = 25, Location = new Point(40, 20) };
+Button btnSt3 = new Button() { Text = "3", Width = 25, Location = new Point(70, 20) };
+grpStations.Controls.Add(btnSt1);
+grpStations.Controls.Add(btnSt2);
+grpStations.Controls.Add(btnSt3);
+
+// Hoparlörler (GroupBox & CheckBox)
+GroupBox grpSpeakers = new GroupBox();
+grpSpeakers.Text = "Speakers";
+grpSpeakers.Location = new System.Drawing.Point(220, 20);
+grpSpeakers.Size = new System.Drawing.Size(120, 70);
+this.Controls.Add(grpSpeakers);
+
+CheckBox chkRear = new CheckBox() { Text = "Rear", Location = new Point(10, 20) };
+CheckBox chkFront = new CheckBox() { Text = "Front", Location = new Point(10, 45) };
+grpSpeakers.Controls.Add(chkRear);
+grpSpeakers.Controls.Add(chkFront);
+
+// Ses Kontrolü
+GroupBox grpVolume = new GroupBox();
+grpVolume.Text = "Volume";
+grpVolume.Location = new System.Drawing.Point(20, 100);
+grpVolume.Size = new System.Drawing.Size(180, 80);
+this.Controls.Add(grpVolume);
+
+CheckBox chkMute = new CheckBox() { Text = "Mute", Location = new Point(10, 20) };
+grpVolume.Controls.Add(chkMute);
+
+TrackBar trkVolume = new TrackBar(); // Ses kaydırma çubuğu
+trkVolume.Location = new Point(10, 45);
+grpVolume.Controls.Add(trkVolume);
+
+// Frekans (Tuning)
+GroupBox grpTuning = new GroupBox();
+grpTuning.Text = "Tuning";
+grpTuning.Location = new System.Drawing.Point(220, 100);
+grpTuning.Size = new System.Drawing.Size(120, 80);
+this.Controls.Add(grpTuning);
+
+Label lblStation = new Label() { Text = "92.9", Location = new Point(30, 20), BackColor = Color.Black, ForeColor = Color.Silver, Font = new Font("Arial", 12, FontStyle.Bold) };
+grpTuning.Controls.Add(lblStation);
