@@ -1,0 +1,649 @@
+6.1 Boşluk Doldurma (Self-Review Exercises)
+Aşağıdaki cümlelerdeki boşlukları doldurun:
+
+a) Tipik olarak, for ifadeleri sayaç kontrollü yineleme (counter-controlled) için kullanılırken, while ifadeleri sentinel kontrollü (sentinel-controlled) yineleme için kullanılır. b) do...while ifadesi, döngü devam koşulunu gövde çalıştırıldıktan sonra (after) test eder; bu nedenle gövde her zaman en az bir kez çalışır. c) switch ifadesi, bir tamsayı değişkeninin veya ifadesinin olası değerlerine dayanarak birden fazla eylem arasından seçim yapar. d) Bir döngü içinde çalıştırıldığında continue ifadesi, döngü gövdesindeki kalan ifadeleri atlar ve döngünün bir sonraki yinelemesine geçer. e) && (koşullu VE) operatörü, belirli bir yürütme yolunu seçmeden önce iki koşulun da doğru olduğundan emin olmak için kullanılabilir. f) Bir for başlığındaki döngü devam koşulu başlangıçta false (yanlış) ise, for ifadesinin gövdesi çalışmaz. g) Ortak görevleri yerine getiren ve nesneler üzerinde çağrılamayan (sınıf adıyla çağrılan) metotlara static metotlar denir.
+
+6.2 Doğru mu Yanlış mı? (Self-Review Exercises)
+a) switch seçim ifadesinde default etiketi zorunludur.
+
+YANLIŞ. default etiketi isteğe bağlıdır. Eğer eşleşmeyen durumlar için özel bir eylem gerekmiyorsa yazılmayabilir.
+
+b) Bir switch ifadesinin her case bloğunda break ifadesi zorunludur.
+
+YANLIŞ. Genellikle break kullanılır ama zorunlu değildir; akışı sonlandırmak veya başka bir yere yönlendirmek için return, throw veya goto ifadeleri de kullanılabilir.
+
+c) ((x > y) && (a < b)) ifadesi, yalnızca (x > y) doğruysa VEYA (a < b) doğruysa doğrudur.
+
+YANLIŞ. && (VE) operatörü kullanıldığı için, ifadenin tamamının doğru olması için her iki koşulun da doğru olması gerekir.
+
+d) || operatörü içeren bir ifade, işlenenlerden biri veya her ikisi de doğruysa doğrudur.
+
+DOĞRU.
+
+e) Bir format öğesindeki virgülden sonraki tamsayı (örneğin {0, 4}), görüntülenen dizenin alan genişliğini belirtir.
+
+DOĞRU.
+
+f) Bir switch ifadesinde bir değer aralığını test etmek için case etiketinde başlangıç ve bitiş değerleri arasında kısa çizgi (-) kullanın.
+
+YANLIŞ. C#'ın switch ifadesi (standart kullanımda) aralıkları (range) doğrudan desteklemez, her değeri ayrı bir case olarak yazmanız gerekir.
+
+g) Aralarında hiçbir ifade olmadan case etiketlerini art arda listelemek, bu durumların aynı ifade kümesini gerçekleştirmesini sağlar.
+
+DOĞRU.
+
+6.3 Kod Yazma (Self-Review Exercises)
+Aşağıdaki görevleri gerçekleştiren C# kodlarını yazın:
+
+a) 1 ile 99 arasındaki tek sayıları for kullanarak toplayın:
+
+
+sum = 0;
+for (count = 1; count <= 99; count += 2)
+{
+    sum += count;
+}
+b) 2.5'in 3. kuvvetini Pow metoduyla hesaplayın:
+
+
+double result = Math.Pow(2.5, 3);
+c) while döngüsü ile 1'den 20'ye kadar sayıları yazdırın (Her satırda 5 sayı):
+
+
+int i = 1;
+while (i <= 20)
+{
+    Console.Write(i);
+    if (i % 5 == 0)
+        Console.WriteLine(); // 5'in katlarında alt satıra geç
+    else
+        Console.Write('\t'); // Değilse tab boşluğu bırak
+    
+    ++i;
+}
+d) Yukarıdaki (c) şıkkını for döngüsü ile yapın:
+
+
+for (int i = 1; i <= 20; ++i)
+{
+    Console.Write(i);
+    if (i % 5 == 0)
+        Console.WriteLine();
+    else
+        Console.Write('\t');
+}
+6.4 Hata Bulma (Self-Review Exercises)
+Aşağıdaki kod parçalarındaki hataları bulun ve düzeltin:
+
+a)
+
+
+i = 1;
+while (i <= 10); // HATA: Noktalı virgül sonsuz döngü yapar.
+    ++i;
+} // HATA: while bloğunun açılış parantezi { eksik.
+Düzeltme:
+
+
+i = 1;
+while (i <= 10)
+{
+    ++i;
+}
+b)
+
+
+// HATA: Kayan noktalı sayılar (float/double) döngü kontrolünde hassasiyet hatası verebilir.
+for (k = 0.1; k != 1.0; k += 0.1) 
+    Console.WriteLine(k);
+Düzeltme: Tamsayı kullanıp bölme işlemi yapın.
+
+
+for (int k = 1; k <= 10; k++)
+    Console.WriteLine((double)k / 10);
+c)
+
+
+switch (n)
+{
+    case 1:
+        Console.WriteLine("The number is 1");
+        // HATA: case 1'den case 2'ye geçiş (fall-through) yasaktır. break eklenmeli.
+    case 2:
+        Console.WriteLine("The number is 2");
+        break;
+    // ...
+}
+Düzeltme: case 1 bloğunun sonuna break; ekleyin.
+
+d)
+
+
+n = 1;
+while (n < 10) // HATA: 1'den 10'a kadar yazdırmak için n <= 10 veya n < 11 olmalı.
+{
+    Console.WriteLine(n++);
+}
+Düzeltme: while (n <= 10) olarak değiştirin.
+
+6.5 Kısa Devre Değerlendirme (Short-circuit evaluation): Karmaşık koşullarda (&& veya || içeren), C# ifadesi soldan sağa değerlendirilir.
+
+&& (VE) işleminde: Eğer sol taraf false ise, sağ tarafa bakılmaz çünkü sonuç zaten false olacaktır.
+
+|| (VEYA) işleminde: Eğer sol taraf true ise, sağ tarafa bakılmaz çünkü sonuç zaten true olacaktır. Bu mekanizmaya "kısa devre değerlendirme" denir ve performans sağlar veya yan etkileri (örneğin sağ tarafta x++) engeller.
+
+6.6 for döngüsü başlığı: for başlığı üç bileşenden oluşur: for (başlatma; döngü_koşulu; artırma/azaltma).
+
+Başlatma: Döngü kontrol değişkeninin ilk değerini atar (sadece bir kez çalışır).
+
+Döngü Koşulu: Her iterasyondan önce kontrol edilir; true ise döngü döner, false ise biter.
+
+Artırma: Her iterasyonun sonunda çalışır, kontrol değişkenini günceller.
+
+6.7 do...while kullanımı: do...while döngüsü, koşul ne olursa olsun gövdesindeki kodları en az bir kez çalıştırır. while döngüsü ise koşul baştan yanlışsa hiç çalışmaz. Kullanıcıdan geçerli bir veri girene kadar tekrar tekrar veri istemek gibi durumlarda (veri en az bir kere istenmelidir) do...while daha uygundur.
+
+6.8 break ve continue farkı:
+
+break: Döngüyü tamamen sonlandırır ve döngüden sonraki ilk satıra atlar.
+
+continue: Döngünün sadece o anki iterasyonunu (adımını) sonlandırır, döngü başındaki artırma/koşul kısmına geri döner ve döngü devam eder.
+
+6.9: Hata Bulma ve Düzeltme
+a)
+
+Hata: For büyük harfle yazılmış (C# büyük/küçük harf duyarlıdır) ve virgül kullanılmış.
+
+Düzeltme:
+
+
+
+for (i = 100; i >= 1; --i) // Virgüller noktalı virgül olmalı, For küçük harf olmalı, ++i sonsuz döngü yapar, --i olmalı.
+{
+   Console.WriteLine(i);
+}
+b)
+
+Hata: break ifadeleri eksik. case 0 çalıştıktan sonra case 1 de çalışır (fall-through).
+
+Düzeltme:
+
+
+
+switch (value % 2)
+{
+   case 0:
+      Console.WriteLine("Even integer");
+      break; // Eklendi
+   case 1:
+      Console.WriteLine("Odd integer");
+      break; // Eklendi
+}
+c)
+
+Hata: 19'dan 1'e inmek isteniyor ama i += 2 kullanılmış. Bu sayıları yukarı götürür (19, 21...) ve i >= 1 hep doğru kalacağı için sonsuz döngü oluşur.
+
+Düzeltme:
+
+
+
+for (int i = 19; i >= 1; i -= 2) // += yerine -=
+{
+   Console.WriteLine(i);
+}
+d)
+
+Hata: do döngüsünün sonundaki While büyük harfle yazılmış.
+
+Düzeltme: while (counter < 100); (küçük harf ile).
+
+6.10: Kod Ne Yapar?
+Bu kod iç içe iki döngü kullanır. Dış döngü (x) 4'ten 1'e, iç döngü (y) 5'ten 1'e azalır. Çıktı: Her satırda 5 4 3 2 1 yazar (aralarında tab boşluğu ile) ve toplam 4 satır oluşur.
+
+6.11: Multiples of Five (5'in Katları)
+
+
+using System;
+
+class MultiplesOfFive
+{
+    static void Main()
+    {
+        int count = 0; // 5'in katı olanların sayısı
+        
+        Console.Write("Kaç adet sayı gireceksiniz?: ");
+        int n = int.Parse(Console.ReadLine());
+
+        for (int i = 1; i <= n; i++)
+        {
+            Console.Write($"{i}. sayıyı girin: ");
+            int val = int.Parse(Console.ReadLine());
+
+            if (val % 5 == 0)
+                count++;
+        }
+
+        Console.WriteLine($"{count} adet sayı 5'in katıdır.");
+    }
+}
+6.12: Product of Odd Integers (Tek Sayıların Çarpımı)
+
+using System;
+
+class ProductOdd
+{
+    static void Main()
+    {
+        int product = 1;
+
+        for (int i = 1; i <= 7; i += 2)
+        {
+            product *= i;
+        }
+
+        Console.WriteLine($"1'den 7'ye tek sayıların çarpımı: {product}");
+    }
+}
+6.13: Permutations (Permütasyon)
+
+using System;
+
+class Permutation
+{
+    static void Main()
+    {
+        Console.Write("n değerini girin: ");
+        int n = int.Parse(Console.ReadLine());
+
+        Console.Write("r değerini girin: ");
+        int r = int.Parse(Console.ReadLine());
+
+        if (r > n)
+        {
+            Console.WriteLine("Hata: r, n'den büyük olamaz.");
+        }
+        else
+        {
+            long nFactorial = Factorial(n);
+            long nMinusRFactorial = Factorial(n - r);
+            long result = nFactorial / nMinusRFactorial;
+
+            Console.WriteLine($"P({n}, {r}) = {result}");
+        }
+    }
+
+    static long Factorial(int number)
+    {
+        long fact = 1;
+        for (int i = 2; i <= number; i++)
+            fact *= i;
+        return fact;
+    }
+}
+6.14: Modified Compound-Interest (Bileşik Faiz - Değişen Oranlar)
+
+using System;
+
+class Interest
+{
+    static void Main()
+    {
+        decimal principal = 1000; // Ana para
+
+        for (int rate = 5; rate <= 10; rate++)
+        {
+            double ratePercent = rate / 100.0;
+            Console.WriteLine($"\nFaiz Oranı: %{rate}");
+            Console.WriteLine("Yıl\tTutar");
+
+            for (int year = 1; year <= 10; year++)
+            {
+                decimal amount = principal * (decimal)Math.Pow(1.0 + ratePercent, year);
+                Console.WriteLine($"{year}\t{amount:C}");
+            }
+        }
+    }
+}
+6.15: Displaying Triangles (Üçgen Çizimi)
+
+using System;
+
+class Triangles
+{
+    static void Main()
+    {
+        // (a) Deseni
+        Console.WriteLine("(a)");
+        for (int i = 1; i <= 10; i++)
+        {
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+
+        // (b) Deseni
+        Console.WriteLine("\n(b)");
+        for (int i = 10; i >= 1; i--)
+        {
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+
+        // (c) Deseni
+        Console.WriteLine("\n(c)");
+        for (int i = 10; i >= 1; i--)
+        {
+            for (int space = 0; space < 10 - i; space++) Console.Write(" ");
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+
+        // (d) Deseni
+        Console.WriteLine("\n(d)");
+        for (int i = 1; i <= 10; i++)
+        {
+            for (int space = 0; space < 10 - i; space++) Console.Write(" ");
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+    }
+}
+6.16: Bar Chart (Grafik Çizimi)
+
+using System;
+
+class BarChart
+{
+    static void Main()
+    {
+        Console.WriteLine("1-30 arasında 3 sayı giriniz:");
+        
+        for (int k = 1; k <= 3; k++)
+        {
+            int num = int.Parse(Console.ReadLine());
+            for (int i = 0; i < num; i++) Console.Write("*");
+            Console.WriteLine();
+        }
+    }
+}
+6.17: Calculating Sales (Satış Hesaplama)
+
+using System;
+
+class Sales
+{
+    static void Main()
+    {
+        decimal totalSales = 0;
+        int productNum;
+
+        Console.WriteLine("Ürün No girin (Çıkış için -1), ardından adedi girin.");
+
+        while (true)
+        {
+            Console.Write("Ürün No (-1 bitirir): ");
+            productNum = int.Parse(Console.ReadLine());
+
+            if (productNum == -1) break;
+
+            Console.Write("Satılan Adet: ");
+            int quantity = int.Parse(Console.ReadLine());
+            decimal price = 0;
+
+            switch (productNum)
+            {
+                case 1: price = 2.98m; break;
+                case 2: price = 4.50m; break;
+                case 3: price = 9.98m; break;
+                default: Console.WriteLine("Geçersiz ürün."); continue;
+            }
+            
+            totalSales += price * quantity;
+        }
+
+        Console.WriteLine($"Toplam Perakende Satış Değeri: {totalSales:C}");
+    }
+}
+6.18: Integer Compound Interest (Tamsayı ile Faiz)
+
+using System;
+
+class InterestInt
+{
+    static void Main()
+    {
+        long principalPennies = 100000; // 1000.00 dolar = 100000 cent
+        double rate = 0.05;
+
+        Console.WriteLine("Yıl\tTutar");
+
+        for (int year = 1; year <= 10; year++)
+        {
+            double amountD = principalPennies * Math.Pow(1.0 + rate, year);
+            long amountPennies = (long)amountD;
+
+            long dollars = amountPennies / 100;
+            long cents = amountPennies % 100;
+
+            Console.WriteLine($"{year}\t{dollars}.{cents:D2}");
+        }
+    }
+}
+6.19: Mantıksal İfadeler Sonuçları
+Verilenler: i = 1, j = 2, k = 3, m = 2 a) i == 1 -> True b) j == 3 -> False c) (i >= 1) && (j < 4) -> True && True -> True d) (m <= 99) & (k < m) -> True & False -> False e) (j >= i) || (k == m) -> True || False -> True f) (k + m < j) | (3 - j >= k) -> (5 < 2) | (1 >= 3) -> False | False -> False g) !(k > m) -> !(3 > 2) -> !True -> False
+
+6.20: Log(x) Hesaplama
+
+using System;
+
+class LogX
+{
+    static void Main()
+    {
+        Console.Write("x değerini girin (Log(x) için): ");
+        double x = double.Parse(Console.ReadLine());
+        
+        Console.Write("Terim sayısını girin: ");
+        int terms = int.Parse(Console.ReadLine());
+
+        double result = 0;
+        
+        // Formül: (x-1) - (x-1)^2/2 + (x-1)^3/3 ...
+        // Not: Kitaptaki formül log(x) Taylor serisi genellikle x=1 civarında kullanılır.
+        
+        for (int n = 1; n <= terms; n++)
+        {
+            double term = Math.Pow(x - 1, n) / n;
+            if (n % 2 == 0) // Çift terimler çıkarılır
+                result -= term;
+            else // Tek terimler eklenir
+                result += term;
+        }
+        
+        Console.WriteLine($"Ln({x}) yaklaşık değeri: {result}");
+    }
+}
+6.21: Pythagorean Triples (Pisagor Üçlüleri - Brute Force)
+
+using System;
+
+class Pythagorean
+{
+    static void Main()
+    {
+        Console.WriteLine("Pisagor Üçlüleri (500'e kadar):");
+        
+        for (int side1 = 1; side1 <= 500; side1++)
+        {
+            for (int side2 = side1; side2 <= 500; side2++)
+            {
+                for (int hyp = side2; hyp <= 500; hyp++)
+                {
+                    if ((side1 * side1) + (side2 * side2) == (hyp * hyp))
+                    {
+                        Console.WriteLine($"{side1}\t{side2}\t{hyp}");
+                    }
+                }
+            }
+        }
+    }
+}
+6.22: Modified Triangle (Yan Yana Üçgenler)
+Bu soru 6.15'teki üçgenleri yan yana yazdırmayı ister. Bunun için tek bir dış döngü (satırlar için) ve içinde her desen için ayrı iç döngüler kullanılmalıdır.
+
+using System;
+
+class SideBySide
+{
+    static void Main()
+    {
+        for (int i = 1; i <= 10; i++)
+        {
+            // (a) 
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            for (int s = 1; s <= 10 - i; s++) Console.Write(" ");
+            
+            Console.Write("\t"); // Aradaki boşluk
+
+            // (b)
+            for (int j = 1; j <= 11 - i; j++) Console.Write("*");
+            for (int s = 1; s < i; s++) Console.Write(" ");
+
+            Console.Write("\t");
+
+            // (c)
+            for (int s = 1; s < i; s++) Console.Write(" ");
+            for (int j = 1; j <= 11 - i; j++) Console.Write("*");
+
+            Console.Write("\t");
+
+            // (d)
+            for (int s = 1; s <= 10 - i; s++) Console.Write(" ");
+            for (int j = 1; j <= i; j++) Console.Write("*");
+            
+            Console.WriteLine();
+        }
+    }
+}
+6.23 & 6.24: Diamond (Elmas Şekli)
+6.24, 6.23'ün değişken girişli halidir. Aşağıdaki çözüm 6.24'ü kapsar (6.23 için input yerine 9 yazmanız yeterlidir).
+
+
+using System;
+
+class Diamond
+{
+    static void Main()
+    {
+        Console.Write("Satır sayısını girin (tek sayı, 1-19): ");
+        int rows = int.Parse(Console.ReadLine());
+        int mid = rows / 2 + 1;
+
+        // Üst kısım
+        for (int i = 1; i <= mid; i++)
+        {
+            for (int s = 1; s <= mid - i; s++) Console.Write(" ");
+            for (int j = 1; j <= 2 * i - 1; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+
+        // Alt kısım
+        for (int i = mid - 1; i >= 1; i--)
+        {
+            for (int s = 1; s <= mid - i; s++) Console.Write(" ");
+            for (int j = 1; j <= 2 * i - 1; j++) Console.Write("*");
+            Console.WriteLine();
+        }
+    }
+}
+6.25: Break Yerine Yapısal Kod
+break döngüyü aniden keser. Bunun yerine döngü koşuluna bir bool bayrak (flag) eklenmelidir. Örnek: for (int i=0; i<10; i++) { if(hata) break; } Yapısal hali:
+
+
+bool devam = true;
+for (int i=0; i<10 && devam; i++) {
+    if (hata) devam = false;
+}
+6.26: Kod Ne Yapar?
+3 katmanlı iç içe döngü. Dış (5) * Orta (3) * İç (4) = 60. Her iç döngüde 4 yıldız basar. Orta döngü bittiğinde alt satıra geçer. Dış döngü bittiğinde bir boş satır daha atar. Sonuç: 5 blok oluşur. Her blokta 3 satır vardır. Her satırda 4 yıldız vardır (****).
+
+6.27: Continue Yerine Yapısal Kod
+continue o adımı atlar. Bunun yerine kodu bir if bloğu içine alarak o şart sağlanmıyorsa çalıştırılmasını sağlarız. Örnek:
+
+
+// Continue ile
+for (int i=0; i<10; i++) {
+    if (i==5) continue;
+    Console.Write(i);
+}
+
+// Yapısal (Continue olmadan)
+for (int i=0; i<10; i++) {
+    if (i != 5) { // Koşulu tersine çevir
+        Console.Write(i);
+    }
+}
+6.28: AutoPolicy Class Modification
+Soru, AutoPolicy sınıfında eyalet kodlarını kontrol etmemizi istiyor.
+
+
+public string State
+{
+    get { return state; }
+    set
+    {
+        if (value == "CT" || value == "MA" || value == "ME" || 
+            value == "NH" || value == "NJ" || value == "NY" || 
+            value == "PA" || value == "VT")
+        {
+            state = value;
+        }
+        else
+        {
+            Console.WriteLine("Hatalı Eyalet Kodu!");
+        }
+    }
+}
+6.29: Global Warming Quiz (Küresel Isınma Testi)
+Basit bir iskelet yapı:
+
+
+using System;
+
+class Quiz
+{
+    static void Main()
+    {
+        int score = 0;
+        Console.WriteLine("Soru 1: Hangi gaz sera etkisine en çok katkı sağlar?");
+        Console.WriteLine("1) Oksijen 2) Karbondioksit 3) Azot 4) Helyum");
+        if (int.Parse(Console.ReadLine()) == 2) score++;
+
+        // ... Diğer 4 soru buraya benzer şekilde eklenir ...
+
+        if (score == 5) Console.WriteLine("Mükemmel!");
+        else if (score == 4) Console.WriteLine("Çok İyi");
+        else Console.WriteLine("Bilgilerini tazelemelisin. Kaynak: IPCC, NASA vb.");
+    }
+}
+6.30: FairTax Hesplayıcı
+Kullanıcıdan harcamaları alıp %23 vergi hesaplayan program.
+
+using System;
+
+class FairTax
+{
+    static void Main()
+    {
+        double totalExpense = 0;
+        
+        Console.WriteLine("Aylık konut masrafı:");
+        totalExpense += double.Parse(Console.ReadLine());
+        
+        Console.WriteLine("Aylık gıda masrafı:");
+        totalExpense += double.Parse(Console.ReadLine());
+        
+        // ... Diğer kategoriler (giyim, ulaşım vb.) ...
+
+        double tax = totalExpense * 0.23;
+        Console.WriteLine($"Tahmini FairTax Verginiz: {tax:C}");
+    }
+}
