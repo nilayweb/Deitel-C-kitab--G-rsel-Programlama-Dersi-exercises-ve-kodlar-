@@ -1,0 +1,940 @@
+BÖLÜM 10: Öz Değerlendirme Alıştırmaları (10.1 - 10.2)
+10.1 Boşluk Doldurma
+a) Bir sınıfın public üyeleri aynı zamanda sınıfın public servisleri (public services) veya public arayüzü (public interface) olarak da bilinir. 
+b) Bir metot, sınıfının alanlarından (field) biriyle aynı isme sahip bir yerel değişken içeriyorsa, yerel değişken o metodun kapsamında alanı gizler (hides). 
+c) Yıkıcı (destructor), çöp toplayıcı (garbage collector) bir nesnenin belleğini geri almadan önce çağrılır. 
+d) Bir sınıf kurucu metotlar (constructors) bildirirse, derleyici bir varsayılan kurucu (default constructor) oluşturmaz. 
+e) Bir nesnenin ToString metodu, bir dizenin (string) gerektiği kodlarda bir nesne göründüğünde dolaylı olarak (implicitly) çağrılabilir. 
+f) Kompozisyon bazen bir sahiplik (has-a) ilişkisi olarak adlandırılır. 
+g) Bir static değişken, sınıfın tüm nesneleri tarafından paylaşılan sınıf çapında bilgiyi temsil eder. 
+h) En az ayrıcalık ilkesi (principle of least privilege), koda yalnızca belirlenen görevini yerine getirmek için gereken erişim miktarının verilmesi gerektiğini belirtir. 
+i) Bir örnek değişkenini readonly anahtar kelimesiyle bildirmek, değişkenin değiştirilemez olduğunu belirtir. 
+j) nameof operatörü, bir tanımlayıcının adının dize temsilini döndürür. 
+k) Operatör aşırı yükleme (operator overloading), yerleşik operatörlerin kendi türlerinizdeki nesnelerle nasıl çalışacağını tanımlamanıza olanak tanır. 
+l) Genişletme metotları (extension methods), mevcut türlere yeni yetenekler eklemenize olanak tanır.
+
+10.2 Nesne Başlatıcı Kullanımı
+Book sınıfının Title, Author ve Year özelliklerini tanımladığını varsayalım. Bir Book nesnesi oluşturmak ve özelliklerini başlatmak için bir nesne başlatıcı (object initializer) kullanın.
+new Book { Title = "Visual C# How to Program", Author = "Deitel", Year = 2017 };
+
+
+BÖLÜM 10: Alıştırmalar (10.3 - 10.14)10.3 Yarım Küre Sınıfı (Hemisphere Class)
+Hemisphere sınıfı oluşturun. radius (yarıçap) niteliği varsayılan olarak 1 olsun. Hacim (Volume), Eğri Yüzey Alanı (CurvedSurfaceArea) ve Toplam Yüzey Alanı (TotalSurfaceArea) hesaplayan salt okunur özellikler ekleyin. Yarıçap için set erişimcisi 0.0 ile 12.0 arasında kontrol yapsın.
+Formüller:Hacim = $(2/3) \pi r^3$Eğri Yüzey Alanı = $2 \pi r^2$Toplam Yüzey Alanı = $3 \pi r^2$
+
+
+using System;
+
+class Hemisphere
+{
+    private double radius = 1.0; // Varsayılan 1
+
+    public double Radius
+    {
+        get { return radius; }
+        set
+        {
+            if (value > 0.0 && value < 12.0)
+                radius = value;
+        }
+    }
+
+    public double Volume
+    {
+        get { return (2.0 / 3.0) * Math.PI * Math.Pow(Radius, 3); }
+    }
+
+    public double CurvedSurfaceArea
+    {
+        get { return 2.0 * Math.PI * Math.Pow(Radius, 2); }
+    }
+
+    public double TotalSurfaceArea
+    {
+        get { return 3.0 * Math.PI * Math.Pow(Radius, 2); }
+    }
+}
+
+class HemisphereTest
+{
+    static void Main()
+    {
+        Hemisphere h = new Hemisphere();
+        Console.WriteLine("Default Radius: " + h.Radius);
+        
+        h.Radius = 5.0;
+        Console.WriteLine($"Radius: {h.Radius}");
+        Console.WriteLine($"Volume: {h.Volume:F2}");
+        Console.WriteLine($"Curved Surface Area: {h.CurvedSurfaceArea:F2}");
+        Console.WriteLine($"Total Surface Area: {h.TotalSurfaceArea:F2}");
+
+        h.Radius = 15.0; // Geçersiz değer
+        Console.WriteLine($"Radius after invalid assignment: {h.Radius}");
+    }
+}
+10.4 Time2 Sınıfının İç Veri Temsilini DeğiştirmeTime2 sınıfını (Fig. 10.5), saati, dakikayı ve saniyeyi ayrı ayrı tutmak yerine, gece yarısından itibaren geçen saniye sayısı (totalSeconds) olarak saklayacak şekilde değiştirin. Ancak, sınıfın dışarıya sunduğu metotlar ve özellikler (Hour, Minute, Second) aynı şekilde çalışmaya devam etmelidir.
+
+using System;
+
+public class Time2
+{
+    private int totalSeconds; // Gece yarısından itibaren saniyeler (0 - 86399)
+
+    public Time2(int hour = 0, int minute = 0, int second = 0)
+    {
+        SetTime(hour, minute, second);
+    }
+
+    public void SetTime(int hour, int minute, int second)
+    {
+        if ((hour >= 0 && hour < 24) && (minute >= 0 && minute < 60) && (second >= 0 && second < 60))
+        {
+            totalSeconds = (hour * 3600) + (minute * 60) + second;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException("Invalid time values");
+        }
+    }
+
+    // Özellikler - İçerideki totalSeconds'ı dönüştürerek sunar
+    public int Hour
+    {
+        get { return totalSeconds / 3600; }
+        set { SetTime(value, Minute, Second); }
+    }
+
+    public int Minute
+    {
+        get { return (totalSeconds % 3600) / 60; }
+        set { SetTime(Hour, value, Second); }
+    }
+
+    public int Second
+    {
+        get { return (totalSeconds % 3600) % 60; }
+        set { SetTime(Hour, Minute, value); }
+    }
+
+    public string ToUniversalString()
+    {
+        return $"{Hour:D2}:{Minute:D2}:{Second:D2}";
+    }
+
+    public override string ToString()
+    {
+        return $"{((Hour == 0 || Hour == 12) ? 12 : Hour % 12)}:" +
+               $"{Minute:D2}:{Second:D2} {(Hour < 12 ? "AM" : "PM")}";
+    }
+}
+
+class Time2Test
+{
+    static void Main()
+    {
+        Time2 t1 = new Time2(13, 27, 6);
+        Console.WriteLine($"Constructed time: {t1.ToUniversalString()}");
+        Console.WriteLine($"Standard time: {t1}");
+
+        t1.Hour = 4; 
+        Console.WriteLine($"Updated Hour: {t1.ToUniversalString()}");
+    }
+}
+10.5 Amortisman Sınıfı (Depreciating-Value Class)DepreciatingValue sınıfı oluşturun. AnnualDepreciationRate (Yıllık Amortisman Oranı) tüm varlıklar için ortak olmalı (static). Her varlığın kendi ValueOfAsset (Varlık Değeri) özelliği olmalı.
+
+using System;
+
+class DepreciatingValue
+{
+    public static decimal AnnualDepreciationRate { get; set; }
+    public decimal ValueOfAsset { get; private set; }
+
+    public DepreciatingValue(decimal value)
+    {
+        ValueOfAsset = value;
+    }
+
+    public void CalculateAnnualDepreciation()
+    {
+        decimal depreciation = ValueOfAsset * AnnualDepreciationRate;
+        ValueOfAsset -= depreciation;
+    }
+}
+
+class DepreciationTest
+{
+    static void Main()
+    {
+        DepreciatingValue asset1 = new DepreciatingValue(5000000m);
+        DepreciatingValue asset2 = new DepreciatingValue(6000000m);
+        DepreciatingValue asset3 = new DepreciatingValue(7000000m);
+
+        DepreciatingValue.AnnualDepreciationRate = 0.10m; // %10
+
+        Console.WriteLine("--- After 1 Year (Rate 10%) ---");
+        asset1.CalculateAnnualDepreciation();
+        asset2.CalculateAnnualDepreciation();
+        asset3.CalculateAnnualDepreciation();
+        Console.WriteLine($"Asset 1: {asset1.ValueOfAsset:C}");
+        Console.WriteLine($"Asset 2: {asset2.ValueOfAsset:C}");
+        Console.WriteLine($"Asset 3: {asset3.ValueOfAsset:C}");
+
+        DepreciatingValue.AnnualDepreciationRate = 0.11m; // %11
+
+        Console.WriteLine("\n--- After Next 3 Years (Rate 11%) ---");
+        for (int i = 0; i < 3; i++)
+        {
+            asset1.CalculateAnnualDepreciation();
+            asset2.CalculateAnnualDepreciation();
+            asset3.CalculateAnnualDepreciation();
+        }
+        Console.WriteLine($"Asset 1: {asset1.ValueOfAsset:C}");
+        Console.WriteLine($"Asset 2: {asset2.ValueOfAsset:C}");
+        Console.WriteLine($"Asset 3: {asset3.ValueOfAsset:C}");
+    }
+}
+10.6 Tarih Sınıfını Geliştirme (Enhancing Class Date)Date sınıfını (Fig. 10.7) gün, ay ve yıl için tam doğrulama yapacak şekilde güncelleyin. NextDay (Ertesi Gün) metodu ekleyin.
+
+using System;
+
+public class Date
+{
+    private int month;
+    private int day;
+    private int year;
+
+    public Date(int month, int day, int year)
+    {
+        Year = year; // Önce yılı ayarla
+        Month = month; // Sonra ayı
+        Day = day; // En son günü (ay ve yıla bağlı olduğu için)
+    }
+
+    public int Year
+    {
+        get { return year; }
+        set { if (value >= 1900 && value <= 2100) year = value; else throw new ArgumentOutOfRangeException("Year invalid"); }
+    }
+
+    public int Month
+    {
+        get { return month; }
+        set { if (value > 0 && value <= 12) month = value; else throw new ArgumentOutOfRangeException("Month invalid"); }
+    }
+
+    public int Day
+    {
+        get { return day; }
+        set
+        {
+            int[] daysPerMonth = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+            
+            // Artık yıl kontrolü
+            if (Month == 2 && value == 29 && (Year % 400 == 0 || (Year % 4 == 0 && Year % 100 != 0)))
+            {
+                day = value;
+                return;
+            }
+
+            if (value > 0 && value <= daysPerMonth[Month])
+                day = value;
+            else
+                throw new ArgumentOutOfRangeException("Day invalid");
+        }
+    }
+
+    public void NextDay()
+    {
+        try
+        {
+            Day++; // Günü artırmayı dene
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Day = 1; // Gün 1 oldu
+            NextMonth(); // Ayı artır
+        }
+    }
+
+    private void NextMonth()
+    {
+        try
+        {
+            Month++;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Month = 1; // Ay 1 oldu
+            Year++; // Yılı artır
+        }
+    }
+
+    public override string ToString() => $"{Month}/{Day}/{Year}";
+}
+
+class DateTest
+{
+    static void Main()
+    {
+        Date d1 = new Date(12, 30, 2023);
+        Console.WriteLine($"Start: {d1}");
+        
+        for (int i = 0; i < 35; i++)
+        {
+            d1.NextDay();
+            Console.WriteLine(d1);
+        }
+    }
+}
+10.7 Tamsayı Kümesi (Set of Integers)IntegerSet sınıfı oluşturun. 0-100 arası tamsayıları tutmak için bir bool dizisi kullanın. Union (Birleşim) ve Intersection (Kesişim) metotları ekleyin.
+
+using System;
+
+class IntegerSet
+{
+    private bool[] set;
+
+    public IntegerSet()
+    {
+        set = new bool[101]; // 0-100
+    }
+
+    public void InsertElement(int k)
+    {
+        if (k >= 0 && k <= 100) set[k] = true;
+    }
+
+    public void DeleteElement(int m)
+    {
+        if (m >= 0 && m <= 100) set[m] = false;
+    }
+
+    public static IntegerSet Union(IntegerSet set1, IntegerSet set2)
+    {
+        IntegerSet resultSet = new IntegerSet();
+        for (int i = 0; i <= 100; i++)
+        {
+            if (set1.set[i] || set2.set[i]) resultSet.set[i] = true;
+        }
+        return resultSet;
+    }
+
+    public static IntegerSet Intersection(IntegerSet set1, IntegerSet set2)
+    {
+        IntegerSet resultSet = new IntegerSet();
+        for (int i = 0; i <= 100; i++)
+        {
+            if (set1.set[i] && set2.set[i]) resultSet.set[i] = true;
+        }
+        return resultSet;
+    }
+
+    public bool IsEqualTo(IntegerSet otherSet)
+    {
+        for (int i = 0; i <= 100; i++)
+        {
+            if (this.set[i] != otherSet.set[i]) return false;
+        }
+        return true;
+    }
+
+    public override string ToString()
+    {
+        string elements = "";
+        bool isEmpty = true;
+        for (int i = 0; i <= 100; i++)
+        {
+            if (set[i])
+            {
+                elements += i + " ";
+                isEmpty = false;
+            }
+        }
+        return isEmpty ? "---" : elements;
+    }
+}
+
+class SetTest
+{
+    static void Main()
+    {
+        IntegerSet set1 = new IntegerSet();
+        set1.InsertElement(10);
+        set1.InsertElement(20);
+        
+        IntegerSet set2 = new IntegerSet();
+        set2.InsertElement(20);
+        set2.InsertElement(30);
+
+        Console.WriteLine("Set 1: " + set1);
+        Console.WriteLine("Set 2: " + set2);
+
+        IntegerSet union = IntegerSet.Union(set1, set2);
+        Console.WriteLine("Union: " + union);
+
+        IntegerSet intersection = IntegerSet.Intersection(set1, set2);
+        Console.WriteLine("Intersection: " + intersection);
+    }
+}
+10.8 Rasyonel Sayılar (Rational Numbers)Kesirli sayılarla işlem yapmak için Rational sınıfı. Pay ve paydayı en sade haliyle saklamalı.
+
+using System;
+
+class Rational
+{
+    private int numerator;
+    private int denominator;
+
+    public Rational(int num = 0, int den = 1)
+    {
+        if (den == 0) throw new ArgumentException("Denominator cannot be zero");
+        
+        // Sadeleştirme
+        int gcd = Gcd(Math.Abs(num), Math.Abs(den));
+        
+        numerator = num / gcd;
+        denominator = den / gcd;
+
+        if (denominator < 0) // İşareti paya taşı
+        {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+    }
+
+    private int Gcd(int a, int b)
+    {
+        while (b != 0) { int t = b; b = a % b; a = t; }
+        return a;
+    }
+
+    public Rational Add(Rational r)
+    {
+        return new Rational(numerator * r.denominator + r.numerator * denominator, 
+                            denominator * r.denominator);
+    }
+
+    // Subtract, Multiply, Divide metotları benzer mantıkla yazılır...
+
+    public override string ToString() => $"{numerator}/{denominator}";
+    public string ToFloatString(int precision) => 
+        ((double)numerator / denominator).ToString($"F{precision}");
+}
+
+class RationalTest
+{
+    static void Main()
+    {
+        Rational r1 = new Rational(2, 4); // 1/2 olur
+        Rational r2 = new Rational(3, 5);
+
+        Console.WriteLine($"R1: {r1}");
+        Console.WriteLine($"R2: {r2}");
+        Console.WriteLine($"Add: {r1.Add(r2)}");
+        Console.WriteLine($"Float: {r1.ToFloatString(2)}");
+    }
+}
+
+10.9 HugeInteger Sınıfı (Devasa Tamsayılar)
+40 basamağa kadar olan tamsayıları saklamak ve üzerlerinde işlem yapmak için bir sınıf. int veya long sınırlarını aşan sayılar için dizi kullanılır.
+
+Dosya 1: HugeInteger.cs
+
+
+using System;
+
+class HugeInteger
+{
+    private int[] digits = new int[40]; // 40 basamaklı sayı
+
+    public void Input(string numberStr)
+    {
+        // Diziyi temizle
+        for (int i = 0; i < 40; i++) digits[i] = 0;
+
+        int length = numberStr.Length;
+        // String'i diziye yerleştir (Sağa yaslı olarak)
+        // Örnek: "123" -> ...000123 (digits[39]=3, digits[38]=2, digits[37]=1)
+        for (int i = 0; i < length; i++)
+        {
+            digits[40 - length + i] = numberStr[i] - '0'; // Char to Int
+        }
+    }
+
+    public override string ToString()
+    {
+        string result = "";
+        bool leadingZero = true;
+        
+        for (int i = 0; i < 40; i++)
+        {
+            if (digits[i] != 0) leadingZero = false;
+            if (!leadingZero) result += digits[i];
+        }
+        
+        return string.IsNullOrEmpty(result) ? "0" : result;
+    }
+
+    public HugeInteger Add(HugeInteger other)
+    {
+        HugeInteger result = new HugeInteger();
+        int carry = 0;
+
+        // Sondan başa doğru toplama (İlkokul toplama mantığı)
+        for (int i = 39; i >= 0; i--)
+        {
+            int sum = this.digits[i] + other.digits[i] + carry;
+            result.digits[i] = sum % 10;
+            carry = sum / 10;
+        }
+        return result;
+    }
+
+    public HugeInteger Subtract(HugeInteger other)
+    {
+        // Not: Bu basit implementasyon, sonucun negatif olmayacağını varsayar.
+        if (other.IsGreaterThan(this)) return new HugeInteger(); // Hata durumunda 0 dön
+
+        HugeInteger result = new HugeInteger();
+        int borrow = 0;
+
+        for (int i = 39; i >= 0; i--)
+        {
+            int sub = this.digits[i] - other.digits[i] - borrow;
+            if (sub < 0)
+            {
+                sub += 10;
+                borrow = 1;
+            }
+            else
+            {
+                borrow = 0;
+            }
+            result.digits[i] = sub;
+        }
+        return result;
+    }
+
+    public bool IsEqualTo(HugeInteger other)
+    {
+        for (int i = 0; i < 40; i++)
+            if (this.digits[i] != other.digits[i]) return false;
+        return true;
+    }
+
+    public bool IsNotEqualTo(HugeInteger other) => !IsEqualTo(other);
+
+    public bool IsGreaterThan(HugeInteger other)
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            if (this.digits[i] > other.digits[i]) return true;
+            if (this.digits[i] < other.digits[i]) return false;
+        }
+        return false;
+    }
+
+    public bool IsLessThan(HugeInteger other) => !IsGreaterThan(other) && !IsEqualTo(other);
+    
+    public bool IsGreaterThanOrEqualTo(HugeInteger other) => IsGreaterThan(other) || IsEqualTo(other);
+    
+    public bool IsLessThanOrEqualTo(HugeInteger other) => IsLessThan(other) || IsEqualTo(other);
+
+    public bool IsZero()
+    {
+        foreach (int digit in digits) if (digit != 0) return false;
+        return true;
+    }
+}
+Dosya 2: HugeIntegerTest.cs
+
+using System;
+
+class HugeIntegerTest
+{
+    static void Main()
+    {
+        HugeInteger num1 = new HugeInteger();
+        HugeInteger num2 = new HugeInteger();
+
+        num1.Input("99999999999999999999");
+        num2.Input("1");
+
+        Console.WriteLine($"Num1: {num1}");
+        Console.WriteLine($"Num2: {num2}");
+
+        HugeInteger sum = num1.Add(num2);
+        Console.WriteLine($"Sum: {sum}"); // 1000....00 olmalı
+
+        Console.WriteLine($"Num1 == Num2? {num1.IsEqualTo(num2)}");
+        Console.WriteLine($"Num1 > Num2? {num1.IsGreaterThan(num2)}");
+        
+        HugeInteger sub = sum.Subtract(num2);
+        Console.WriteLine($"Sum - Num2: {sub}"); // Num1'e geri dönmeli
+    }
+}
+10.10 Tic-Tac-Toe Oyunu (X-O-X)
+3x3'lük bir tahtada iki kişilik oyun.
+
+Dosya 1: TicTacToe.cs
+
+
+using System;
+
+class TicTacToe
+{
+    private int[,] board = new int[3, 3]; // 0: Boş, 1: Oyuncu 1 (X), 2: Oyuncu 2 (O)
+
+    public TicTacToe()
+    {
+        // Tahta zaten 0 ile başlatılır
+    }
+
+    public void PrintBoard()
+    {
+        Console.WriteLine("  0 1 2");
+        for (int i = 0; i < 3; i++)
+        {
+            Console.Write(i + " ");
+            for (int j = 0; j < 3; j++)
+            {
+                char symbol = '.';
+                if (board[i, j] == 1) symbol = 'X';
+                else if (board[i, j] == 2) symbol = 'O';
+                Console.Write(symbol + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public bool MakeMove(int player, int row, int col)
+    {
+        if (row < 0 || row > 2 || col < 0 || col > 2) return false;
+        if (board[row, col] != 0) return false; // Dolu kare
+
+        board[row, col] = player;
+        return true;
+    }
+
+    public int CheckWin()
+    {
+        // Satır ve Sütun kontrolü
+        for (int i = 0; i < 3; i++)
+        {
+            if (board[i, 0] != 0 && board[i, 0] == board[i, 1] && board[i, 1] == board[i, 2]) return board[i, 0];
+            if (board[0, i] != 0 && board[0, i] == board[1, i] && board[1, i] == board[2, i]) return board[0, i];
+        }
+        // Çapraz kontrol
+        if (board[0, 0] != 0 && board[0, 0] == board[1, 1] && board[1, 1] == board[2, 2]) return board[0, 0];
+        if (board[0, 2] != 0 && board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0]) return board[0, 2];
+
+        return 0; // Kazanan yok
+    }
+
+    public bool IsDraw()
+    {
+        foreach (int cell in board) if (cell == 0) return false; // Boş yer varsa beraberlik yok
+        return true;
+    }
+}
+Dosya 2: TicTacToeTest.cs
+
+using System;
+
+class TicTacToeTest
+{
+    static void Main()
+    {
+        TicTacToe game = new TicTacToe();
+        int player = 1;
+        
+        while (true)
+        {
+            game.PrintBoard();
+            Console.WriteLine($"Player {player} ({(player == 1 ? 'X' : 'O')}), enter row and col:");
+            
+            int r = int.Parse(Console.ReadLine());
+            int c = int.Parse(Console.ReadLine());
+
+            if (game.MakeMove(player, r, c))
+            {
+                int winner = game.CheckWin();
+                if (winner != 0)
+                {
+                    game.PrintBoard();
+                    Console.WriteLine($"Player {winner} wins!");
+                    break;
+                }
+                if (game.IsDraw())
+                {
+                    game.PrintBoard();
+                    Console.WriteLine("Draw!");
+                    break;
+                }
+                player = (player == 1) ? 2 : 1; // Sıra değiştir
+            }
+            else
+            {
+                Console.WriteLine("Invalid move, try again.");
+            }
+        }
+    }
+}
+10.11 Time2 Sınıfı için Genişletme Metodları
+Time2 sınıfını değiştirmeden, ona saniyeyi bir artıran Tick özelliği eklemek. (Not: Bu alıştırma için Time2 sınıfının Hour, Minute, Second özelliklerinin public set erişimine açık olduğunu varsayıyoruz).
+
+Dosya: Time2ExtensionsTest.cs
+
+using System;
+
+// Time2 Sınıfı (Basitleştirilmiş)
+public class Time2
+{
+    public int Hour { get; set; }
+    public int Minute { get; set; }
+    public int Second { get; set; }
+
+    public Time2(int h, int m, int s) { Hour = h; Minute = m; Second = s; }
+    public override string ToString() => $"{Hour:D2}:{Minute:D2}:{Second:D2}";
+}
+
+// Genişletme Metodu Sınıfı (static olmalı)
+public static class Time2Extensions
+{
+    public static void Tick(this Time2 t)
+    {
+        t.Second++;
+        if (t.Second >= 60)
+        {
+            t.Second = 0;
+            t.Minute++;
+            if (t.Minute >= 60)
+            {
+                t.Minute = 0;
+                t.Hour++;
+                if (t.Hour >= 24)
+                {
+                    t.Hour = 0;
+                }
+            }
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Time2 t = new Time2(23, 59, 58);
+        Console.WriteLine($"Current: {t}");
+        
+        t.Tick();
+        Console.WriteLine($"Tick 1 : {t}"); // 23:59:59
+        
+        t.Tick();
+        Console.WriteLine($"Tick 2 : {t}"); // 00:00:00
+    }
+}
+10.12 Gelişmiş ComplexNumber (Operatör Aşırı Yükleme ++/--)
+Karmaşık sayıların reel ve sanal kısımlarını ++ ve -- operatörleriyle artırıp azaltmak.
+
+Dosya: ComplexNumberTest.cs
+
+
+using System;
+
+class ComplexNumber
+{
+    public double Real { get; private set; }
+    public double Imaginary { get; private set; }
+
+    public ComplexNumber(double r, double i)
+    {
+        Real = r;
+        Imaginary = i;
+    }
+
+    public override string ToString() => $"({Real} + {Imaginary}i)";
+
+    // ++ Operatörü (Hem Real hem Imaginary kısmını artırır)
+    public static ComplexNumber operator ++(ComplexNumber c)
+    {
+        return new ComplexNumber(c.Real + 1, c.Imaginary + 1);
+    }
+
+    // -- Operatörü
+    public static ComplexNumber operator --(ComplexNumber c)
+    {
+        return new ComplexNumber(c.Real - 1, c.Imaginary - 1);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ComplexNumber c = new ComplexNumber(10, 20);
+        Console.WriteLine($"Original: {c}");
+
+        c++; 
+        Console.WriteLine($"After c++: {c}"); // 11 + 21i
+
+        c--;
+        Console.WriteLine($"After c--: {c}"); // 10 + 20i
+    }
+}
+10.13 Rational Sınıfı Operatör Aşırı Yükleme
+10.8'deki Add, Subtract gibi metotlar yerine +, -, *, / operatörlerini kullanmak.
+
+Dosya: RationalOperatorTest.cs
+
+
+using System;
+
+class Rational
+{
+    public int Numerator { get; }
+    public int Denominator { get; }
+
+    public Rational(int num, int den)
+    {
+        if (den == 0) throw new ArgumentException("Denominator cannot be 0");
+        int gcd = GCD(Math.Abs(num), Math.Abs(den));
+        Numerator = num / gcd;
+        Denominator = den / gcd;
+        if (Denominator < 0) { Numerator = -Numerator; Denominator = -Denominator; }
+    }
+
+    private static int GCD(int a, int b) => b == 0 ? a : GCD(b, a % b);
+
+    public override string ToString() => $"{Numerator}/{Denominator}";
+
+    // + Operatörü
+    public static Rational operator +(Rational r1, Rational r2)
+    {
+        return new Rational(r1.Numerator * r2.Denominator + r2.Numerator * r1.Denominator,
+                            r1.Denominator * r2.Denominator);
+    }
+
+    // - Operatörü
+    public static Rational operator -(Rational r1, Rational r2)
+    {
+        return new Rational(r1.Numerator * r2.Denominator - r2.Numerator * r1.Denominator,
+                            r1.Denominator * r2.Denominator);
+    }
+
+    // * Operatörü
+    public static Rational operator *(Rational r1, Rational r2)
+    {
+        return new Rational(r1.Numerator * r2.Numerator, r1.Denominator * r2.Denominator);
+    }
+
+    // / Operatörü
+    public static Rational operator /(Rational r1, Rational r2)
+    {
+        return new Rational(r1.Numerator * r2.Denominator, r1.Denominator * r2.Numerator);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Rational r1 = new Rational(1, 2);
+        Rational r2 = new Rational(1, 4);
+
+        Console.WriteLine($"{r1} + {r2} = {r1 + r2}");
+        Console.WriteLine($"{r1} - {r2} = {r1 - r2}");
+        Console.WriteLine($"{r1} * {r2} = {r1 * r2}");
+        Console.WriteLine($"{r1} / {r2} = {r1 / r2}");
+    }
+}
+10.14 HugeInteger Operatör Aşırı Yükleme
+10.9'daki metotları operatörlerle değiştirmek (+, -, ==, >, vb.).
+
+Dosya: HugeIntegerOperatorTest.cs
+
+
+using System;
+
+class HugeInteger
+{
+    private int[] digits = new int[40];
+
+    public HugeInteger(string val = "0")
+    {
+        int len = val.Length;
+        for (int i = 0; i < len; i++)
+            digits[40 - len + i] = val[i] - '0';
+    }
+
+    public override string ToString()
+    {
+        string s = "";
+        bool leading = true;
+        foreach (int d in digits) {
+            if (d != 0) leading = false;
+            if (!leading) s += d;
+        }
+        return string.IsNullOrEmpty(s) ? "0" : s;
+    }
+
+    // Toplama Operatörü (+)
+    public static HugeInteger operator +(HugeInteger h1, HugeInteger h2)
+    {
+        HugeInteger res = new HugeInteger();
+        int carry = 0;
+        for (int i = 39; i >= 0; i--)
+        {
+            int sum = h1.digits[i] + h2.digits[i] + carry;
+            res.digits[i] = sum % 10;
+            carry = sum / 10;
+        }
+        return res;
+    }
+
+    // Büyüktür Operatörü (>)
+    public static bool operator >(HugeInteger h1, HugeInteger h2)
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            if (h1.digits[i] > h2.digits[i]) return true;
+            if (h1.digits[i] < h2.digits[i]) return false;
+        }
+        return false;
+    }
+
+    public static bool operator <(HugeInteger h1, HugeInteger h2) => !(h1 > h2) && !(h1 == h2);
+    public static bool operator >=(HugeInteger h1, HugeInteger h2) => (h1 > h2) || (h1 == h2);
+    public static bool operator <=(HugeInteger h1, HugeInteger h2) => (h1 < h2) || (h1 == h2);
+
+    // Eşittir Operatörü (==)
+    public static bool operator ==(HugeInteger h1, HugeInteger h2)
+    {
+        if (ReferenceEquals(h1, null)) return ReferenceEquals(h2, null);
+        if (ReferenceEquals(h2, null)) return false;
+        for (int i = 0; i < 40; i++)
+            if (h1.digits[i] != h2.digits[i]) return false;
+        return true;
+    }
+
+    public static bool operator !=(HugeInteger h1, HugeInteger h2) => !(h1 == h2);
+
+    // Equals ve GetHashCode override edilmelidir
+    public override bool Equals(object obj) => obj is HugeInteger h && this == h;
+    public override int GetHashCode() => 0; 
+}
+
+class Program
+{
+    static void Main()
+    {
+        HugeInteger n1 = new HugeInteger("99999");
+        HugeInteger n2 = new HugeInteger("1");
+        
+        HugeInteger sum = n1 + n2;
+        Console.WriteLine($"{n1} + {n2} = {sum}"); // 100000
+
+        Console.WriteLine($"{sum} > {n1}? {sum > n1}");
+    }
+}
