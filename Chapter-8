@@ -1,0 +1,875 @@
+BÖLÜM 8: Öz Değerlendirme Alıştırmaları (8.1 - 8.5)
+8.1 Boşluk Doldurma (Fill in the blanks)
+a) Değerlerin listeleri ve tabloları dizilerde (arrays) saklanabilir. b) Bir dizi, hepsi aynı türe (type) sahip değerleri içeren bir grup değişkendir (variables) (elemanlar olarak adlandırılır). c) foreach ifadesi, bir sayaç kullanmadan bir dizideki elemanlar arasında yineleme yapmanıza (dolaşmanıza) olanak tanır. d) Belirli bir dizi elemanına başvuran sayıya, elemanın indeksi (index) veya pozisyon numarası denir. e) İki indeks kullanan bir diziye iki boyutlu (two-dimensional) dizi denir. f) double türündeki numbers dizisi üzerinde yineleme yapmak için kullanılacak foreach başlığı: foreach (double d in numbers). g) Komut satırı argümanları bir dize dizisinde (an array of strings) saklanır (genellikle args olarak adlandırılır). h) Komut satırındaki toplam argüman sayısını almak için args.Length ifadesini kullanın (argümanların args içinde saklandığını varsayarak). i) MyApp test komutu verildiğinde, ilk komut satırı argümanı test olur. j) Bir metodun parametre listesindeki params değiştiricisi (modifier), metodun değişken sayıda argüman alabileceğini belirtir. k) C# 6 itibarıyla, salt okunur özellikler olan salt-getir (getter-only) otomatik uygulanan özellikleri bildirebilirsiniz.
+
+8.2 Doğru mu Yanlış mı? (True or False)
+a) Tek bir dizi birçok farklı türde değeri saklayabilir.
+
+YANLIŞ. Bir dizi yalnızca aynı türdeki değerleri saklayabilir. (object dizisi hariç, o da teknik olarak aynı türdür).
+
+b) Bir dizi indeksi normalde float türünde olmalıdır.
+
+YANLIŞ. Bir dizi indeksi bir tamsayı (integer) veya tamsayı ifadesi olmalıdır.
+
+c) Bir metoda geçirilen ve o metotta değiştirilen bireysel bir dizi elemanı, çağrılan metot yürütmeyi tamamladığında değiştirilmiş değeri içerir.
+
+YANLIŞ/DOĞRU (Duruma Göre): Değer türündeki (int, double vb.) bireysel elemanlar kopyalanarak geçer, bu yüzden değişiklikler orijinali etkilemez (YANLIŞ). Ancak referans türündeki elemanlar veya dizinin kendisi geçerse değişiklikler yansır. Sorunun cevabı genelde değer türleri için YANLIŞ kabul edilir.
+
+d) Komut satırı argümanları virgüllerle ayrılır.
+
+YANLIŞ. Komut satırı argümanları boşluklarla (whitespace) ayrılır.
+
+e) Otomatik uygulanan özellikler bildirimlerinde başlatılamaz.
+
+YANLIŞ.  6 itibarıyla, otomatik özellik başlatma (auto-property initialization) kullanılabilir.
+
+8.3 Kod Yazma (Writing Code Statements)
+fractions adlı bir dizi için aşağıdaki görevleri gerçekleştirin:
+
+a) ArraySize sabitini 10 olarak bildirin.
+
+const int ArraySize = 10;
+b) ArraySize elemanlı double türünde bir diziye başvuracak fractions değişkenini bildirin. Elemanları 0'a başlatın.
+
+double[] fractions = new double[ArraySize];
+c) Dizinin 3. indeksindeki elemanını adlandırın.
+
+fractions[3]
+d) 9. indisteki dizi elemanına 1.667 değerini atayın.
+
+fractions[9] = 1.667;
+e) 6. indisteki dizi elemanına 3.333 değerini atayın.
+
+fractions[6] = 3.333;
+f) Bir for ifadesi kullanarak dizinin tüm elemanlarını toplayın. Döngü kontrol değişkeni olarak x tamsayı değişkenini bildirin.
+
+double total = 0.0;
+for (int x = 0; x < fractions.Length; ++x)
+{
+    total += fractions[x];
+}
+g) Bir foreach ifadesi kullanarak dizinin tüm elemanlarını toplayın. Döngü kontrol değişkeni olarak element double değişkenini bildirin.
+
+double total = 0.0;
+foreach (double element in fractions)
+{
+    total += element;
+}
+8.4 Çok Boyutlu Dizi İşlemleri (Multidimensional Array Tasks)
+table adlı bir dizi için aşağıdaki görevleri gerçekleştirin:
+
+a) Değişkeni bildirin ve üç satır ve üç sütuna sahip dikdörtgen bir tamsayı dizisiyle başlatın. ARRAY_SIZE sabitinin 3 olarak bildirildiğini varsayın.
+
+int[,] table = new int[ARRAY_SIZE, ARRAY_SIZE];
+b) Dizi kaç eleman içerir?
+
+Cevap: 9 eleman (3 x 3).
+
+c) Dizinin her elemanını indekslerinin toplamına (x + y) eşitlemek için iç içe for ifadesi kullanın.
+
+for (int x = 0; x < table.GetLength(0); ++x)
+{
+    for (int y = 0; y < table.GetLength(1); ++y)
+    {
+        table[x, y] = x + y;
+    }
+}
+8.5 Hata Bulma ve Düzeltme (Find and Correct Errors)
+a)
+const int ArraySize = 5;
+ArraySize = 10; // HATA: Sabitlere (const) sonradan değer atanamaz.
+Düzeltme: ArraySize'a bildirim sırasında doğru değeri atayın veya const anahtar kelimesini kaldırın.
+
+b)
+var b = new int[10];
+for (var i = 0; i <= b.Length; ++i) // HATA: <= operatörü dizi sınırlarını aşar (IndexOutOfRangeException).
+{
+    b[i] = 1;
+}
+Düzeltme: <= yerine < operatörünü kullanın (i < b.Length).
+
+c)
+int[,] a = { { 1, 2 }, { 3, 4 } };
+a[1][1] = 5; // HATA: C#'ta dikdörtgen diziler [row, col] şeklinde erişilir, [row][col] j
+
+
+8.6 Boşluk Doldurma
+a) Bir istisna (exception) nesnesinin Message özelliği, istisnanın hata mesajını döndürür. b) Bir dizinin değişkenini adlandırmak, türünü belirtmek ve boyut sayısını belirlemek, diziyi bildirmek (declaring) olarak adlandırılır. c) İki boyutlu bir dizide, birinci indeks elemanın satırını (row), ikinci indeks ise sütununu (column) tanımlar. d) C#, değişken uzunluklu argüman listesini bir dizi (array) olarak ele alır. e) Düzensiz (jagged) dizi d'nin 3. satır ve 5. sütunundaki elemanın adı d[3][5]'tir.
+
+8.7 Doğru mu Yanlış mı?
+a) Bir dizideki belirli bir konuma başvurmak için dizi değişkeninin adını ve o elemanın değerini belirtiriz.
+
+YANLIŞ. Elemanın değerini değil, indeksini (pozisyon numarasını) belirtiriz.
+
+b) Sabitler (constants) bildirildiklerinde başlatılmalı ve daha sonra değiştirilemezler.
+
+DOĞRU.
+
+c) p tamsayı dizisi için 100 yer ayrılacağını belirtmek için p[100]; yazılır.
+
+YANLIŞ. Bildirim int[] p = new int[100]; şeklinde olmalıdır. Sadece p[100] bir bildirim değildir.
+
+d) foreach ifadesinin yineleme değişkeni yalnızca dizi elemanlarına erişmek için kullanılabilir, onları değiştirmek için kullanılamaz.
+
+DOĞRU.
+
+e) İki boyutlu bir dizinin elemanlarını toplamak için iç içe for ifadeleri kullanmalısınız.
+
+DOĞRU.
+
+8.10 Maaş Aralığı Hesaplayıcı (Wages Rate)
+Bir şirket, çalışanlarına haftalık 200$ sabit ücret + 40 saati aşan satışlar için %9 komisyon gibi bir sistem yerine; bu soruda "sabit ücret + parça başı iş" benzeri bir senaryo verilmiş (Soru metni biraz karışık, ancak genellikle dağılım sorusudur). Biz standart bir maaş aralığı sayacı uygulaması yazalım.
+
+Çalışanların maaşlarını (tamsayı) hesapladığınızı varsayalım. Maaşların hangi aralıklara düştüğünü sayan bir uygulama yazın: $200-299, $300-399, ..., $1000 ve üzeri.
+
+using System;
+
+class WageDistribution
+{
+    static void Main()
+    {
+        // Maaş aralıkları için sayaçlar (frequency array)
+        // index 0: 200-299, index 1: 300-399 ... index 8: 1000+
+        int[] frequency = new int[9]; 
+
+        // Örnek çalışan maaşları
+        int[] salaries = { 250, 350, 450, 500, 200, 1200, 900, 650, 400, 1050 };
+
+        foreach (var salary in salaries)
+        {
+            // Formül: (Maaş - 200) / 100 bize indeksi verir
+            // Örn: 250 -> (50)/100 = 0. indeks
+            // Örn: 1200 -> (1000)/100 = 10. indeks (fakat 8. indekste sabitlenmeli)
+            
+            if (salary >= 200)
+            {
+                int index = (salary - 200) / 100;
+                
+                if (index > 8) 
+                    index = 8; // $1000 ve üzeri hepsi son kutuya
+
+                frequency[index]++;
+            }
+        }
+
+        Console.WriteLine("Salary Range\tNumber of Employees");
+        for (int i = 0; i < frequency.Length; i++)
+        {
+            if (i == 8)
+                Console.WriteLine($"$1000 and over\t{frequency[i]}");
+            else
+                Console.WriteLine($"${200 + i * 100}-${200 + i * 100 + 99}\t{frequency[i]}");
+        }
+    }
+}
+
+8.12 Sekizin Katlarını Belirleme (Identifying Multiples of Eight)
+Kullanıcıdan 1-1000 arasında 5 sayı girmesini isteyin. Her girişten sonra, sadece 8'in katı olan sayıları görüntüleyin.
+
+using System;
+
+class MultiplesOfEight
+{
+    static void Main()
+    {
+        int[] numbers = new int[5];
+
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            Console.Write($"Enter number {i + 1} (1-1000): ");
+            numbers[i] = int.Parse(Console.ReadLine());
+
+            Console.Write("Multiples of 8 entered so far: ");
+            // O ana kadar girilenleri kontrol et
+            for (int j = 0; j <= i; j++)
+            {
+                if (numbers[j] % 8 == 0)
+                {
+                    Console.Write($"{numbers[j]} ");
+                }
+            }
+            Console.WriteLine();
+        }
+    }
+}
+
+8.14 Değişken Uzunluklu Argüman Listesi (Variable-Length Argument List)
+params kullanarak, aldığı tamsayıların çarpımını döndüren Product metodunu yazın.
+
+using System;
+
+class VariableArgs
+{
+    static void Main()
+    {
+        Console.WriteLine($"Product(1, 2): {Product(1, 2)}");
+        Console.WriteLine($"Product(1, 2, 3, 4): {Product(1, 2, 3, 4)}");
+        Console.WriteLine($"Product(5, 10): {Product(5, 10)}");
+    }
+
+    // params: Değişken sayıda argüman almayı sağlar
+    static int Product(params int[] numbers)
+    {
+        int product = 1;
+        foreach (int number in numbers)
+        {
+            product *= number;
+        }
+        return product;
+    }
+}
+8.17 Zar Atma Simülasyonu (Dice Rolling)
+İki zar atılmasını 36.000 kez simüle edin. İki zarın toplamını (2 ile 12 arası) bir dizide saklayın ve her toplamın kaç kez geldiğini tablo olarak gösterin. (7 gelme olasılığı en yüksek olmalıdır).
+
+using System;
+
+class DiceRolling
+{
+    static void Main()
+    {
+        Random random = new Random();
+        int[] frequency = new int[13]; // Toplamlar 2-12 arası (0 ve 1 kullanılmayacak)
+
+        // 36.000 kez zar at
+        for (int roll = 0; roll < 36000; roll++)
+        {
+            int die1 = random.Next(1, 7);
+            int die2 = random.Next(1, 7);
+            int sum = die1 + die2;
+            
+            frequency[sum]++;
+        }
+
+        Console.WriteLine("Sum\tFrequency\tPercentage");
+        for (int sum = 2; sum <= 12; sum++)
+        {
+            double percentage = (double)frequency[sum] / 36000 * 100;
+            Console.WriteLine($"{sum}\t{frequency[sum]}\t\t{percentage:F2}%");
+        }
+    }
+}
+8.19 Havayolu Rezervasyon Sistemi (Airline Reservations System)
+10 koltuklu bir uçak için rezervasyon sistemi yazın. 1-5 Birinci Sınıf, 6-10 Ekonomi.
+
+using System;
+
+class AirlineReservation
+{
+    static void Main()
+    {
+        bool[] seats = new bool[11]; // 1-10 indekslerini kullanacağız (0 boş)
+        int seatsTaken = 0;
+
+        while (seatsTaken < 10)
+        {
+            Console.WriteLine("\nPlease type 1 for First Class");
+            Console.WriteLine("Please type 2 for Economy");
+            int section = int.Parse(Console.ReadLine());
+
+            if (section == 1)
+            {
+                if (!AssignSeat(seats, 1, 5)) // Birinci sınıf doluysa
+                {
+                    Console.Write("First Class is full. Accept Economy? (1=Yes, 0=No): ");
+                    if (int.Parse(Console.ReadLine()) == 1)
+                        AssignSeat(seats, 6, 10);
+                    else
+                        Console.WriteLine("Next flight leaves in 3 hours.");
+                }
+            }
+            else if (section == 2)
+            {
+                if (!AssignSeat(seats, 6, 10)) // Ekonomi doluysa
+                {
+                    Console.Write("Economy is full. Accept First Class? (1=Yes, 0=No): ");
+                    if (int.Parse(Console.ReadLine()) == 1)
+                        AssignSeat(seats, 1, 5);
+                    else
+                        Console.WriteLine("Next flight leaves in 3 hours.");
+                }
+            }
+        }
+        Console.WriteLine("All seats are taken.");
+    }
+
+    static bool AssignSeat(bool[] seats, int start, int end)
+    {
+        for (int i = start; i <= end; i++)
+        {
+            if (!seats[i]) // Koltuk boşsa
+            {
+                seats[i] = true;
+                Console.WriteLine($"Seat {i} assigned in {(start == 1 ? "First Class" : "Economy")}.");
+                return true;
+            }
+        }
+        return false; // Bölüm dolu
+    }
+}
+8.20 Toplam Satışlar (Total Sales - 2 Boyutlu Dizi)
+3 satış elemanı ve 5 ürün için satışları özetleyen bir program yazın. Satırları ve sütunları toplayın (Çapraz Toplam).
+
+C#
+
+using System;
+
+class SalesSummary
+{
+    static void Main()
+    {
+        // 5 Ürün (Satır), 3 Satıcı (Sütun)
+        // +1 ekleyerek toplamları da dizide tutabiliriz veya ayrı hesaplarız.
+        decimal[,] sales = new decimal[5, 3]; 
+
+        // Örnek Veri Girişi (Normalde kullanıcıdan alınır)
+        // Ürün 0, Satıcı 0, Tutar 100
+        sales[0, 0] = 100; sales[0, 1] = 200; sales[0, 2] = 50;
+        sales[1, 0] = 500; sales[1, 1] = 100; // ... diğerleri 0 kalsın
+
+        Console.WriteLine("Product\tSP1\tSP2\tSP3\tTotal");
+        
+        decimal[] sellerTotals = new decimal[3];
+
+        for (int product = 0; product < 5; product++)
+        {
+            decimal productTotal = 0;
+            Console.Write($"Prod {product + 1}\t");
+
+            for (int sp = 0; sp < 3; sp++)
+            {
+                Console.Write($"{sales[product, sp]}\t");
+                productTotal += sales[product, sp];
+                sellerTotals[sp] += sales[product, sp]; // Sütun toplamı biriktir
+            }
+            Console.WriteLine($"{productTotal}"); // Satır toplamı
+        }
+
+        Console.Write("Total\t");
+        foreach (var total in sellerTotals)
+        {
+            Console.Write($"{total}\t");
+        }
+        Console.WriteLine();
+    }
+}
+8.21 Kaplumbağa Grafikleri (Turtle Graphics)
+20x20'lik bir dizide komutlarla hareket eden ve çizim yapan bir "Kaplumbağa" simülasyonu. Komutlar: 1(Kalem Yukarı), 2(Kalem Aşağı), 3(Sağa Dön), 4(Sola Dön), 5,x(x kadar ilerle), 6(Yazdır), 9(Çık).
+
+using System;
+
+class TurtleGraphics
+{
+    static int[,] floor = new int[20, 20];
+    static int r = 0, c = 0; // Konum (row, col)
+    static int dir = 0; // Yön: 0=Sağ, 1=Aşağı, 2=Sol, 3=Yukarı
+    static bool penDown = false;
+
+    static void Main()
+    {
+        // Örnek Komutlar: 12x12 kare çiz
+        int[] commands = { 2, 5, 12, 3, 5, 12, 3, 5, 12, 3, 5, 12, 1, 6, 9 };
+        
+        // Komut dizisini işle
+        for (int i = 0; i < commands.Length; i++)
+        {
+            int cmd = commands[i];
+            if (cmd == 9) break; // Çıkış
+
+            switch (cmd)
+            {
+                case 1: penDown = false; break;
+                case 2: penDown = true; break;
+                case 3: dir = (dir + 1) % 4; break; // Sağa dön
+                case 4: dir = (dir + 3) % 4; break; // Sola dön
+                case 5:
+                    int steps = commands[++i]; // Sonraki eleman adımdır
+                    Move(steps);
+                    break;
+                case 6: Display(); break;
+            }
+        }
+    }
+
+    static void Move(int steps)
+    {
+        for (int i = 0; i < steps; i++)
+        {
+            if (penDown) floor[r, c] = 1;
+            
+            // Yöne göre hareket
+            switch (dir)
+            {
+                case 0: if (c < 19) c++; break; // Sağ
+                case 1: if (r < 19) r++; break; // Aşağı
+                case 2: if (c > 0) c--; break;  // Sol
+                case 3: if (r > 0) r--; break;  // Yukarı
+            }
+        }
+        if (penDown) floor[r, c] = 1; // Son kareyi işaretle
+    }
+
+    static void Display()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            for (int j = 0; j < 20; j++)
+                Console.Write(floor[i, j] == 1 ? "*" : " ");
+            Console.WriteLine();
+        }
+    }
+}
+8.27 Eratosten Kalburu (Sieve of Eratosthenes)
+1000'e kadar olan asal sayıları bulmak için verimli bir algoritma. Dizideki her sayıyı önce true (asal olabilir) kabul edip, sonra asal olmayanların (bir sayının katlarının) üzerini çizeriz (false).
+
+using System;
+
+class Sieve
+{
+    static void Main()
+    {
+        bool[] primes = new bool[1000];
+        
+        // Hepsini true yap (0 ve 1 hariç)
+        for (int i = 2; i < primes.Length; i++) primes[i] = true;
+
+        // Kalbur Algoritması
+        for (int i = 2; i < primes.Length; i++)
+        {
+            if (primes[i]) // Eğer sayı asalsa
+            {
+                // Bu sayının tüm katlarını false yap
+                for (int j = i * 2; j < primes.Length; j += i)
+                {
+                    primes[j] = false;
+                }
+            }
+        }
+
+        // Yazdırma
+        Console.WriteLine("Prime numbers up to 999:");
+        for (int i = 2; i < primes.Length; i++)
+        {
+            if (primes[i])
+            {
+                Console.Write(i + " ");
+            }
+        }
+        Console.WriteLine();
+    }
+}
+
+8.28 Simülasyon: Kaplumbağa ve Tavşan (The Tortoise and the Hare)
+Klasik yarışı simüle eden bir uygulama. 70 karelik bir pist var. Rastgele sayılarla hayvanların hareketleri (ileri/geri) belirlenir.
+
+using System;
+using System.Threading; // Bekleme süresi eklemek istersen
+
+class RaceSimulation
+{
+    // Sabitler
+    const int FINISH_LINE = 70;
+    static Random rand = new Random();
+
+    static void Main()
+    {
+        int tortoise = 1;
+        int hare = 1;
+
+        Console.WriteLine("ON YOUR MARK, GET SET");
+        Console.WriteLine("BANG !!!!!");
+        Console.WriteLine("AND THEY'RE OFF !!!!!");
+
+        while (tortoise < FINISH_LINE && hare < FINISH_LINE)
+        {
+            // Hareketleri belirle
+            MoveTortoise(ref tortoise);
+            MoveHare(ref hare);
+
+            // Sınırları kontrol et (1'den aşağı düşemezler)
+            if (tortoise < 1) tortoise = 1;
+            if (hare < 1) hare = 1;
+
+            // Pisti çiz
+            DisplayRace(tortoise, hare);
+            
+            // Yarışı yavaşlatmak için (isteğe bağlı)
+            // Thread.Sleep(1000); 
+        }
+
+        // Kazananı belirle
+        if (tortoise >= FINISH_LINE && hare >= FINISH_LINE)
+            Console.WriteLine("\nIt's a tie.");
+        else if (tortoise >= FINISH_LINE)
+            Console.WriteLine("\nTORTOISE WINS!!! YAY!!!");
+        else
+            Console.WriteLine("\nHare wins. Yuch.");
+    }
+
+    static void MoveTortoise(ref int position)
+    {
+        int move = rand.Next(1, 11); // 1-10
+        if (move <= 5) position += 3; // Fast plod (50%)
+        else if (move <= 7) position -= 6; // Slip (20%)
+        else position += 1; // Slow plod (30%)
+    }
+
+    static void MoveHare(ref int position)
+    {
+        int move = rand.Next(1, 11); // 1-10
+        if (move <= 2) { /* Sleep (20%) - No move */ }
+        else if (move <= 4) position += 9; // Big hop (20%)
+        else if (move <= 5) position -= 12; // Big slip (10%)
+        else if (move <= 8) position += 1; // Small hop (30%)
+        else position -= 2; // Small slip (20%)
+    }
+
+    static void DisplayRace(int t, int h)
+    {
+        for (int i = 1; i <= FINISH_LINE; i++)
+        {
+            if (i == t && i == h) Console.Write("OUCH!!!"); // Çarpışma
+            else if (i == t) Console.Write("T");
+            else if (i == h) Console.Write("H");
+            else Console.Write(" ");
+        }
+        Console.WriteLine();
+    }
+}
+8.29 Kart Karıştırma ve Dağıtma (Poker Eli Kontrolü)
+Bu soru, Card ve DeckOfCards sınıflarını genişleterek dağıtılan 5 kartlık bir elin poker değerini (Çift, Döper, Üçlü, Kare, Renk, Kent, Full House) kontrol etmenizi ister.
+
+using System;
+using System.Linq;
+
+// Kart Sınıfı
+class Card
+{
+    public string Face { get; }
+    public string Suit { get; }
+    public int FaceValue { get; } // Değer karşılaştırması için (As=1 veya 14, Papaz=13 vb.)
+
+    public Card(string face, string suit, int value)
+    {
+        Face = face;
+        Suit = suit;
+        FaceValue = value;
+    }
+    public override string ToString() => $"{Face} of {Suit}";
+}
+
+// Deste ve Oyun Sınıfı
+class PokerGame
+{
+    static Random rand = new Random();
+    static Card[] deck = new Card[52];
+    static Card[] hand = new Card[5];
+
+    static void Main()
+    {
+        InitializeDeck();
+        ShuffleDeck();
+        DealHand();
+        
+        Console.WriteLine("--- Your Hand ---");
+        foreach (var card in hand) Console.WriteLine(card);
+        Console.WriteLine("\n--- Hand Analysis ---");
+        
+        CheckHand();
+    }
+
+    static void InitializeDeck()
+    {
+        string[] faces = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
+        string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
+        
+        int count = 0;
+        for (int i = 0; i < suits.Length; i++)
+            for (int j = 0; j < faces.Length; j++)
+                deck[count++] = new Card(faces[j], suits[i], j + 1);
+    }
+
+    static void ShuffleDeck()
+    {
+        for (int i = 0; i < deck.Length; i++)
+        {
+            int second = rand.Next(52);
+            Card temp = deck[i];
+            deck[i] = deck[second];
+            deck[second] = temp;
+        }
+    }
+
+    static void DealHand()
+    {
+        for (int i = 0; i < 5; i++) hand[i] = deck[i];
+    }
+
+    static void CheckHand()
+    {
+        // Analiz için kartları değerlerine göre grupla
+        var groups = hand.GroupBy(c => c.FaceValue).OrderByDescending(g => g.Count()).ToList();
+        bool isFlush = hand.GroupBy(c => c.Suit).Count() == 1; // Hepsi aynı renk mi?
+        
+        // Sıralı mı (Straight)?
+        var sortedValues = hand.Select(c => c.FaceValue).OrderBy(v => v).ToArray();
+        bool isStraight = true;
+        for(int i=0; i<4; i++) { if(sortedValues[i+1] != sortedValues[i]+1) isStraight = false; }
+
+        if (isFlush && isStraight) Console.WriteLine("Straight Flush!");
+        else if (groups[0].Count() == 4) Console.WriteLine("Four of a Kind!");
+        else if (groups[0].Count() == 3 && groups[1].Count() == 2) Console.WriteLine("Full House!");
+        else if (isFlush) Console.WriteLine("Flush!");
+        else if (isStraight) Console.WriteLine("Straight!");
+        else if (groups[0].Count() == 3) Console.WriteLine("Three of a Kind!");
+        else if (groups[0].Count() == 2 && groups[1].Count() == 2) Console.WriteLine("Two Pairs!");
+        else if (groups[0].Count() == 2) Console.WriteLine("One Pair!");
+        else Console.WriteLine("High Card");
+    }
+}
+8.30 Dizileri Birleştirme (Merging Arrays)
+Sıralı iki diziyi alıp, tek bir sıralı dizi halinde birleştiren program.
+
+using System;
+
+class MergeArrays
+{
+    static void Main()
+    {
+        int[] array1 = { 1, 3, 5, 7, 9 };
+        int[] array2 = { 2, 4, 6, 8, 10, 12 };
+        int[] merged = new int[array1.Length + array2.Length];
+
+        int i = 0, j = 0, k = 0;
+
+        // İki diziyi karşılaştırarak ekle
+        while (i < array1.Length && j < array2.Length)
+        {
+            if (array1[i] < array2[j])
+                merged[k++] = array1[i++];
+            else
+                merged[k++] = array2[j++];
+        }
+
+        // Kalan elemanları ekle
+        while (i < array1.Length) merged[k++] = array1[i++];
+        while (j < array2.Length) merged[k++] = array2[j++];
+
+        Console.WriteLine("Merged Array: " + string.Join(" ", merged));
+    }
+}
+8.31 - 8.33 Simpletron Bilgisayar Simülatörü
+Bu, kitabın en kapsamlı "özel bölüm" projesidir. Kendi makine dilini (SML) çalıştıran sanal bir bilgisayar yapmanız istenir. Aşağıdaki kod, Simpletron'un temel çalışan bir versiyonudur. Bellek yönetimi, komut işleme (fetch-decode-execute) ve temel matematiksel işlemleri içerir.
+
+
+using System;
+
+class Simpletron
+{
+    // Bellek ve Kayıtçılar (Registers)
+    static int[] memory = new int[100];
+    static int accumulator = 0;
+    static int instructionCounter = 0;
+    static int instructionRegister = 0;
+    static int operationCode = 0;
+    static int operand = 0;
+
+    // İşlem Kodları (Opcodes)
+    const int READ = 10, WRITE = 11;
+    const int LOAD = 20, STORE = 21;
+    const int ADD = 30, SUBTRACT = 31, DIVIDE = 32, MULTIPLY = 33;
+    const int BRANCH = 40, BRANCHNEG = 41, BRANCHZERO = 42, HALT = 43;
+
+    static void Main()
+    {
+        Console.WriteLine("*** Welcome to Simpletron! ***");
+        Console.WriteLine("*** Please enter your program one instruction  ***");
+        Console.WriteLine("*** (or data word) at a time. Enter -99999 to ***");
+        Console.WriteLine("*** stop entering your program. ***");
+
+        // 1. PROGRAM YÜKLEME AŞAMASI
+        int location = 0;
+        while (true)
+        {
+            Console.Write($"{location:D2} ? ");
+            int input = int.Parse(Console.ReadLine());
+            if (input == -99999) break;
+            memory[location] = input;
+            location++;
+        }
+
+        Console.WriteLine("*** Program loading completed ***");
+        Console.WriteLine("*** Program execution begins  ***");
+
+        // 2. ÇALIŞTIRMA AŞAMASI (Fetch-Decode-Execute Cycle)
+        bool isHalted = false;
+        
+        while (!isHalted && instructionCounter < 100)
+        {
+            // FETCH: Komutu bellekten al
+            instructionRegister = memory[instructionCounter];
+            
+            // DECODE: Operasyon kodu ve adresi ayır
+            // Örn: +1009 -> Opcode: 10 (READ), Operand: 09 (Adres)
+            operationCode = instructionRegister / 100;
+            operand = instructionRegister % 100;
+
+            // EXECUTE: İşlemi yap
+            switch (operationCode)
+            {
+                case READ:
+                    Console.Write("Enter an integer: ");
+                    memory[operand] = int.Parse(Console.ReadLine());
+                    instructionCounter++;
+                    break;
+                case WRITE:
+                    Console.WriteLine($"Output: {memory[operand]}");
+                    instructionCounter++;
+                    break;
+                case LOAD:
+                    accumulator = memory[operand];
+                    instructionCounter++;
+                    break;
+                case STORE:
+                    memory[operand] = accumulator;
+                    instructionCounter++;
+                    break;
+                case ADD:
+                    accumulator += memory[operand];
+                    instructionCounter++;
+                    break;
+                case SUBTRACT:
+                    accumulator -= memory[operand];
+                    instructionCounter++;
+                    break;
+                case DIVIDE:
+                    if (memory[operand] == 0)
+                    {
+                        Console.WriteLine("*** Attempt to divide by zero ***");
+                        Console.WriteLine("*** Simpletron execution abnormally terminated ***");
+                        isHalted = true;
+                    }
+                    else
+                    {
+                        accumulator /= memory[operand];
+                        instructionCounter++;
+                    }
+                    break;
+                case MULTIPLY:
+                    accumulator *= memory[operand];
+                    instructionCounter++;
+                    break;
+                case BRANCH:
+                    instructionCounter = operand;
+                    break;
+                case BRANCHNEG:
+                    if (accumulator < 0) instructionCounter = operand;
+                    else instructionCounter++;
+                    break;
+                case BRANCHZERO:
+                    if (accumulator == 0) instructionCounter = operand;
+                    else instructionCounter++;
+                    break;
+                case HALT:
+                    Console.WriteLine("*** Simpletron execution terminated ***");
+                    isHalted = true;
+                    break;
+                default:
+                    Console.WriteLine($"*** Invalid opcode: {operationCode} ***");
+                    isHalted = true;
+                    break;
+            }
+        }
+        
+        // Bellek Dökümü (Dump)
+        Dump();
+    }
+
+    static void Dump()
+    {
+        Console.WriteLine("\nREGISTERS:");
+        Console.WriteLine($"accumulator          {accumulator:+0000;-0000}");
+        Console.WriteLine($"instructionCounter   {instructionCounter:D2}");
+        Console.WriteLine($"instructionRegister  {instructionRegister:+0000;-0000}");
+        Console.WriteLine($"operationCode        {operationCode:D2}");
+        Console.WriteLine($"operand              {operand:D2}");
+        
+        Console.WriteLine("\nMEMORY:");
+        Console.Write("       ");
+        for (int i = 0; i < 10; i++) Console.Write($"{i,5} ");
+        Console.WriteLine();
+        
+        for (int i = 0; i < 100; i += 10)
+        {
+            Console.Write($"{i,2}   ");
+            for (int j = 0; j < 10; j++)
+            {
+                Console.Write($"{memory[i + j]:+0000;-0000} ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+8.34 Anket Uygulaması (Polling)
+Kullanıcılardan 5 farklı sosyal konuyu 1-10 arasında puanlamalarını isteyen ve sonuçları tablo halinde gösteren bir uygulama.
+
+using System;
+
+class Polling
+{
+    static void Main()
+    {
+        string[] topics = { "Global Warming", "Economy", "Healthcare", "Education", "Immigration" };
+        int[,] responses = new int[5, 10]; // 5 Konu, 10 Puan (1-10 arası)
+
+        // Anket Döngüsü
+        while (true)
+        {
+            Console.WriteLine("Rate the following issues from 1 (least) to 10 (most). Enter -1 to finish.");
+            
+            for (int i = 0; i < topics.Length; i++)
+            {
+                Console.Write($"{topics[i]}: ");
+                int rating = int.Parse(Console.ReadLine());
+
+                if (rating == -1) goto Summary; // Çıkış
+
+                if (rating >= 1 && rating <= 10)
+                    responses[i, rating - 1]++; // Diziler 0 indeksli olduğu için -1
+            }
+            Console.WriteLine("Thank you! Next user...\n");
+        }
+
+        Summary:
+        Console.WriteLine("\n--- Polling Summary ---");
+        Console.Write("Topic\t\t");
+        for (int i = 1; i <= 10; i++) Console.Write($"{i}\t");
+        Console.WriteLine("Average");
+
+        int highestTotal = 0, lowestTotal = int.MaxValue;
+        string highestTopic = "", lowestTopic = "";
+
+        for (int i = 0; i < topics.Length; i++)
+        {
+            Console.Write($"{topics[i],-15}\t");
+            int totalPoints = 0;
+            int totalVotes = 0;
+
+            for (int j = 0; j < 10; j++)
+            {
+                Console.Write($"{responses[i, j]}\t");
+                totalPoints += responses[i, j] * (j + 1);
+                totalVotes += responses[i, j];
+            }
+
+            double average = totalVotes > 0 ? (double)totalPoints / totalVotes : 0;
+            Console.WriteLine($"{average:F2}");
+
+            // En yüksek/düşük puan kontrolü
+            if (totalPoints > highestTotal) { highestTotal = totalPoints; highestTopic = topics[i]; }
+            if (totalPoints < lowestTotal) { lowestTotal = totalPoints; lowestTopic = topics[i]; }
+        }
+
+        Console.WriteLine($"\nHighest Point Total: {highestTopic} ({highestTotal})");
+        Console.WriteLine($"Lowest Point Total: {lowestTopic} ({lowestTotal})");
+    }
+}
