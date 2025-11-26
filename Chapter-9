@@ -1,0 +1,206 @@
+BÖLÜM 9: Öz Değerlendirme Alıştırmaları (Self-Review Exercises)
+9.1 Boşluk Doldurma (Fill in the blanks)
+a) Bir List'teki eleman sayısını bulmak için List sınıfının Count özelliğini kullanın. b) LINQ where yantümcesi filtreleme (filtering) için kullanılır. c) Koleksiyonlar (Collections), nesne gruplarını depolamak için özel olarak tasarlanmış ve bu nesneleri düzenleyen, saklayan ve geri çağıran metotlar sağlayan sınıflardır. d) Bir List'in sonuna eleman eklemek için Add metodunu kullanın. e) Bir LINQ sorgusundan yalnızca benzersiz (tekrarsız) sonuçları almak için Distinct metodunu kullanın.
+
+9.2 Doğru mu Yanlış mı? (True or False)
+a) LINQ sorgusundaki orderby yantümcesi yalnızca artan sırada (ascending) sıralama yapabilir.
+
+YANLIŞ. descending (azalan) değiştiricisi kullanılarak azalan sırada da sıralama yapılabilir.
+
+b) LINQ sorguları hem diziler (arrays) hem de koleksiyonlar (collections) üzerinde kullanılabilir.
+
+DOĞRU.
+
+c) List sınıfının Remove metodu belirli bir indisteki elemanı kaldırır.
+
+YANLIŞ. Remove metodu, argümanına eşit olan ilk elemanı kaldırır. Belirli bir indisteki elemanı kaldırmak için RemoveAt kullanılır.
+
+BÖLÜM 9: Alıştırmalar (Exercises 9.3 - 9.5)
+9.3 Fatura Nesneleri Dizisini Sorgulama (Querying an Array of Invoice Objects)
+Aşağıdaki Invoice sınıfını ve örnek verileri kullanarak bir Invoice dizisi oluşturun. Ardından LINQ sorguları ile istenen işlemleri yapın.
+
+Veri Tablosu: | Part Number | Part Description | Quantity | Price | | :--- | :--- | :--- | :--- | | 83 | Electric sander | 7 | 57.98 | | 24 | Power saw | 18 | 99.99 | | 7 | Sledge hammer | 11 | 21.50 | | 77 | Hammer | 76 | 11.99 | | 39 | Lawn mower | 3 | 79.50 | | 68 | Screwdriver | 106 | 6.99 | | 56 | Jig saw | 21 | 11.00 | | 3 | Wrench | 34 | 7.50 |
+
+Kod Çözümü:
+
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+// Invoice Sınıfı (Soruda sağlandığı varsayılan sınıf)
+class Invoice
+{
+    public int PartNumber { get; set; }
+    public string PartDescription { get; set; }
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+
+    public Invoice(int partNumber, string partDescription, int quantity, decimal price)
+    {
+        PartNumber = partNumber;
+        PartDescription = partDescription;
+        Quantity = quantity;
+        Price = price;
+    }
+
+    public override string ToString()
+    {
+        return $"{PartNumber,-5} {PartDescription,-20} {Quantity,-5} {Price,6:C}";
+    }
+}
+
+class InvoiceLINQ
+{
+    static void Main()
+    {
+        // 1. Dizi Oluşturma ve Veri Girişi
+        Invoice[] invoices = {
+            new Invoice(83, "Electric sander", 7, 57.98m),
+            new Invoice(24, "Power saw", 18, 99.99m),
+            new Invoice(7, "Sledge hammer", 11, 21.50m),
+            new Invoice(77, "Hammer", 76, 11.99m),
+            new Invoice(39, "Lawn mower", 3, 79.50m),
+            new Invoice(68, "Screwdriver", 106, 6.99m),
+            new Invoice(56, "Jig saw", 21, 11.00m),
+            new Invoice(3, "Wrench", 34, 7.50m)
+        };
+
+        Console.WriteLine("--- Original Invoice Data ---");
+        foreach (var i in invoices) Console.WriteLine(i);
+
+        // a) PartDescription'a göre sırala
+        Console.WriteLine("\n--- a) Sorted by Part Description ---");
+        var sortedByDesc = from i in invoices
+                           orderby i.PartDescription
+                           select i;
+
+        foreach (var i in sortedByDesc) Console.WriteLine(i);
+
+        // b) Price'a göre sırala
+        Console.WriteLine("\n--- b) Sorted by Price ---");
+        var sortedByPrice = from i in invoices
+                            orderby i.Price
+                            select i;
+
+        foreach (var i in sortedByPrice) Console.WriteLine(i);
+
+        // c) PartDescription ve Quantity seç, Quantity'ye göre sırala
+        Console.WriteLine("\n--- c) Select Description & Quantity, Sort by Quantity ---");
+        var descAndQuant = from i in invoices
+                           orderby i.Quantity
+                           select new { i.PartDescription, i.Quantity };
+
+        foreach (var i in descAndQuant) Console.WriteLine($"{i.PartDescription,-20} {i.Quantity}");
+
+        // d) InvoiceTotal hesapla, InvoiceTotal'a göre sırala
+        // let kullanarak geçici değişken (total) tanımlıyoruz.
+        Console.WriteLine("\n--- d) Select Description & InvoiceTotal, Sort by Total ---");
+        var invoiceTotals = from i in invoices
+                            let total = i.Quantity * i.Price
+                            orderby total
+                            select new { i.PartDescription, InvoiceTotal = total };
+
+        foreach (var i in invoiceTotals) Console.WriteLine($"{i.PartDescription,-20} {i.InvoiceTotal,10:C}");
+
+        // e) $200 ile $500 arasındaki InvoiceTotal'ları seç
+        Console.WriteLine("\n--- e) Invoice Totals between $200 and $500 ---");
+        var rangeTotals = from i in invoiceTotals
+                          where i.InvoiceTotal >= 200 && i.InvoiceTotal <= 500
+                          select i;
+
+        foreach (var i in rangeTotals) Console.WriteLine($"{i.PartDescription,-20} {i.InvoiceTotal,10:C}");
+    }
+}
+9.4 İsim Birleştirici (Name Connector)
+Kullanıcıdan 10 isim girmesini isteyen bir konsol uygulaması yazın.
+
+İsimleri BÜYÜK HARFE çevirin.
+
+İsimleri azalan sırada (Z-A) sıralayın ve virgülle birleştirerek görüntüleyin.
+
+İsimleri artan sırada (A-Z) sıralayın ve görüntüleyin.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class NameConnector
+{
+    static void Main()
+    {
+        List<string> names = new List<string>();
+
+        Console.WriteLine("Enter 10 names:");
+        for (int i = 1; i <= 10; i++)
+        {
+            Console.Write($"Name {i}: ");
+            string input = Console.ReadLine();
+            names.Add(input.ToUpper()); // 1. Büyük harfe çevir
+        }
+
+        // 2. Azalan Sırada (Z-A)
+        // OrderByDescending LINQ metodunu kullanıyoruz
+        var descendingNames = names.OrderByDescending(n => n);
+        
+        // string.Join ile birleştir
+        string joinedDescending = string.Join(", ", descendingNames);
+        
+        Console.WriteLine("\n--- Descending Order ---");
+        Console.WriteLine(joinedDescending);
+
+        // 3. Artan Sırada (A-Z)
+        // OrderBy LINQ metodunu kullanıyoruz
+        var ascendingNames = names.OrderBy(n => n);
+        
+        string joinedAscending = string.Join(", ", ascendingNames);
+
+        Console.WriteLine("\n--- Ascending Order ---");
+        Console.WriteLine(joinedAscending);
+    }
+}
+9.5 Evcil Hayvan İsimlerini Uzunluğa Göre Sıralama (Sorting Pets Names by Length)
+Bir List içine evcil hayvan isimleri alın. Aşağıdaki sorguları yapın: a) İsimleri karakter uzunluğuna göre artan sırada (kısadan uzuna) sıralayın. b) İsimleri karakter uzunluğuna göre azalan sırada (uzundan kısaya) sıralayın. c) Tekrar eden isimleri kaldırarak (Duplicate Removal) listenin eleman sayısını görüntüleyin.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class PetNames
+{
+    static void Main()
+    {
+        List<string> pets = new List<string>();
+        string input = "";
+
+        Console.WriteLine("Enter pet names (type 'end' to finish):");
+        while (true)
+        {
+            input = Console.ReadLine();
+            if (input.ToLower() == "end") break;
+            pets.Add(input);
+        }
+
+        // a) Uzunluğa göre artan (Ascending by Length)
+        var sortedByLengthAsc = from p in pets
+                                orderby p.Length
+                                select p;
+
+        Console.WriteLine("\n--- Sorted by Length (Ascending) ---");
+        foreach (var p in sortedByLengthAsc) Console.WriteLine(p);
+
+        // b) Uzunluğa göre azalan (Descending by Length)
+        var sortedByLengthDesc = from p in pets
+                                 orderby p.Length descending
+                                 select p;
+
+        Console.WriteLine("\n--- Sorted by Length (Descending) ---");
+        foreach (var p in sortedByLengthDesc) Console.WriteLine(p);
+
+        // c) Tekrar edenleri kaldır ve say (Distinct Count)
+        var distinctPets = pets.Distinct(); // Distinct LINQ metodu
+        Console.WriteLine($"\nUnique Pet Count: {distinctPets.Count()}");
+        
+        // Benzersizleri görelim
+        Console.WriteLine("Unique Names: " + string.Join(", ", distinctPets));
+    }
+}
