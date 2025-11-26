@@ -1,0 +1,415 @@
+Bölüm 11: Nesne Yönelimli Programlama: Kalıtım (Inheritance) ünitesine geldik. Bu bölümdeki alıştırmalar, kalıtım hiyerarşileri oluşturma, base sınıf kullanma ve polimorfizmin temelleri üzerine odaklanıyor.
+
+İşte Bölüm 11 Alıştırmalarının (11.3 - 11.9) Türkçe açıklamaları ve C# çözümleri:
+
+BÖLÜM 11: Alıştırmalar (Exercises 11.3 - 11.9)
+11.3 Kompozisyon vs. Kalıtım (Composition vs. Inheritance)
+Kitaptaki BasePlusCommissionEmployee sınıfını, CommissionEmployee sınıfından miras almak (inheritance) yerine, CommissionEmployee nesnesini bir alanı olarak barındıracak (composition) şekilde yeniden yazın.
+
+Not: Bu alıştırma için CommissionEmployee sınıfının zaten tanımlı olduğu varsayılmıştır.
+
+Dosya 1: CommissionEmployee.cs (Referans Sınıf)
+(Bu sınıfı zaten var kabul ediyoruz, sadece yapısını hatırlamak için ekliyorum)
+
+C#
+
+public class CommissionEmployee
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string SocialSecurityNumber { get; }
+    public decimal GrossSales { get; set; }
+    public decimal CommissionRate { get; set; }
+
+    public CommissionEmployee(string firstName, string lastName, string ssn, 
+                              decimal grossSales, decimal commissionRate)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        SocialSecurityNumber = ssn;
+        GrossSales = grossSales;
+        CommissionRate = commissionRate;
+    }
+
+    public decimal Earnings() => CommissionRate * GrossSales;
+
+    public override string ToString() => 
+        $"commission employee: {FirstName} {LastName}\nSSN: {SocialSecurityNumber}\n" +
+        $"gross sales: {GrossSales:C}\ncommission rate: {CommissionRate:F2}";
+}
+Dosya 2: BasePlusCommissionEmployee.cs (Kompozisyon ile)
+C#
+
+using System;
+
+// Kalıtım (Inheritance) YOK (: CommissionEmployee kaldırıldı)
+public class BasePlusCommissionEmployee 
+{
+    private decimal baseSalary;
+    
+    // Kompozisyon: CommissionEmployee sınıfını bir alan olarak içeriyor
+    private CommissionEmployee commissionEmployee; 
+
+    public BasePlusCommissionEmployee(string firstName, string lastName, string ssn, 
+                                      decimal grossSales, decimal commissionRate, decimal baseSalary)
+    {
+        // İçerideki nesneyi başlatıyoruz
+        commissionEmployee = new CommissionEmployee(firstName, lastName, ssn, grossSales, commissionRate);
+        BaseSalary = baseSalary;
+    }
+
+    public decimal BaseSalary
+    {
+        get { return baseSalary; }
+        set { if (value >= 0) baseSalary = value; }
+    }
+
+    // Diğer özelliklere erişim için "sarıcı" (wrapper) özellikler
+    public string FirstName => commissionEmployee.FirstName;
+    public string LastName => commissionEmployee.LastName;
+    public string SocialSecurityNumber => commissionEmployee.SocialSecurityNumber;
+
+    public decimal GrossSales
+    {
+        get => commissionEmployee.GrossSales;
+        set => commissionEmployee.GrossSales = value;
+    }
+
+    public decimal CommissionRate
+    {
+        get => commissionEmployee.CommissionRate;
+        set => commissionEmployee.CommissionRate = value;
+    }
+
+    public decimal Earnings()
+    {
+        // İçerideki nesnenin kazancına taban maaşı ekle
+        return BaseSalary + commissionEmployee.Earnings();
+    }
+
+    public override string ToString()
+    {
+        return $"base-salaried {commissionEmployee.ToString()}\nbase salary: {BaseSalary:C}";
+    }
+}
+11.4 Kalıtım ve Yazılımın Yeniden Kullanımı
+Soru: Kalıtımın yazılımın yeniden kullanımını nasıl teşvik ettiğini, geliştirme sırasında nasıl zaman kazandırdığını ve hataları önlemeye nasıl yardımcı olduğunu tartışın.
+
+Cevap:
+
+Yeniden Kullanım (Reuse): Kalıtım, mevcut bir sınıfın (Base Class) kodunu tekrar yazmadan yeni bir sınıfta (Derived Class) kullanmamızı sağlar. Örneğin, Person sınıfındaki Name özelliği, Student ve Teacher sınıfları tarafından miras alınarak tekrar yazılmadan kullanılır.
+
+Zaman Tasarrufu: Ortak özellikler ve metotlar sadece bir kez (temel sınıfta) yazılır. Türetilmiş sınıflarda sadece o sınıfa özgü farklar kodlanır. Bu da kodlama ve test süresini kısaltır.
+
+Hata Önleme: Temel sınıf (Base Class) bir kez iyice test edilip hatasız hale getirildiğinde, ondan türeyen sınıflar bu güvenilir kodu kullanır. Kod tekrarı azaldığı için, bir hatayı düzeltmek gerektiğinde sadece temel sınıfta düzeltmek tüm türetilmiş sınıfları otomatik olarak düzeltir.
+
+11.5 Bilgisayar Parçaları Kalıtım Hiyerarşisi (UML)
+Soru: ComputerDevice temel sınıfından türeyen InputDevice, ProcessingDevice ve OutputDevice sınıflarını ve bunların alt sınıflarını içeren bir hiyerarşi çizin. Kod yazmanıza gerek yok.
+
+Hiyerarşi Açıklaması:
+
+ComputerDevice (Base)
+
+InputDevice
+
+Keyboard
+
+Mouse (Pointer)
+
+Scanner
+
+Webcam
+
+OutputDevice
+
+Monitor
+
+Printer
+
+LaserPrinter
+
+InkjetPrinter
+
+Speaker
+
+ProcessingDevice
+
+CPU (CentralProcessingUnit)
+
+GPU (GraphicsProcessingUnit)
+
+İlişkiler: Her alt sınıf, üst sınıfının bir türüdür (is-a ilişkisi). Örneğin, Printer bir OutputDevice'tır, OutputDevice ise bir ComputerDevice'tır.
+
+11.6 Araç Kalıtım Hiyerarşisi (UML)
+Soru: Vehicle temel sınıfından türeyen MotorVehicle ve NonMotorVehicle sınıflarını içeren bir hiyerarşi oluşturun.
+
+Hiyerarşi Açıklaması:
+
+Vehicle
+
+MotorVehicle (Motorlu)
+
+Car (Fuel)
+
+Bus (Fuel)
+
+ElectricCar (Electricity)
+
+Motorcycle
+
+NonMotorVehicle (Motorsuz)
+
+Bicycle (PersonPowered)
+
+Skateboard (PersonPowered)
+
+Sailboat (WindPowered)
+
+Glider (WindPowered/Gravity)
+
+11.7 Kurucu Çağrı Zinciri (Chain of Constructor Calls)
+Soru: Türetilmiş bir sınıfın nesnesi oluşturulduğunda, kurucu (constructor) çağrı zincirini ve hangisinin en son çalıştığını açıklayın. Kurucular miras alınır mı?
+
+Cevap:
+
+Çağrı Zinciri: Bir türetilmiş sınıf (Derived) nesnesi oluşturulduğunda (new Derived()), önce Derived sınıfın kurucusu çağrılır. Ancak bu kurucu, kendi kodunu çalıştırmadan önce otomatik olarak (veya base anahtar kelimesiyle) temel sınıfın (Base) kurucusunu çağırır. Bu zincirleme işlem en tepedeki Object sınıfına kadar gider.
+
+Çalışma Sırası: Zincir en tepeye ulaştıktan sonra, kurucuların gövdeleri en tepeden aşağıya doğru (Base -> Derived) çalıştırılır. Yani Object kurucusu ilk biter, Derived sınıfın kurucusu en son biter.
+
+Miras: Hayır, kurucular miras alınmaz. Her sınıf kendi kurucusunu tanımlamalıdır. Ancak türetilmiş sınıf, temel sınıfın kurucularını çağırabilir.
+
+11.8 Dörtgen Kalıtım Hiyerarşisi (Quadrilateral Hierarchy)
+Quadrilateral (Dörtgen) temel sınıfını kullanarak Trapezoid (Yamuk), Parallelogram (Paralelkenar), Rectangle (Dikdörtgen) ve Square (Kare) sınıflarını yazın. Alan hesaplayan bir uygulama yapın.
+
+Dosya 1: Quadrilateral.cs ve Türevleri
+C#
+
+using System;
+
+// Nokta yapısı (Koordinatlar için)
+public class Point
+{
+    public double X { get; }
+    public double Y { get; }
+    public Point(double x, double y) { X = x; Y = y; }
+    public override string ToString() => $"({X}, {Y})";
+}
+
+// Temel Sınıf: Dörtgen
+public abstract class Quadrilateral
+{
+    public Point P1 { get; }
+    public Point P2 { get; }
+    public Point P3 { get; }
+    public Point P4 { get; }
+
+    public Quadrilateral(Point p1, Point p2, Point p3, Point p4)
+    {
+        P1 = p1; P2 = p2; P3 = p3; P4 = p4;
+    }
+
+    // Alan hesaplama metodu (abstract, çünkü genel dörtgen formülü karmaşık olabilir, alt sınıflar özelleştirecek)
+    public abstract double Area();
+
+    public override string ToString() => $"{P1}, {P2}, {P3}, {P4}";
+}
+
+// Yamuk
+public class Trapezoid : Quadrilateral
+{
+    private double height;
+    private double sumOfParallelSides;
+
+    public Trapezoid(Point p1, Point p2, Point p3, Point p4, double h, double sumSides) 
+        : base(p1, p2, p3, p4)
+    {
+        height = h;
+        sumOfParallelSides = sumSides;
+    }
+
+    public override double Area() => 0.5 * sumOfParallelSides * height;
+}
+
+// Paralelkenar
+public class Parallelogram : Quadrilateral
+{
+    private double baseLength;
+    private double height;
+
+    public Parallelogram(Point p1, Point p2, Point p3, Point p4, double b, double h) 
+        : base(p1, p2, p3, p4)
+    {
+        baseLength = b;
+        height = h;
+    }
+
+    public override double Area() => baseLength * height;
+}
+
+// Dikdörtgen
+public class Rectangle : Parallelogram
+{
+    public Rectangle(Point p1, Point p2, Point p3, Point p4, double width, double height) 
+        : base(p1, p2, p3, p4, width, height) { }
+    
+    // Area metodu Parallelogram'dan miras alınır (base * height), burada base=width
+}
+
+// Kare
+public class Square : Rectangle
+{
+    public Square(Point p1, Point p2, Point p3, Point p4, double side) 
+        : base(p1, p2, p3, p4, side, side) { }
+}
+Dosya 2: QuadrilateralTest.cs
+C#
+
+class QuadrilateralTest
+{
+    static void Main()
+    {
+        // Not: Koordinatlar semboliktir, alan hesabı constructor'a geçilen değerlerle yapılır.
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(10, 0);
+        Point p3 = new Point(10, 5);
+        Point p4 = new Point(0, 5);
+
+        Rectangle rect = new Rectangle(p1, p2, p3, p4, 10, 5);
+        Square sq = new Square(p1, p2, p3, p4, 4);
+
+        Console.WriteLine($"Rectangle Area: {rect.Area()}");
+        Console.WriteLine($"Square Area: {sq.Area()}");
+    }
+}
+11.9 Hesap Kalıtım Hiyerarşisi (Account Inheritance Hierarchy)
+Account (Hesap) temel sınıfı ile SavingsAccount (Vadeli/Tasarruf) ve CheckingAccount (Vadesiz/Çek) sınıflarını oluşturun. Credit (Yatırma) ve Debit (Çekme) metotlarını uygulayın.
+
+Dosya 1: Account.cs (Temel Sınıf)
+C#
+
+using System;
+
+public class Account
+{
+    private decimal balance;
+
+    public Account(decimal initialBalance)
+    {
+        if (initialBalance >= 0)
+            balance = initialBalance;
+        else
+            throw new ArgumentException("Initial balance cannot be negative.");
+    }
+
+    public decimal Balance
+    {
+        get { return balance; }
+        set 
+        { 
+            // Sadece alt sınıfların veya metodların kontrollü değiştirmesi için protected set veya doğrulama
+            if (value >= 0) balance = value; 
+        }
+    }
+
+    public virtual void Credit(decimal amount)
+    {
+        if (amount > 0)
+            Balance += amount;
+    }
+
+    // Debit metodu bool döner: İşlem başarılı mı? (CheckingAccount için gerekli)
+    public virtual bool Debit(decimal amount)
+    {
+        if (amount > Balance)
+        {
+            Console.WriteLine("Debit amount exceeded account balance.");
+            return false;
+        }
+        
+        Balance -= amount;
+        return true;
+    }
+}
+Dosya 2: SavingsAccount.cs
+C#
+
+public class SavingsAccount : Account
+{
+    public decimal InterestRate { get; set; }
+
+    public SavingsAccount(decimal initialBalance, decimal interestRate) 
+        : base(initialBalance)
+    {
+        InterestRate = interestRate;
+    }
+
+    public decimal CalculateInterest()
+    {
+        return Balance * InterestRate;
+    }
+}
+Dosya 3: CheckingAccount.cs
+C#
+
+public class CheckingAccount : Account
+{
+    public decimal Fee { get; set; }
+
+    public CheckingAccount(decimal initialBalance, decimal fee) 
+        : base(initialBalance)
+    {
+        Fee = fee;
+    }
+
+    public override void Credit(decimal amount)
+    {
+        base.Credit(amount);
+        // Yatırma işleminden ücret kes
+        Balance -= Fee; 
+    }
+
+    public override bool Debit(decimal amount)
+    {
+        // Önce çekme işlemini dene (base.Debit)
+        if (base.Debit(amount))
+        {
+            // Başarılıysa ücret kes
+            Balance -= Fee;
+            return true;
+        }
+        return false;
+    }
+}
+Dosya 4: AccountTest.cs
+C#
+
+using System;
+
+class AccountTest
+{
+    static void Main()
+    {
+        Account acc1 = new Account(50.0m);
+        SavingsAccount sav1 = new SavingsAccount(100.0m, 0.03m); // %3 faiz
+        CheckingAccount chk1 = new CheckingAccount(80.0m, 1.50m); // 1.50 işlem ücreti
+
+        Console.WriteLine($"Account Balance: {acc1.Balance:C}");
+        Console.WriteLine($"Savings Balance: {sav1.Balance:C}");
+        Console.WriteLine($"Checking Balance: {chk1.Balance:C}");
+
+        Console.WriteLine("\n--- Savings Account İşlemleri ---");
+        decimal interest = sav1.CalculateInterest();
+        Console.WriteLine($"Kazanılan Faiz: {interest:C}");
+        sav1.Credit(interest); // Faizi yatır
+        Console.WriteLine($"Faiz Sonrası Bakiye: {sav1.Balance:C}");
+
+        Console.WriteLine("\n--- Checking Account İşlemleri ---");
+        Console.WriteLine("Checking'den 20.00 çekiliyor...");
+        chk1.Debit(20.00m); // 20 çek + 1.50 ücret = 21.50 azalmalı
+        Console.WriteLine($"Checking Balance: {chk1.Balance:C}"); // 58.50 olmalı
+        
+        Console.WriteLine("Checking'e 10.00 yatırılıyor...");
+        chk1.Credit(10.00m); // 10 yatır - 1.50 ücret = 8.50 artmalı
+        Console.WriteLine($"Checking Balance: {chk1.Balance:C}");
+    }
+}
