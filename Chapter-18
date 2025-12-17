@@ -1,0 +1,398 @@
+Soru 18.1 (Boşluk Doldurma)Soru (Türkçe):Aşağıdaki ifadelerin her birindeki boşlukları doldurunuz:
+a) Bir seçmeli sıralama (selection sort) uygulaması, 128 elemanlı bir dizide, 32 elemanlı bir diziye göre yaklaşık ___ kat daha uzun sürer.
+b) Birleştirmeli sıralamanın (merge sort) verimliliği ___'dir.
+Cevaplar:
+a) 16Açıklama: Seçmeli sıralama $O(n^2)$ karmaşıklığına sahiptir. Veri boyutu 4 katına çıkarsa ($128 / 32 = 4$), çalışma süresi $4^2 = 16$ katına çıkar.
+b) $O(n \log n)$Soru 18.2 (Logaritmik Özellik)
+Soru (Türkçe):Hem ikili arama (binary search) hem de birleştirmeli sıralamanın (merge sort) Büyük O (Big O) gösterimlerindeki logaritmik kısımdan sorumlu olan temel özellik nedir?
+Cevap:Her iki algoritmanın da temel özelliği, her adımda sorunu (veya veri kümesini) ikiye bölmeleridir (halving).Binary Search: Aranan elemanı bulmak için arama alanını her adımda yarıya indirir.
+Merge Sort: Diziyi her adımda iki eşit alt diziye böler.Veriyi yarıya indirme işlemi, adım sayısının veri boyutuyla logaritmik ($\log_2 n$) bir ilişki içinde olmasını sağlar.
+Soru 18.3 (Karşılaştırma: Insertion vs. Merge)Soru (Türkçe):Eklemeli sıralama (insertion sort) hangi anlamda birleştirmeli sıralamadan (merge sort) üstündür? Birleştirmeli sıralama hangi anlamda eklemeli
+sıralamadan üstündür?
+Cevap:Eklemeli Sıralamanın (Insertion Sort) Üstünlüğü: Bellek kullanımı açısından üstündür. Eklemeli sıralama "yerinde" (in-place) bir algoritmadır ve sadece $O(1)$ ek bellek alanı kullanır. Ayrıca, zaten sıralı
+veya neredeyse sıralı olan küçük veri kümelerinde çok hızlı çalışır.Birleştirmeli Sıralamanın (Merge Sort) Üstünlüğü: Zaman karmaşıklığı açısından üstündür. Büyük veri kümelerinde $O(n \log n)$ performans
+gösterirken, eklemeli sıralama $O(n^2)$ performans gösterir. Bu, büyük dizilerde Merge Sort'un çok daha hızlı olduğu anlamına gelir.Soru 18.4 (Merge Sort ve Özyineleme)
+Soru (Türkçe):Metinde, birleştirmeli sıralamanın (merge sort) diziyi iki alt diziye ayırdıktan sonra, "bu iki alt diziyi sıraladığını" ve birleştirdiğini söylüyoruz. Birisi neden "daha sonra bu iki alt diziyi 
+sıralar" ifademiz karşısında şaşırabilir (kafası karışabilir)?
+Cevap:Kafalarının karışmasının nedeni, algoritmanın özyinelemeli (recursive) doğasıdır. Algoritma, diziyi sıralamak için henüz tanımlanmakta olan fonksiyonun kendisini çağırır. 
+Yani, "sıralama" işlemi sihirli bir şekilde tek adımda gerçekleşmez; algoritma diziyi tek bir eleman kalana kadar sürekli böler (base case) ve ardından bu parçaları sıralı bir şekilde birleştirerek (merge) yukarı 
+doğru çıkar. Kullanıcı, sıralama işleminin nasıl yapıldığını anlamaya çalışırken, çözümün içinde yine aynı "sıralama" komutunu gördüğünde bir kısır döngü varmış gibi hissedebilir.
+
+
+İşte 18.5'ten 18.10'a kadar olan soruların Türkçe çevirileri ve çözüm kodları.Soru 18.5 (Kabarcık Sıralaması - Bubble Sort)Soru (Türkçe):Kabarcık sıralamayı (bubble sort) uygulayın—basit ama verimsiz bir başka 
+sıralama tekniği. Kabarcık sıralaması veya batan sıralama (sinking sort) olarak adlandırılır çünkü küçük değerler "kabarcık" gibi dizinin tepesine (yani ilk elemana doğru) yükselirken, daha büyük değerler 
+dizinin dibine (sonuna) batar. Bu teknik, dizi üzerinden birkaç geçiş yapmak için iç içe döngüler kullanır. Her geçiş ardışık örtüşen çiftleri karşılaştırır (yani 0 ve 1, 1 ve 2, 2 ve 3, vb.). Eğer bir çift 
+artan sıradaysa (veya değerler eşitse), kabarcık sıralaması değerleri olduğu gibi bırakır. Eğer bir çift azalan sıradaysa, kabarcık sıralaması dizideki değerlerini değiştirir (swap).İlk geçiş, dizinin ilk iki
+elemanını karşılaştırır ve gerekirse değiştirir. Ardından ikinci ve üçüncü elemanları karşılaştırır. Bu geçişin sonu, dizideki son iki elemanı karşılaştırır ve gerekirse değiştirir. Bir geçişten sonra, en büyük
+eleman son pozisyonda olacaktır. İki geçişten sonra, en büyük iki eleman son iki pozisyonda olacaktır. Kabarcık sıralamasının neden bir $O(n^2)$ algoritması olduğunu açıklayın.
+
+Cevap ve Kodlar:Neden $O(n^2)$?:Kabarcık sıralaması, $n$ elemanlı bir diziyi sıralamak için en kötü durumda (dizi tersten sıralıysa) $n-1$ geçiş yapar. Her geçişte yaklaşık $n$ karşılaştırma yapılır 
+(ilk geçişte $n-1$, sonra $n-2$... şeklinde azalsa da). Toplam karşılaştırma sayısı $(n-1) + (n-2) + ... + 1 = n(n-1)/2$ olur. Big O notasyonunda katsayılar ve düşük dereceli terimler ihmal edildiği için
+bu $O(n^2)$ karmaşıklığına karşılık gelir.
+
+Dosya: BubbleSortSimple.cs
+using System;
+
+public class BubbleSortSimple
+{
+    public static void Main()
+    {
+        int[] data = { 34, 56, 4, 10, 77, 51, 93, 30, 5, 52 };
+
+        Console.WriteLine("Unsorted array:");
+        DisplayArray(data);
+
+        BubbleSort(data);
+
+        Console.WriteLine("\nSorted array:");
+        DisplayArray(data);
+    }
+
+    public static void BubbleSort(int[] array)
+    {
+        // Dış döngü geçiş sayısını kontrol eder
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            // İç döngü bitişik elemanları karşılaştırır
+            // Bu basit versiyonda her geçişte tüm diziyi (sona kadar) tarar
+            for (int j = 0; j < array.Length - 1; j++)
+            {
+                if (array[j] > array[j + 1])
+                {
+                    // Swap (Takas) işlemi
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void DisplayArray(int[] array)
+    {
+        foreach (var element in array)
+        {
+            Console.Write(element + " ");
+        }
+        Console.WriteLine();
+    }
+}
+Soru 18.6 (Gelişmiş Kabarcık Sıralaması)Soru (Türkçe):Alıştırma 18.5'te geliştirdiğiniz kabarcık sıralamasının performansını artırmak için aşağıdaki basit değişiklikleri yapın:a) İlk geçişten sonra, en büyük 
+sayının dizinin en yüksek numaralı elemanında (artan sırada sıralanan bir dizi için) olması garanti edilir; ikinci geçişten sonra, en yüksek iki sayı "yerindedir"; ve bu böyle devam eder. 10 elemanlı bir
+dizinin her geçişinde dokuz karşılaştırma yapmak yerine, kabarcık sıralamasını ikinci geçişte sekiz, üçüncü geçişte yedi vb. karşılaştırma yapacak şekilde değiştirin.b) Dizideki veriler zaten uygun sırada 
+veya uygun sıraya yakın olabilir, öyleyse daha azı yeterli olacaksa neden 10 elemanlı bir dizi için dokuz geçiş yapılsın? Sıralamayı, her geçişin sonunda herhangi bir takas yapılıp yapılmadığını kontrol edecek
+şekilde değiştirin. Hiçbir takas yapılmamışsa, veriler zaten uygun sırada olmalıdır, bu nedenle uygulama sonlandırılmalıdır. Takas yapılmışsa, en az bir geçiş daha gereklidir.
+
+Cevap ve Kodlar:
+Dosya: BubbleSortEnhanced.cs
+using System;
+
+public class BubbleSortEnhanced
+{
+    public static void Main()
+    {
+        int[] data = { 34, 56, 4, 10, 77, 51, 93, 30, 5, 52 };
+        
+        Console.WriteLine("Unsorted:");
+        DisplayArray(data);
+
+        BubbleSort(data);
+
+        Console.WriteLine("\nSorted:");
+        DisplayArray(data);
+    }
+
+    public static void BubbleSort(int[] array)
+    {
+        bool swapOccurred = true; // b şıkkı: Swap kontrolü
+
+        // Dış döngü geçiş sayısını (pass) belirtir
+        for (int pass = 1; pass < array.Length && swapOccurred; pass++)
+        {
+            swapOccurred = false; // Her geçişte sıfırla
+
+            // a şıkkı: İç döngü sınırını azaltma (array.Length - pass)
+            // Her geçişte sondaki 'pass' kadar eleman zaten sıralıdır.
+            for (int index = 0; index < array.Length - pass; index++)
+            {
+                if (array[index] > array[index + 1])
+                {
+                    int temp = array[index];
+                    array[index] = array[index + 1];
+                    array[index + 1] = temp;
+
+                    swapOccurred = true; // Takas oldu, dizi henüz tam sıralı değil
+                }
+            }
+            
+            // Eğer bu geçişte hiç swap olmadıysa döngü 'swapOccurred' false olduğu için duracak
+        }
+    }
+
+    public static void DisplayArray(int[] array)
+    {
+        foreach (var element in array) Console.Write(element + " ");
+        Console.WriteLine();
+    }
+}
+Soru 18.7 (Kova Sıralaması - Bucket Sort)Soru (Türkçe):Kova sıralaması (bucket sort), sıralanacak pozitif tam sayılardan oluşan tek boyutlu bir dizi ve satırları 0'dan 9'a, sütunları 0'dan n-1'e (n sıralanacak
+değer sayısıdır) endekslenmiş iki boyutlu bir tamsayı dizisi ile başlar. İki boyutlu dizinin her satırına bir kova (bucket) denir. Aşağıdaki gibi çalışan Sort adında bir metot içeren BucketSort adlı bir sınıf 
+yazın:a) Tek boyutlu dizinin her değerini, değerin "birler" (en sağdaki) basamağına göre kova dizisinin bir satırına yerleştirin. Örneğin, 97 7. satıra, 3 3. satıra ve 100 0. satıra yerleştirilir. Bu prosedüre 
+dağıtım geçişi (distribution pass) denir.b) Kova dizisi satır satır dolaşın ve değerleri orijinal diziye geri kopyalayın. Bu prosedüre toplama geçişi (gathering pass) denir. Tek boyutlu dizideki önceki
+değerlerin yeni sırası 100, 3 ve 97'dir.c) Bu işlemi her sonraki basamak konumu (onlar, yüzler, binler vb.) için tekrarlayın.İkinci (onlar basamağı) geçişte, 100 0. satıra, 3 0. satıra (çünkü 3'ün onlar
+basamağı yoktur) ve 97 9. satıra yerleştirilir. Toplama geçişinden sonra, tek boyutlu dizideki değerlerin sırası 100, 3 ve 97'dir. Üçüncü (yüzler basamağı) geçişte, 100 1. satıra, 3 0. satıra ve 97 0. 
+satıra yerleştirilir. Son toplama geçişinden sonra, orijinal dizi sıralı haldedir.
+Cevap ve Kodlar:
+Dosya: BucketSort.cs
+
+using System;
+
+public class BucketSort
+{
+    public static void Main()
+    {
+        int[] data = { 97, 3, 100, 25, 12, 5, 88, 70, 9, 44 };
+
+        Console.WriteLine("Unsorted:");
+        DisplayArray(data);
+
+        Sort(data);
+
+        Console.WriteLine("\nSorted:");
+        DisplayArray(data);
+    }
+
+    public static void Sort(int[] data)
+    {
+        // En büyük sayıyı bul (basamak sayısını belirlemek için)
+        int maxValue = data[0];
+        foreach (int item in data)
+            if (item > maxValue) maxValue = item;
+
+        // Kaç basamaklı? (Logaritma kullanarak bulabiliriz veya döngüyle)
+        int maxDigits = 0;
+        while (maxValue > 0)
+        {
+            maxValue /= 10;
+            maxDigits++;
+        }
+
+        // 2 Boyutlu Kova Dizisi [Rakamlar 0-9, Kapasite n]
+        int[,] bucket = new int[10, data.Length];
+        
+        // Her satırda (kovada) kaç eleman olduğunu tutan sayaç dizisi
+        int[] bucketCount = new int[10];
+
+        // Basamaklar için döngü (1'ler, 10'lar, 100'ler...)
+        for (int pass = 1; pass <= maxDigits; pass++)
+        {
+            // İlgili basamağı hesaplamak için bölen (1, 10, 100...)
+            int divisor = (int)Math.Pow(10, pass - 1);
+
+            // --- Dağıtım Geçişi (Distribution Pass) ---
+            foreach (int element in data)
+            {
+                // Basamaktaki rakamı bul: (sayı / divisor) % 10
+                int digit = (element / divisor) % 10;
+
+                // Kovaya yerleştir
+                bucket[digit, bucketCount[digit]] = element;
+                bucketCount[digit]++;
+            }
+
+            // --- Toplama Geçişi (Gathering Pass) ---
+            int index = 0;
+            for (int k = 0; k < 10; k++) // Her kova için (0-9)
+            {
+                for (int j = 0; j < bucketCount[k]; j++) // Kovadaki elemanlar
+                {
+                    data[index++] = bucket[k, j];
+                }
+                // Kovayı bir sonraki tur için sıfırla
+                bucketCount[k] = 0; 
+            }
+        }
+    }
+
+    public static void DisplayArray(int[] array)
+    {
+        foreach (var element in array) Console.Write(element + " ");
+        Console.WriteLine();
+    }
+}
+Soru 18.8 (Özyinelemeli Doğrusal Arama)Soru (Türkçe):Dizinin doğrusal aramasını (linear search) gerçekleştirmek için özyinelemeli RecursiveLinearSearch metodunu kullanacak şekilde Şekil 18.2'yi değiştirin.
+Metot, arama anahtarını (search key) ve başlangıç dizinini argüman olarak almalıdır. Arama anahtarı bulunursa, dizideki indeksini döndürün; aksi takdirde -1 döndürün. Özyinelemeli metoda yapılan her çağrı,
+dizideki bir dizini kontrol etmelidir.
+Cevap ve Kodlar:
+Dosya: RecursiveLinearSearchTest.cs
+using System;
+
+public class RecursiveLinearSearchTest
+{
+    public static void Main()
+    {
+        int[] data = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+        int searchKey = 40;
+
+        int index = RecursiveLinearSearch(data, searchKey, 0);
+
+        if (index != -1)
+            Console.WriteLine($"Found {searchKey} at index {index}");
+        else
+            Console.WriteLine($"{searchKey} not found");
+    }
+
+    public static int RecursiveLinearSearch(int[] array, int key, int index)
+    {
+        // Temel Durum 1: Dizi sonuna gelindi, bulunamadı
+        if (index >= array.Length)
+            return -1;
+
+        // Temel Durum 2: Eleman bulundu
+        if (array[index] == key)
+            return index;
+
+        // Özyineleme Adımı: Bir sonraki indeksi kontrol et
+        return RecursiveLinearSearch(array, key, index + 1);
+    }
+}
+Soru 18.9 (Özyinelemeli İkili Arama)Soru (Türkçe):Dizinin ikili aramasını (binary search) gerçekleştirmek için özyinelemeli RecursiveBinarySearch metodunu kullanacak şekilde Şekil 18.3'ü değiştirin.
+Metot, arama anahtarını, başlangıç dizinini ve bitiş dizinini argüman olarak almalıdır. Arama anahtarı bulunursa, dizideki indeksini döndürün. Arama anahtarı bulunamazsa -1 döndürün.
+
+Cevap ve Kodlar:
+Dosya: RecursiveBinarySearchTest.cs
+
+using System;
+
+public class RecursiveBinarySearchTest
+{
+    public static void Main()
+    {
+        // Binary search için dizi sıralı olmalıdır
+        int[] data = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+        int searchKey = 70;
+
+        int index = RecursiveBinarySearch(data, searchKey, 0, data.Length - 1);
+
+        if (index != -1)
+            Console.WriteLine($"Found {searchKey} at index {index}");
+        else
+            Console.WriteLine($"{searchKey} not found");
+    }
+
+    public static int RecursiveBinarySearch(int[] array, int key, int low, int high)
+    {
+        // Temel Durum 1: Aralık geçersiz (bulunamadı)
+        if (low > high)
+            return -1;
+
+        int middle = (low + high) / 2;
+
+        // Temel Durum 2: Ortadaki eleman anahtar mı?
+        if (key == array[middle])
+            return middle;
+
+        // Özyineleme Adımları
+        if (key < array[middle]) // Sol tarafa bak
+            return RecursiveBinarySearch(array, key, low, middle - 1);
+        else // Sağ tarafa bak
+            return RecursiveBinarySearch(array, key, middle + 1, high);
+    }
+}
+Soru 18.10 (Hızlı Sıralama - Quicksort)Soru (Türkçe):Hızlı sıralama (quicksort) adı verilen özyinelemeli sıralama tekniği, tek boyutlu bir değer dizisi için aşağıdaki temel algoritmayı kullanır:a) Bölümleme
+Adımı (Partitioning Step): Sıralanmamış dizinin ilk elemanını alın ve sıralanmış dizideki son konumunu belirleyin (yani, dizideki elemanın solundaki tüm değerler elemandan küçüktür ve dizideki elemanın 
+sağındaki tüm değerler elemandan büyüktür). Artık uygun konumunda bir elemanımız ve iki sıralanmamış alt dizimiz var.b) Özyinelemeli Adım (Recursive Step): a Adımını her sıralanmamış alt dizi üzerinde 
+gerçekleştirin.Bir alt dizi üzerinde a Adımı her gerçekleştirildiğinde, başka bir eleman sıralanmış dizideki son konumuna yerleştirilir ve iki sıralanmamış alt dizi oluşturulur. Bir alt dizi bir elemandan
+oluştuğunda, o eleman son konumundadır (çünkü bir elemanlı dizi zaten sıralıdır).[Soru metnindeki örnekleme adımları, pivot (ilk eleman 37) ile sağdan ve soldan tarama yaparak yer değiştirme mantığını 
+anlatmaktadır.]Önceki tartışmaya dayanarak, tek boyutlu bir tamsayı dizisini sıralamak için özyinelemeli QuickSortHelper metodunu yazın; bir QuickSort metodu diziyi argüman olarak almalı, ardından 
+QuickSortHelper'ı çağırmalıdır. Metot, sıralanmakta olan orijinal dizideki bir başlangıç indeksini ve bir bitiş indeksini argüman olarak almalıdır.
+Cevap ve Kodlar:
+Dosya: QuickSortTest.cs
+using System;
+
+public class QuickSortTest
+{
+    public static void Main()
+    {
+        int[] data = { 37, 2, 6, 4, 89, 8, 10, 12, 68, 45 };
+
+        Console.WriteLine("Unsorted:");
+        DisplayArray(data);
+
+        QuickSort(data);
+
+        Console.WriteLine("\nSorted:");
+        DisplayArray(data);
+    }
+
+    // Kullanıcının çağırdığı genel metod
+    public static void QuickSort(int[] array)
+    {
+        QuickSortHelper(array, 0, array.Length - 1);
+    }
+
+    // Özyinelemeli yardımcı metod
+    private static void QuickSortHelper(int[] array, int low, int high)
+    {
+        // Temel durum: Dizi boyutu 0 veya 1 ise işlem yapma
+        if (low >= high) return;
+
+        // Pivot'u doğru yerine yerleştir ve indeksini al
+        int pivotIndex = Partition(array, low, high);
+
+        // Sol alt diziyi sırala
+        QuickSortHelper(array, low, pivotIndex - 1);
+
+        // Sağ alt diziyi sırala
+        QuickSortHelper(array, pivotIndex + 1, high);
+    }
+
+    // Soruda anlatılan Bölümleme (Partition) mantığı
+    private static int Partition(int[] array, int low, int high)
+    {
+        int pivot = array[low]; // İlk elemanı pivot olarak seç
+        int left = low + 1;
+        int right = high;
+
+        while (true)
+        {
+            // Soldan sağa, pivottan büyük eleman bulana kadar ilerle
+            while (left <= right && array[left] <= pivot)
+                left++;
+
+            // Sağdan sola, pivottan küçük eleman bulana kadar ilerle
+            while (right >= left && array[right] > pivot)
+                right--;
+
+            // İbreler kesiştiyse döngüden çık
+            if (right < left)
+                break;
+
+            // Swap (left ve right)
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+        }
+
+        // Pivotu (low) doğru yerine (right) yerleştir
+        // right, pivottan küçük olan son elemanı gösterir (veya pivotun kendisini)
+        int tempPivot = array[low];
+        array[low] = array[right];
+        array[right] = tempPivot;
+
+        return right; // Pivotun yeni indeksi
+    }
+
+    public static void DisplayArray(int[] array)
+    {
+        foreach (var item in array) Console.Write(item + " ");
+        Console.WriteLine();
+    }
+}
+
+
+
+
+
+
+
