@@ -1,0 +1,676 @@
+17.1 Doğru/Yanlış
+a) Stream tipindeki nesneleri örnekleyemezsiniz (oluşturamazsınız). Cevap: Doğru (True). Açıklama: Stream bir soyut (abstract) sınıftır, bu yüzden doğrudan new Stream() diyerek nesne oluşturulamaz. Türetilmiş sınıflar (FileStream, MemoryStream vb.) kullanılır.
+
+b) Tipik olarak, sıralı bir dosya kayıtları kayıt anahtarı (record-key) alanına göre sıralı olarak saklar. Cevap: Doğru (True).
+
+c) StreamReader sınıfı Stream sınıfından miras alır. Cevap: Yanlış (False). Açıklama: StreamReader sınıfı TextReader sınıfından miras alır.
+
+d) Herhangi bir sınıf bir dosyaya serileştirilebilir. Cevap: Yanlış (False). Açıklama: Bir sınıfın (binary serileştirme için) serileştirilebilir olması için [Serializable] özniteliği (attribute) ile işaretlenmiş olması gerekir. Her sınıf varsayılan olarak serileştirilebilir değildir.
+
+e) FileStream sınıfının Seek metodu her zaman dosyanın başlangıcına göre arama yapar. Cevap: Yanlış (False). Açıklama: Seek metodu, SeekOrigin parametresi alır. Bu parametre ile dosyanın başından (Begin), mevcut konumundan (Current) veya sonundan (End) itibaren konumlandırma yapılabilir.
+
+f) StreamReader ve StreamWriter sınıfları sıralı erişimli dosyalarla (sequential-access files) kullanılır. Cevap: Doğru (True).
+
+17.2 Boşluk Doldurma
+a) System.Runtime.Serialization.Formatters.Binary ad alanı BinaryFormatter sınıfını içerir.
+
+b) StreamReader metodu ReadLine, bir dosyadan bir satır metin okur.
+
+c) StreamWriter metodu WriteLine, bir dosyaya bir satır metin yazar.
+
+d) BinaryFormatter sınıfının Serialize metodu argüman olarak bir Stream (Akış) ve bir nesne (object) alır.
+
+e) System.IO ad alanı, C#'ın dosya işleme sınıflarının çoğunu içerir.
+
+Soru 17.3 (Ürün Detayları Dosyası)Soru (Türkçe):Ürün detaylarını bir metin dosyasında saklayan bir program oluşturun. Dosya ürünün kodunu, adını, kategorisini, birim fiyatını, satın alınan miktarını ve toplam 
+fiyatını içermelidir. Kullanıcının bir ürün dosyasını yüklemesine ve içeriğini salt okunur bir TextBox içinde görüntülemesine izin verin. Girişler aşağıdaki formatta görüntülenmelidir:
+
+Cevap ve Kodlar:Dosya: ProductFileForm.cs
+
+using System;
+using System.IO;
+using System.Windows.Forms;
+
+public class ProductFileForm : Form
+{
+    private TextBox txtDisplay;
+    private Button btnSave;
+    private Button btnLoad;
+
+    public ProductFileForm()
+    {
+        this.Text = "Product File System";
+        this.Size = new System.Drawing.Size(500, 400);
+
+        btnSave = new Button { Text = "Create/Add Sample Data", Location = new System.Drawing.Point(10, 10), Width = 150 };
+        btnSave.Click += BtnSave_Click;
+        this.Controls.Add(btnSave);
+
+        btnLoad = new Button { Text = "Load & Display", Location = new System.Drawing.Point(170, 10), Width = 150 };
+        btnLoad.Click += BtnLoad_Click;
+        this.Controls.Add(btnLoad);
+
+        txtDisplay = new TextBox { 
+            Location = new System.Drawing.Point(10, 50), 
+            Size = new System.Drawing.Size(460, 300), 
+            Multiline = true, 
+            ReadOnly = true, 
+            ScrollBars = ScrollBars.Vertical,
+            Font = new System.Drawing.Font("Consolas", 9) // Hizalama için monospaced font
+        };
+        this.Controls.Add(txtDisplay);
+    }
+
+    private void BtnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            // Örnek verileri dosyaya yazma (Append modu)
+            using (StreamWriter writer = new StreamWriter("products.txt", false))
+            {
+                // Format: Code,Name,Category,Price,Quantity
+                writer.WriteLine("21,BedSheet,Home Décor,500,2");
+                writer.WriteLine("33,Fighter Plane,Toy,300,3");
+                writer.WriteLine("40,Stapler,Stationery,60,4");
+            }
+            MessageBox.Show("Sample data written to products.txt");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error writing file: " + ex.Message);
+        }
+    }
+
+    private void BtnLoad_Click(object sender, EventArgs e)
+    {
+        txtDisplay.Clear();
+        if (!File.Exists("products.txt"))
+        {
+            MessageBox.Show("File not found!");
+            return;
+        }
+
+        try
+        {
+            using (StreamReader reader = new StreamReader("products.txt"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(',');
+                    if (parts.Length == 5)
+                    {
+                        string code = parts[0];
+                        string name = parts[1];
+                        string category = parts[2];
+                        decimal price = decimal.Parse(parts[3]);
+                        int quantity = int.Parse(parts[4]);
+                        decimal total = price * quantity;
+
+                        // İstenen formatta yazdırma
+                        txtDisplay.AppendText($"{code}, {name}:\r\n");
+                        txtDisplay.AppendText($"       {"Category",-15} {"Price per unit",15} {"Quantity",10} {"Total Price",12}\r\n");
+                        txtDisplay.AppendText($"       {category,-15} {price,15} {quantity,10} {total,12}\r\n\r\n");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error reading file: " + ex.Message);
+        }
+    }
+}
+Soru 17.4 (Serileştirme ve Seri Durumdan Çıkarma)Soru (Türkçe):Önceki programı, bir dosyaya serileştirilebilen ve dosyadan seri durumdan çıkarılabilen (deserialized) bir sınıfın nesnelerini kullanacak şekilde 
+değiştirin.Cevap ve Kodlar:Not: BinaryFormatter modern .NET sürümlerinde güvenlik nedeniyle önerilmez ancak soru bağlamı gereği burada kullanılmıştır.
+
+Dosya: Product.cs
+
+using System;
+
+[Serializable]
+public class Product
+{
+    public int Code { get; set; }
+    public string Name { get; set; }
+    public string Category { get; set; }
+    public decimal PricePerUnit { get; set; }
+    public int Quantity { get; set; }
+    
+    public decimal TotalPrice => PricePerUnit * Quantity;
+}
+Dosya: SerializationForm.cs
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary; // BinaryFormatter için
+using System.Windows.Forms;
+
+public class SerializationForm : Form
+{
+    private Button btnSerialize;
+    private Button btnDeserialize;
+    private TextBox txtOutput;
+
+    public SerializationForm()
+    {
+        this.Text = "Serialization Demo";
+        this.Size = new System.Drawing.Size(400, 300);
+
+        btnSerialize = new Button { Text = "Serialize Objects", Location = new System.Drawing.Point(10, 10), Width = 120 };
+        btnSerialize.Click += BtnSerialize_Click;
+        this.Controls.Add(btnSerialize);
+
+        btnDeserialize = new Button { Text = "Deserialize Objects", Location = new System.Drawing.Point(140, 10), Width = 120 };
+        btnDeserialize.Click += BtnDeserialize_Click;
+        this.Controls.Add(btnDeserialize);
+
+        txtOutput = new TextBox { Location = new System.Drawing.Point(10, 50), Size = new System.Drawing.Size(360, 200), Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical };
+        this.Controls.Add(txtOutput);
+    }
+
+    private void BtnSerialize_Click(object sender, EventArgs e)
+    {
+        List<Product> products = new List<Product>
+        {
+            new Product { Code = 21, Name = "BedSheet", Category = "Home Décor", PricePerUnit = 500, Quantity = 2 },
+            new Product { Code = 33, Name = "Fighter Plane", Category = "Toy", PricePerUnit = 300, Quantity = 3 }
+        };
+
+        try
+        {
+            using (FileStream stream = new FileStream("products.bin", FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, products);
+            }
+            MessageBox.Show("Objects serialized to products.bin");
+        }
+        catch (Exception ex) { MessageBox.Show(ex.Message); }
+    }
+
+    private void BtnDeserialize_Click(object sender, EventArgs e)
+    {
+        txtOutput.Clear();
+        if (!File.Exists("products.bin")) return;
+
+        try
+        {
+            using (FileStream stream = new FileStream("products.bin", FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                List<Product> products = (List<Product>)formatter.Deserialize(stream);
+
+                foreach (var p in products)
+                {
+                    txtOutput.AppendText($"Loaded: {p.Code}, {p.Name} ({p.Category}) - Total: {p.TotalPrice:C}\r\n");
+                }
+            }
+        }
+        catch (Exception ex) { MessageBox.Show(ex.Message); }
+    }
+}
+Soru 17.5 (StreamReader ve StreamWriter'ı Genişletmek)Soru (Türkçe):StreamReader ve StreamWriter sınıflarını genişletin (extend). StreamReader'dan türetilen sınıfın ReadInteger, ReadBoolean ve ReadString
+metotlarına sahip olmasını sağlayın. StreamWriter'dan türetilen sınıfın WriteInteger, WriteBoolean ve WriteString metotlarına sahip olmasını sağlayın. Yazma metotlarını, okuma metotlarının yazılanları doğru 
+okuyabileceği şekilde tasarlamayı düşünün. ReadInteger ve ReadBoolean'ın bu değerleri doğru okuyabilmesi için WriteInteger ve WriteBoolean'ı tek tip boyutta (sabit genişlikte) dizeler yazacak şekilde tasarlayın.
+ReadString ve WriteString'in dizeleri ayırmak için aynı karakter(ler)i kullandığından emin olun.
+
+Cevap ve Kodlar:
+
+Dosya: CustomStreams.cs
+
+using System;
+using System.IO;
+using System.Text;
+
+// Genişletilmiş Writer
+public class CustomStreamWriter : StreamWriter
+{
+    public CustomStreamWriter(string path) : base(path) { }
+
+    // Sabit genişlik: 10 karakter (sağa hizalı)
+    public void WriteInteger(int value)
+    {
+        string formatted = value.ToString().PadLeft(10); 
+        this.Write(formatted);
+    }
+
+    // Sabit genişlik: 5 karakter ("TRUE " veya "FALSE")
+    public void WriteBoolean(bool value)
+    {
+        string formatted = value ? "TRUE " : "FALSE";
+        this.Write(formatted);
+    }
+
+    // Stringler noktalı virgül ile sonlandırılır
+    public void WriteString(string value)
+    {
+        this.Write(value + ";");
+    }
+}
+
+// Genişletilmiş Reader
+public class CustomStreamReader : StreamReader
+{
+    public CustomStreamReader(string path) : base(path) { }
+
+    public int ReadInteger()
+    {
+        char[] buffer = new char[10];
+        this.Read(buffer, 0, 10);
+        string intStr = new string(buffer).Trim();
+        return int.Parse(intStr);
+    }
+
+    public bool ReadBoolean()
+    {
+        char[] buffer = new char[5];
+        this.Read(buffer, 0, 5);
+        string boolStr = new string(buffer).Trim();
+        return boolStr == "TRUE";
+    }
+
+    public string ReadString()
+    {
+        StringBuilder sb = new StringBuilder();
+        int charCode;
+        while ((charCode = this.Read()) != -1)
+        {
+            char c = (char)charCode;
+            if (c == ';') break; // Ayırıcıyı gördüğünde dur
+            sb.Append(c);
+        }
+        return sb.ToString();
+    }
+}
+
+// Kullanım Örneği
+public class TestCustomStreams
+{
+    public static void Main()
+    {
+        // Yazma Testi
+        using (var writer = new CustomStreamWriter("test.dat"))
+        {
+            writer.WriteInteger(123);
+            writer.WriteBoolean(true);
+            writer.WriteString("Hello World");
+        }
+
+        // Okuma Testi
+        using (var reader = new CustomStreamReader("test.dat"))
+        {
+            Console.WriteLine($"Int: {reader.ReadInteger()}");
+            Console.WriteLine($"Bool: {reader.ReadBoolean()}");
+            Console.WriteLine($"String: {reader.ReadString()}");
+        }
+    }
+}
+Soru 17.6 (Hesap Bilgilerini Okuma ve Yazma)Soru (Türkçe):Kullanıcının kayıtlara yazmasını ve bir dosyadan kayıtları okumasını sağlamak için Şekil 17.4 ve Şekil 17.6'daki fikirleri birleştiren bir program 
+oluşturun. Hesabın kredili mevduat korumasına (overdraft protection) sahip olup olmadığını belirtmek için kayda bool türünde fazladan bir alan ekleyin.
+
+Cevap ve Kodlar:
+Dosya: AccountRecord.cs
+
+public class AccountRecord
+{
+    public int AccountNumber { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public decimal Balance { get; set; }
+    public bool OverdraftProtection { get; set; } // Yeni alan
+
+    public override string ToString()
+    {
+        return $"{AccountNumber},{FirstName},{LastName},{Balance},{OverdraftProtection}";
+    }
+}
+Dosya: AccountAppForm.cs
+
+using System;
+using System.IO;
+using System.Windows.Forms;
+
+public class AccountAppForm : Form
+{
+    private TextBox txtAccNum, txtFirst, txtLast, txtBalance, txtDisplay;
+    private CheckBox chkOverdraft;
+    private Button btnSave, btnRead;
+
+    public AccountAppForm()
+    {
+        this.Text = "Account Manager";
+        this.Size = new System.Drawing.Size(400, 450);
+
+        // Giriş Alanları (Basitleştirilmiş konumlandırma)
+        int y = 10;
+        this.Controls.Add(new Label { Text = "Account #", Location = new System.Drawing.Point(10, y) });
+        txtAccNum = new TextBox { Location = new System.Drawing.Point(100, y) }; this.Controls.Add(txtAccNum); y += 30;
+
+        this.Controls.Add(new Label { Text = "First Name", Location = new System.Drawing.Point(10, y) });
+        txtFirst = new TextBox { Location = new System.Drawing.Point(100, y) }; this.Controls.Add(txtFirst); y += 30;
+
+        this.Controls.Add(new Label { Text = "Last Name", Location = new System.Drawing.Point(10, y) });
+        txtLast = new TextBox { Location = new System.Drawing.Point(100, y) }; this.Controls.Add(txtLast); y += 30;
+
+        this.Controls.Add(new Label { Text = "Balance", Location = new System.Drawing.Point(10, y) });
+        txtBalance = new TextBox { Location = new System.Drawing.Point(100, y) }; this.Controls.Add(txtBalance); y += 30;
+
+        chkOverdraft = new CheckBox { Text = "Overdraft Protection", Location = new System.Drawing.Point(100, y), AutoSize = true };
+        this.Controls.Add(chkOverdraft); y += 30;
+
+        btnSave = new Button { Text = "Save Record", Location = new System.Drawing.Point(10, y), Width = 100 };
+        btnSave.Click += BtnSave_Click;
+        this.Controls.Add(btnSave);
+
+        btnRead = new Button { Text = "Read File", Location = new System.Drawing.Point(120, y), Width = 100 };
+        btnRead.Click += BtnRead_Click;
+        this.Controls.Add(btnRead); y += 40;
+
+        txtDisplay = new TextBox { Location = new System.Drawing.Point(10, y), Size = new System.Drawing.Size(360, 150), Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical };
+        this.Controls.Add(txtDisplay);
+    }
+
+    private void BtnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            var record = new AccountRecord
+            {
+                AccountNumber = int.Parse(txtAccNum.Text),
+                FirstName = txtFirst.Text,
+                LastName = txtLast.Text,
+                Balance = decimal.Parse(txtBalance.Text),
+                OverdraftProtection = chkOverdraft.Checked
+            };
+
+            using (StreamWriter writer = new StreamWriter("accounts.txt", true))
+            {
+                writer.WriteLine(record.ToString());
+            }
+            MessageBox.Show("Record Saved.");
+            // Alanları temizle...
+        }
+        catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+    }
+
+    private void BtnRead_Click(object sender, EventArgs e)
+    {
+        txtDisplay.Clear();
+        if (!File.Exists("accounts.txt")) return;
+
+        try
+        {
+            using (StreamReader reader = new StreamReader("accounts.txt"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] fields = line.Split(',');
+                    txtDisplay.AppendText($"Acc: {fields[0]}, Name: {fields[1]} {fields[2]}, Bal: {fields[3]}, Overdraft: {fields[4]}\r\n");
+                }
+            }
+        }
+        catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+    }
+}
+Soru 17.7 (Telefon Numarası Kelime Üreticisi)Soru (Türkçe):Standart telefon tuş takımları sıfırdan dokuza kadar rakamları içerir. İkiden dokuza kadar olan sayıların her biri kendileriyle ilişkili üç harfe 
+sahiptir (Şekil 17.15). Yedi basamaklı bir sayı verildiğinde, bu sayıya karşılık gelen olası her yedi harfli kelime kombinasyonunu bir dosyaya yazmak için StreamWriter nesnesini kullanan bir GUI programı yazın. 
+2.187 ($3^7$) adet böyle kombinasyon vardır. İçinde 0 ve 1 rakamları olan telefon numaralarından kaçının.
+Cevap ve Kodlar:
+
+Dosya: PhoneWordGeneratorForm.cs
+
+using System;
+using System.IO;
+using System.Windows.Forms;
+
+public class PhoneWordGeneratorForm : Form
+{
+    private TextBox txtPhoneNumber;
+    private Button btnGenerate;
+    
+    // Tuş takımı haritalaması (0 ve 1 boş)
+    private readonly string[] digitMap = {
+        "", "", "ABC", "DEF", "GHI", "JKL", "MNO", "PRS", "TUV", "WXYZ"
+    };
+
+    public PhoneWordGeneratorForm()
+    {
+        this.Text = "Phone Word Generator";
+        this.Size = new System.Drawing.Size(350, 200);
+
+        this.Controls.Add(new Label { Text = "Enter 7-digit Number (no 0 or 1):", Location = new System.Drawing.Point(10, 10), AutoSize = true });
+        
+        txtPhoneNumber = new TextBox { Location = new System.Drawing.Point(10, 35), Width = 200, MaxLength = 7 };
+        this.Controls.Add(txtPhoneNumber);
+
+        btnGenerate = new Button { Text = "Generate Words", Location = new System.Drawing.Point(10, 70) };
+        btnGenerate.Click += BtnGenerate_Click;
+        this.Controls.Add(btnGenerate);
+    }
+
+    private void BtnGenerate_Click(object sender, EventArgs e)
+    {
+        string number = txtPhoneNumber.Text;
+
+        // Doğrulama
+        if (number.Length != 7 || number.Contains("0") || number.Contains("1") || !long.TryParse(number, out _))
+        {
+            MessageBox.Show("Please enter a valid 7-digit number without 0 or 1.");
+            return;
+        }
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter("phonewords.txt"))
+            {
+                GenerateWords(number, 0, "", writer);
+            }
+            MessageBox.Show("Words generated in 'phonewords.txt'.");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error: " + ex.Message);
+        }
+    }
+
+    // Rekürsif kombinasyon üretimi
+    private void GenerateWords(string number, int index, string currentWord, StreamWriter writer)
+    {
+        if (index == number.Length)
+        {
+            writer.WriteLine(currentWord);
+            return;
+        }
+
+        int digit = int.Parse(number[index].ToString());
+        string letters = digitMap[digit];
+
+        // 7 ve 9 için 4 harf, diğerleri için 3 harf olsa da hepsi döngüyle halledilir
+        foreach (char c in letters)
+        {
+            GenerateWords(number, index + 1, currentWord + c, writer);
+        }
+    }
+}
+Soru 17.8 (Öğrenci Anketi)Soru (Türkçe):Şekil 8.9, programa sabit kodlanmış bir anket yanıtları dizisi içermektedir. Sonuçları bir dosyada saklanan anketleri işlemek istediğimizi varsayalım. İlk olarak,
+kullanıcıdan anket yanıtlarını isteyen ve her yanıtı bir dosyaya çıktı olarak veren bir Windows Form oluşturun. StreamWriter kullanarak numbers.txt adlı bir dosya oluşturun. Her tam sayı Write metodu 
+kullanılarak yazılmalıdır. Ardından, anket yanıtlarının frekansını çıktı olarak verecek bir TextBox ekleyin. Yanıtları numbers.txt dosyasından okumak için Şekil 8.9'daki kodu değiştirmelisiniz. Yanıtlar
+StreamReader kullanılarak dosyadan okunmalıdır. String sınıfının Split metodu, girdi dizesini ayrı yanıtlara bölmek için kullanılmalı, ardından her yanıt bir tamsayıya dönüştürülmelidir. Program dosya sonuna
+ulaşana kadar yanıtları okumaya devam etmelidir. Sonuçlar TextBox'a çıktı olarak verilmelidir.
+Cevap ve Kodlar:Dosya: StudentPollForm.cs
+
+using System;
+using System.IO;
+using System.Windows.Forms;
+
+public class StudentPollForm : Form
+{
+    private TextBox txtInputResponses;
+    private Button btnSaveToFile;
+    private Button btnProcessFile;
+    private TextBox txtResults;
+
+    public StudentPollForm()
+    {
+        this.Text = "Student Poll Analysis";
+        this.Size = new System.Drawing.Size(400, 400);
+
+        this.Controls.Add(new Label { Text = "Enter responses (space separated, 1-5):", Location = new System.Drawing.Point(10, 10), AutoSize = true });
+        
+        txtInputResponses = new TextBox { Location = new System.Drawing.Point(10, 30), Size = new System.Drawing.Size(360, 50), Multiline = true };
+        // Varsayılan değer
+        txtInputResponses.Text = "1 2 5 4 3 5 2 1 3 3 1 4 3 3 3 2 3 3 2 14"; // 14 hatalı giriş örneği
+        this.Controls.Add(txtInputResponses);
+
+        btnSaveToFile = new Button { Text = "Save to numbers.txt", Location = new System.Drawing.Point(10, 90), Width = 150 };
+        btnSaveToFile.Click += BtnSaveToFile_Click;
+        this.Controls.Add(btnSaveToFile);
+
+        btnProcessFile = new Button { Text = "Process & Show Frequency", Location = new System.Drawing.Point(170, 90), Width = 180 };
+        btnProcessFile.Click += BtnProcessFile_Click;
+        this.Controls.Add(btnProcessFile);
+
+        txtResults = new TextBox { Location = new System.Drawing.Point(10, 130), Size = new System.Drawing.Size(360, 200), Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical, Font = new System.Drawing.Font("Consolas", 10) };
+        this.Controls.Add(txtResults);
+    }
+
+    private void BtnSaveToFile_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            using (StreamWriter writer = new StreamWriter("numbers.txt"))
+            {
+                writer.Write(txtInputResponses.Text);
+            }
+            MessageBox.Show("Responses saved.");
+        }
+        catch (Exception ex) { MessageBox.Show(ex.Message); }
+    }
+
+    private void BtnProcessFile_Click(object sender, EventArgs e)
+    {
+        if (!File.Exists("numbers.txt")) return;
+
+        int[] frequency = new int[6]; // 1-5 arası değerler için, 0 indexi boş
+
+        try
+        {
+            using (StreamReader reader = new StreamReader("numbers.txt"))
+            {
+                string content = reader.ReadToEnd();
+                string[] responses = content.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string s in responses)
+                {
+                    if (int.TryParse(s, out int response))
+                    {
+                        if (response >= 1 && response <= 5)
+                        {
+                            frequency[response]++;
+                        }
+                    }
+                }
+            }
+
+            // Sonuçları Yazdır
+            txtResults.Clear();
+            txtResults.AppendText($"{"Rating",10}{"Frequency",15}\r\n");
+            
+            for (int rating = 1; rating < frequency.Length; rating++)
+            {
+                txtResults.AppendText($"{rating,10}{frequency[rating],15}\r\n");
+            }
+        }
+        catch (Exception ex) { MessageBox.Show("Error processing file: " + ex.Message); }
+    }
+}
+Soru 17.9 (Kimlik Avı Tarayıcısı)Soru (Türkçe):Kimlik avı (Phishing), güvenilir bir kaynak gibi davranan bir göndericinin e-postada kullanıcı adlarınız, şifreleriniz, kredi kartı numaralarınız ve sosyal 
+güvenlik numaranız gibi özel bilgileri elde etmeye çalıştığı bir kimlik hırsızlığı türüdür. Kimlik avı mesajlarında yaygın olarak bulunan 30 kelime, ifade ve şirket adından oluşan bir liste oluşturun. Kimlik 
+avı mesajında bulunma olasılığına ilişkin tahmininize dayanarak her birine bir puan değeri atayın (örneğin, biraz olasıysa bir puan, orta derecede olasıysa iki puan veya çok yüksek olasılıklıysa üç puan). Bu
+terimleri ve ifadeleri bir metin dosyasında tarayan bir program yazın. Metin dosyasında bir anahtar kelime veya ifadenin her geçişi için, atanan puan değerini o kelime veya ifade için toplam puanlara ekleyin.
+Bulunan her anahtar kelime veya ifade için, kelime veya ifadeyi, oluşum sayısını ve puan toplamını içeren bir satır çıktı olarak verin. Ardından tüm mesaj için toplam puanı gösterin.
+Cevap ve Kodlar:
+
+Dosya: PhishingScannerForm.cs
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using System.Text.RegularExpressions;
+
+public class PhishingScannerForm : Form
+{
+    private TextBox txtEmailBody;
+    private Button btnScan;
+    private TextBox txtReport;
+
+    // Phishing Terimleri ve Puanları
+    private Dictionary<string, int> phishingTerms = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+    {
+        {"verify your account", 3}, {"update your account", 2}, {"urgent", 1},
+        {"click here", 2}, {"suspend", 3}, {"password", 2},
+        {"social security", 3}, {"credit card", 3}, {"bank account", 3},
+        {"limited time", 1}, {"free", 1}, {"winner", 1},
+        {"lottery", 2}, {"irs", 2}, {"refund", 2},
+        {"unauthorized", 2}, {"login", 2}, {"confirm identity", 3},
+        {"security alert", 2}, {"paypal", 1}, {"dear customer", 1}, // Genel hitap şüphelidir
+        {"expire", 2}, {"investment", 2}, {"risk", 1},
+        {"official", 1}, {"nigerian prince", 3}, {"million dollars", 2},
+        {"claim", 1}, {"confidential", 1}, {"inheritance", 3}
+    };
+
+    public PhishingScannerForm()
+    {
+        this.Text = "Phishing Scanner";
+        this.Size = new System.Drawing.Size(500, 500);
+
+        this.Controls.Add(new Label { Text = "Paste Email Content:", Location = new System.Drawing.Point(10, 10) });
+
+        txtEmailBody = new TextBox { Location = new System.Drawing.Point(10, 30), Size = new System.Drawing.Size(460, 150), Multiline = true };
+        txtEmailBody.Text = "Dear Customer, please verify your account immediately. Click here to avoid unauthorized access. Your password will expire.";
+        this.Controls.Add(txtEmailBody);
+
+        btnScan = new Button { Text = "Scan Text", Location = new System.Drawing.Point(10, 190) };
+        btnScan.Click += BtnScan_Click;
+        this.Controls.Add(btnScan);
+
+        txtReport = new TextBox { Location = new System.Drawing.Point(10, 230), Size = new System.Drawing.Size(460, 200), Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical, Font = new System.Drawing.Font("Consolas", 9) };
+        this.Controls.Add(txtReport);
+    }
+
+    private void BtnScan_Click(object sender, EventArgs e)
+    {
+        string content = txtEmailBody.Text;
+        int totalScore = 0;
+        txtReport.Clear();
+        txtReport.AppendText($"{"Term",-25} {"Count",-10} {"Points",-10}\r\n");
+        txtReport.AppendText(new string('-', 45) + "\r\n");
+
+        foreach (var term in phishingTerms)
+        {
+            // Regex kullanarak kaç kez geçtiğini bul (büyük/küçük harf duyarsız)
+            int count = Regex.Matches(content, Regex.Escape(term.Key), RegexOptions.IgnoreCase).Count;
+
+            if (count > 0)
+            {
+                int points = count * term.Value;
+                totalScore += points;
+                txtReport.AppendText($"{term.Key,-25} {count,-10} {points,-10}\r\n");
+            }
+        }
+
+        txtReport.AppendText("\r\n" + new string('=', 45) + "\r\n");
+        txtReport.AppendText($"TOTAL PHISHING SCORE: {totalScore}\r\n");
+
+        if (totalScore > 10)
+            txtReport.AppendText("Risk Level: HIGH\r\n");
+        else if (totalScore > 5)
+            txtReport.AppendText("Risk Level: MODERATE\r\n");
+        else
+            txtReport.AppendText("Risk Level: LOW\r\n");
+    }
+}
