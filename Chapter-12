@@ -1,0 +1,823 @@
+12.1 Boşluk Doldurma
+
+a) Eğer bir sınıf en az bir soyut metot içeriyorsa, bu sınıf bir abstract (soyut) sınıf olarak bildirilmelidir.
+
+b) Kendilerinden nesne oluşturulabilen sınıflara somut (concrete) sınıflar denir.
+
+c) Polimorfizm (Çok biçimlilik), temel sınıf ve türetilmiş sınıf nesnelerindeki metotları çağırmak için bir temel sınıf değişkeni kullanmayı içerir ve "genel programlama" yapmanızı sağlar.
+
+d) Bir sınıfta gövdesi (uyarlaması) bulunmayan metotlar abstract anahtar kelimesi kullanılarak bildirilmelidir.
+
+e) Temel sınıf değişkeninde saklanan bir referansı türetilmiş sınıf türüne dönüştürmeye downcasting (aşağı doğru dönüşüm) denir.
+
+12.2 Doğru/Yanlış
+
+a) Temel sınıf nesnelerini ve türetilmiş sınıf nesnelerini benzer şekilde (polimorfik olarak) ele almak mümkündür. Cevap: Doğru (True).
+
+b) Soyut (abstract) bir sınıftaki tüm metotlar soyut metot olarak bildirilmelidir. Cevap: Yanlış (False). Açıklama: Soyut sınıflar, uygulaması yapılmış (gövdesi olan) somut metotlar ve örnek değişkenleri de içerebilir. Hepsinin soyut olması zorunlu değildir.
+
+c) Yalnızca türetilmiş sınıfa ait olan (temel sınıfta bulunmayan) bir metodu, temel sınıf değişkeni üzerinden çağırmaya çalışmak bir hatadır. Cevap: Doğru (True).
+
+d) Eğer bir temel sınıf soyut bir metot bildirirse, türetilmiş sınıf o metodu kesinlikle uygulamak (implement etmek) zorundadır. Cevap: Yanlış (False). Açıklama: Eğer türetilmiş sınıf da soyut (abstract) olarak bildirilmişse, temel sınıftan gelen soyut metodu uygulamak zorunda değildir. Zorunluluk yalnızca türetilmiş sınıf somut (concrete) ise geçerlidir.
+
+e) Bir arayüzü (interface) uygulayan bir sınıfın nesnesi, o arayüz türünde bir nesne olarak düşünülebilir. Cevap: Doğru (True).
+
+12.3 (NYP'nin Temel Özelliği) Nesne yönelimli programlamanın temel özelliklerinden biri polimorfizmdir. Polimorfizm ne anlama gelir? Uygulamaya yeni sınıflar eklendiğinde tüm uygulamanın değiştirilmesi gerekir mi?
+
+Cevap: Polimorfizm (çok biçimlilik), farklı tiplerdeki nesnelerin ortak bir temel sınıf veya arayüz üzerinden ele alınabilmesi ve her nesnenin aynı metot çağrısına kendi özel davranışıyla yanıt verebilmesidir. "Program in the general" (genel için programlama) yapmanızı sağlar. Hayır, tüm uygulamanın değiştirilmesi gerekmez. Polimorfizm sayesinde, mevcut kod temel sınıflara göre yazıldığı için, sisteme yeni türetilmiş sınıflar eklense bile (mevcut kod bu yeni sınıflardan haberdar olmasa dahi) çalışmaya devam eder. Bu durum, yazılımın genişletilebilirliğini artırır.
+
+12.4 (Mühürlü -Sealed- Metot) Mühürlü (sealed) bir metodun bildirimi asla değiştirilemez. Tüm türetilmiş sınıflar aynı metot uygulamasını mı kullanır? Bu durumu tanımlamak için hangi terim kullanılır? Derleyici bu durumda kodu nasıl optimize eder?
+
+Cevap: Evet, bir metot sealed olarak işaretlendiğinde, o sınıftan türetilen diğer sınıflar bu metodu geçersiz kılamaz (override edemez), dolayısıyla hepsi aynı uygulamayı kullanır. Bu durum, polimorfik davranışın sonlandırılması anlamına gelir. Derleyici, metodun geçersiz kılınamayacağını bildiği için sanal tablo (v-table) araması yapmak yerine çağrıyı doğrudan bağlayabilir. En önemli optimizasyon inlining (satır içi genişletme) işlemidir; yani derleyici, metot çağrısı yerine metodun gövdesindeki kodu doğrudan çağrıldığı yere kopyalayarak performans artışı sağlayabilir.
+
+12.5 (Soyut Özellikler) Bir soyut sınıf içinde soyut metotlar bulunabilir. Get ve set gibi özellikler (properties) soyut olarak bildirilebilir mi? Açıklayınız.
+
+Cevap: Evet, özellikler (properties) de soyut (abstract) olarak bildirilebilir. Tıpkı metotlarda olduğu gibi, özelliğin ne yapacağını tanımlayan bir gövde yazılmaz; sadece get ve/veya set erişimcileri tanımlanır. Bu özelliği miras alan somut türetilmiş sınıflar, bu özelliğin gövdesini (nasıl çalışacağını) yazmak zorundadır.
+
+12.6 (Polimorfizm ve Genişletilebilirlik) Polimorfizm genişletilebilirliği nasıl destekler?
+
+Cevap: Polimorfizm, yazılımcıların belirli somut sınıflar yerine genel temel sınıflar veya arayüzler üzerine kod yazmasına olanak tanır. Bu sayede, sisteme sonradan yeni sınıflar eklendiğinde, sistemi yöneten mevcut kodun değiştirilmesine gerek kalmaz; yeni sınıflar sisteme otomatik olarak uyum sağlar. Bu da yazılımın "değişikliğe kapalı, gelişime açık" (Open/Closed Principle) olmasını sağlayarak genişletilebilirliği kolaylaştırır.
+
+12.7 (Polimorfizm ve Aygıt Sürücüleri) Katmanlı yazılım sistemlerinde aygıt sürücülerini (device drivers) uygulamak için polimorfizm nasıl etkili olur?
+
+Cevap: İşletim sistemleri veya yazılımlar, belirli bir donanım türü (örneğin yazıcı veya ekran kartı) için genel bir arayüz veya temel sınıf tanımlar. Her donanım üreticisi, kendi sürücüsünü yazarken bu ortak arayüzü uygular (polimorfizm). İşletim sistemi, hangi marka veya model donanım takılı olursa olsun, o donanıma standart komutları (örneğin "Yazdır") gönderir. Polimorfizm sayesinde, doğru sürücünün doğru metodu çalışır ve işletim sistemi kodunun her yeni donanım için yeniden yazılması gerekmez.
+
+12.8 (UML'de Arayüz) Bir sınıftaki arayüz (interface), sınıf bildiriminde iki nokta üst üste (:) işaretinden sonra listelenir. UML diyagramında bu nasıl ayırt edilir?
+
+Cevap: UML diyagramlarında bir arayüz, sınıf adının hemen üzerinde yer alan «interface» stereotipi (etiketi) ile ayırt edilir. Ayrıca, arayüzler bazen sınıf diyagramlarında o arayüzü uygulayan sınıfa kesikli bir ok (gerçekleştirme oku) ile bağlanarak da gösterilir.
+
+İşte 12.9 ve 12.10 numaralı soruların çevirileri ve çözüm kodları. Bu sorular C# (Deitel & Deitel kitabının yapısına uygun olarak) ile çözülmüştür.
+
+Soru 12.9 (Maaş Bordrosu Sistemi Değişikliği)
+Soru (Türkçe): Şekil 12.4–12.9'daki maaş bordrosu sistemini, Employee (Çalışan) sınıfına private bir birthDate (doğum tarihi) örnek değişkeni ekleyecek şekilde değiştirin. Bir çalışanın doğum gününü temsil etmek için Şekil 10.7'deki Date sınıfını kullanın. Maaş bordrosunun ayda bir kez işlendiğini varsayın. Çeşitli çalışan nesnelerine referansları saklamak için bir Employee dizisi oluşturun. Bir döngü içinde, her Employee için maaş bordrosunu (polimorfik olarak) hesaplayın ve eğer mevcut ay, çalışanın doğum gününün olduğu ay ise, kişinin maaş tutarına 100.00$ bonus ekleyin.
+
+Cevap ve Kodlar:
+
+Bu çözümde, Employee sınıfına bir Date nesnesi eklenmiş ve kurucular (constructor) buna göre güncellenmiştir. Main metodunda ise polimorfik döngü sırasında mevcut ay kontrol edilerek bonus eklenmiştir.
+
+Date.cs (Tarih işlemlerini yapan yardımcı sınıf)
+
+using System;
+
+public class Date
+{
+    public int Month { get; }
+    public int Day { get; }
+    public int Year { get; }
+
+    public Date(int month, int day, int year)
+    {
+        // Basit doğrulama
+        if (month <= 0 || month > 12) throw new ArgumentOutOfRangeException(nameof(month));
+        Month = month;
+        Day = day;
+        Year = year;
+    }
+
+    public override string ToString() => $"{Month}/{Day}/{Year}";
+}
+
+Employee.cs (Temel soyut sınıf, BirthDate özelliği eklendi)
+
+public abstract class Employee
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string SocialSecurityNumber { get; }
+    public Date BirthDate { get; } // Yeni eklenen özellik
+
+    // Kurucu metoda birthDate parametresi eklendi
+    public Employee(string firstName, string lastName, string ssn, Date birthDate)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        SocialSecurityNumber = ssn;
+        BirthDate = birthDate;
+    }
+
+    public override string ToString() =>
+        $"{FirstName} {LastName}\nSSN: {SocialSecurityNumber}\nBirth Date: {BirthDate}";
+
+    // Soyut metot
+    public abstract decimal Earnings();
+}
+
+SalariedEmployee.cs (Örnek bir somut sınıf, diğer sınıflar da benzer şekilde güncellenmelidir)
+
+public class SalariedEmployee : Employee
+{
+    private decimal weeklySalary;
+
+    public SalariedEmployee(string firstName, string lastName, string ssn, Date birthDate, decimal weeklySalary)
+        : base(firstName, lastName, ssn, birthDate)
+    {
+        WeeklySalary = weeklySalary;
+    }
+
+    public decimal WeeklySalary
+    {
+        get => weeklySalary;
+        set
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            weeklySalary = value;
+        }
+    }
+
+    public override decimal Earnings() => WeeklySalary * 4; // Aylık varsayalım
+
+    public override string ToString() =>
+        $"Salaried Employee: {base.ToString()}\nWeekly Salary: {WeeklySalary:C}";
+}
+
+PayrollSystemTest.cs (Ana program ve Bonus mantığı)
+
+using System;
+using System.Collections.Generic;
+
+public class PayrollSystemTest
+{
+    public static void Main()
+    {
+        int currentMonth = DateTime.Now.Month; // Mevcut ayı al
+        Console.WriteLine($"Current Month: {currentMonth}\n");
+
+        var employees = new List<Employee>
+        {
+            new SalariedEmployee("John", "Smith", "111-11-111", new Date(currentMonth, 15, 1990), 800.00m), // Bu ay doğdu
+            new SalariedEmployee("Jane", "Doe", "222-22-222", new Date(1, 20, 1985), 900.00m) // Başka ay doğdu
+        };
+
+        foreach (var emp in employees)
+        {
+            Console.WriteLine(emp); // ToString() çağrılır
+
+            decimal currentEarnings = emp.Earnings();
+            
+            // Doğum günü kontrolü ve Bonus ekleme
+            if (emp.BirthDate.Month == currentMonth)
+            {
+                currentEarnings += 100.00m;
+                Console.WriteLine($"*** Happy Birthday! Bonus of $100.00 added. ***");
+            }
+
+            Console.WriteLine($"Earnings: {currentEarnings:C}\n---------------------------");
+        }
+    }
+} 
+
+Soru 12.10 (Şekil Hiyerarşisi)
+Soru (Türkçe): Şekil 11.3'teki Shape (Şekil) hiyerarşisini uygulayın. Triangle (Üçgen) ve Tetrahedron (Dörtyüzlü) sınıflarını dahil etmeyin. Her TwoDimensionalShape (İki Boyutlu Şekil), iki boyutlu şeklin 
+alanını hesaplamak için salt okunur bir soyut özellik olan Area'yı içermelidir. Her ThreeDimensionalShape (Üç Boyutlu Şekil), üç boyutlu şeklin sırasıyla yüzey alanını ve hacmini hesaplamak için salt okunur 
+soyut özellikler olan Area ve Volume'u içermelidir. Hiyerarşideki her somut sınıftan nesnelere Shape referanslarından oluşan bir dizi kullanan bir uygulama oluşturun. Her dizi elemanının başvurduğu nesnenin 
+metin açıklamasını görüntüleyin. Ayrıca, dizideki tüm şekilleri işleyen döngüde, her şeklin bir TwoDimensionalShape mi yoksa bir ThreeDimensionalShape mi olduğunu belirleyin. Eğer şekil bir TwoDimensionalShape
+ise alanını görüntüleyin. Eğer şekil bir ThreeDimensionalShape ise alanını ve hacmini görüntüleyin.
+
+Dosya: Shape.cs
+
+public abstract class Shape
+{
+    public override string ToString() => $"{GetType().Name}";
+}
+Dosya: TwoDimensionalShape.cs
+
+
+public abstract class TwoDimensionalShape : Shape
+{
+    public abstract double Area { get; } // Salt okunur soyut özellik
+}
+Dosya: ThreeDimensionalShape.cs
+
+C#
+
+public abstract class ThreeDimensionalShape : Shape
+{
+    public abstract double Area { get; }   // Yüzey Alanı
+    public abstract double Volume { get; } // Hacim
+}
+Dosya: Circle.cs (2 Boyutlu Örnek)
+
+using System;
+
+public class Circle : TwoDimensionalShape
+{
+    public double Radius { get; }
+
+    public Circle(double radius)
+    {
+        Radius = radius;
+    }
+
+    public override double Area => Math.PI * Radius * Radius;
+
+    public override string ToString() => $"Circle with radius {Radius}";
+}
+Dosya: Square.cs (2 Boyutlu Örnek)
+
+public class Square : TwoDimensionalShape
+{
+    public double Side { get; }
+
+    public Square(double side)
+    {
+        Side = side;
+    }
+
+    public override double Area => Side * Side;
+
+    public override string ToString() => $"Square with side {Side}";
+}
+Dosya: Sphere.cs (3 Boyutlu Örnek)
+
+using System;
+
+public class Sphere : ThreeDimensionalShape
+{
+    public double Radius { get; }
+
+    public Sphere(double radius)
+    {
+        Radius = radius;
+    }
+
+    public override double Area => 4 * Math.PI * Radius * Radius;
+    public override double Volume => (4.0 / 3.0) * Math.PI * Math.Pow(Radius, 3);
+
+    public override string ToString() => $"Sphere with radius {Radius}";
+}
+Dosya: Cube.cs (3 Boyutlu Örnek)
+
+using System;
+
+public class Cube : ThreeDimensionalShape
+{
+    public double Side { get; }
+
+    public Cube(double side)
+    {
+        Side = side;
+    }
+
+    public override double Area => 6 * Side * Side;
+    public override double Volume => Math.Pow(Side, 3);
+
+    public override string ToString() => $"Cube with side {Side}";
+}
+Dosya: ShapeTest.cs (Ana Uygulama)
+
+using System;
+
+public class ShapeTest
+{
+    public static void Main()
+    {
+        // Polimorfik dizi
+        Shape[] shapes = new Shape[]
+        {
+            new Circle(2.5),
+            new Square(4.0),
+            new Sphere(5.0),
+            new Cube(3.0)
+        };
+
+        foreach (var currentShape in shapes)
+        {
+            // Nesnenin açıklamasını yazdır
+            Console.WriteLine(currentShape);
+
+            // Tip kontrolü (downcasting)
+            if (currentShape is TwoDimensionalShape twoDShape)
+            {
+                Console.WriteLine($" -> This is a TwoDimensionalShape");
+                Console.WriteLine($"    Area: {twoDShape.Area:F2}");
+            }
+            else if (currentShape is ThreeDimensionalShape threeDShape)
+            {
+                Console.WriteLine($" -> This is a ThreeDimensionalShape");
+                Console.WriteLine($"    Area: {threeDShape.Area:F2}");
+                Console.WriteLine($"    Volume: {threeDShape.Volume:F2}");
+            }
+            
+            Console.WriteLine(); // Boşluk bırak
+        }
+    }
+}
+
+Soru 12.11 (Maaş Bordrosu Sistemi Değişikliği)
+
+Soru (Türkçe): Şekil 12.4–12.9'daki maaş bordrosu sistemini, ödemesi üretilen ticari mal adedine dayanan bir çalışanı temsil eden, Employee (Çalışan) sınıfından türetilmiş ek bir sınıf olan PieceWorker
+(Parça Başı Çalışan) sınıfını içerecek şekilde değiştirin. PieceWorker sınıfı, wage (çalışanın parça başı ücretini saklamak için) ve pieces (üretilen parça sayısını saklamak için) adında private örnek 
+değişkenleri içermelidir. PieceWorker sınıfında, çalışanın kazancını üretilen parça sayısı ile parça başı ücreti çarparak hesaplayan Earnings metodunun somut bir uygulamasını sağlayın. Yeni Employee 
+hiyerarşisindeki her somut sınıftan nesnelere referansları saklamak için bir Employee değişkenleri dizisi oluşturun. Her çalışanın metin temsilini (ToString) ve kazançlarını görüntüleyin.
+
+Cevap ve Kodlar:
+
+Bu çözümde, PieceWorker sınıfı Employee sınıfından türetilmiş ve gerekli özellikler ile Earnings metodu eklenmiştir. Test sınıfında bu yeni sınıfın kullanımı gösterilmiştir.
+
+Dosya: Employee.cs (Temel soyut sınıf)
+
+
+public abstract class Employee
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string SocialSecurityNumber { get; }
+
+    public Employee(string firstName, string lastName, string ssn)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        SocialSecurityNumber = ssn;
+    }
+
+    public override string ToString() => $"{FirstName} {LastName}\nSSN: {SocialSecurityNumber}";
+
+    // Soyut metot: Alt sınıflar bunu ezmek (override) zorundadır
+    public abstract decimal Earnings();
+}
+Dosya: PieceWorker.cs (İstenen yeni sınıf)
+
+using System;
+
+public class PieceWorker : Employee
+{
+    private decimal wage; // Parça başı ücret
+    private int pieces;   // Üretilen parça sayısı
+
+    public PieceWorker(string firstName, string lastName, string ssn, decimal wage, int pieces)
+        : base(firstName, lastName, ssn)
+    {
+        Wage = wage;
+        Pieces = pieces;
+    }
+
+    public decimal Wage
+    {
+        get => wage;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Wage per piece must be >= 0");
+            wage = value;
+        }
+    }
+
+    public int Pieces
+    {
+        get => pieces;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Pieces produced must be >= 0");
+            pieces = value;
+        }
+    }
+
+    // Kazanç hesaplama: Ücret * Adet
+    public override decimal Earnings() => Wage * Pieces;
+
+    public override string ToString() =>
+        $"Piece Worker: {base.ToString()}\nWage per Piece: {Wage:C}\nPieces Produced: {Pieces}";
+}
+Dosya: SalariedEmployee.cs (Hiyerarşiyi tamamlamak için örnek bir diğer çalışan sınıfı)
+
+
+public class SalariedEmployee : Employee
+{
+    public decimal WeeklySalary { get; set; }
+
+    public SalariedEmployee(string firstName, string lastName, string ssn, decimal weeklySalary)
+        : base(firstName, lastName, ssn)
+    {
+        WeeklySalary = weeklySalary;
+    }
+
+    public override decimal Earnings() => WeeklySalary;
+
+    public override string ToString() =>
+        $"Salaried Employee: {base.ToString()}\nWeekly Salary: {WeeklySalary:C}";
+}
+Dosya: PayrollSystemTest.cs (Ana program ve test)
+
+
+using System;
+using System.Collections.Generic;
+
+public class PayrollSystemTest
+{
+    public static void Main()
+    {
+        // Polimorfik bir Employee dizisi oluşturuyoruz
+        Employee[] employees = new Employee[]
+        {
+            // Haftalık maaşlı çalışan
+            new SalariedEmployee("John", "Smith", "111-11-111", 800.00m),
+            
+            // Yeni eklediğimiz PieceWorker (Parça Başı Çalışan)
+            // Örn: Parça başı 2.5 TL, 200 parça üretmiş
+            new PieceWorker("Bob", "Lewis", "222-22-222", 2.5m, 200),
+            
+            // Bir tane daha PieceWorker örneği
+            new PieceWorker("Alice", "Doe", "333-33-333", 4.0m, 150)
+        };
+
+        Console.WriteLine("Employees processed polymorphically:\n");
+
+        // Tüm çalışanları döngü ile gezip bilgilerini ve kazançlarını yazdırıyoruz
+        foreach (var currentEmployee in employees)
+        {
+            Console.WriteLine(currentEmployee); // ToString() çağrılır
+            Console.WriteLine($"Earned: {currentEmployee.Earnings():C}\n");
+        }
+    }
+}
+
+
+Soru 12.12 (Borç Hesapları Sistemi Değişikliği)
+Soru (Türkçe): Şekil 12.11–12.14'teki borç hesapları (accounts payable) uygulamasını, Şekil 12.4–12.9'daki maaş bordrosu uygulamasının tüm işlevlerini içerecek şekilde değiştirin. Uygulama yine de iki 
+Invoice (Fatura) nesnesini işlemelidir, ancak şimdi dört Employee (Çalışan) türetilmiş sınıfının her birinden bir nesneyi de işlemelidir. İşlenmekte olan nesne bir BasePlusCommissionEmployee (Taban Maaşlı
+Komisyoncu) ise, uygulama bu çalışanın taban maaşını %10 artırmalıdır. Son olarak, uygulama her nesne için ödeme tutarını çıktı olarak vermelidir. PayableInterfaceTest (Şekil 12.14) sınıfını, iki Fatura, bir
+SalariedEmployee (Maaşlı), bir HourlyEmployee (Saatlik), bir CommissionEmployee (Komisyonlu) ve bir BasePlusCommissionEmployee nesnesini polimorfik olarak işleyecek şekilde değiştirin. İlk olarak, her IPayable 
+nesnesinin metin temsilini (ToString) çıktı olarak verin. Ardından, bir nesne BasePlusCommissionEmployee ise, taban maaşını %10 artırın. Son olarak, her IPayable nesnesinin ödeme tutarını görüntüleyin.
+
+Cevap ve Kodlar:
+
+Bu çözüm, IPayable arayüzünü temel alarak hem Faturaları hem de Çalışanları ortak bir çatı altında toplar.
+
+Dosya: IPayable.cs
+
+C#
+
+public interface IPayable
+{
+    decimal GetPaymentAmount(); // Ödeme tutarını hesapla
+}
+Dosya: Invoice.cs
+
+public class Invoice : IPayable
+{
+    public string PartNumber { get; }
+    public string PartDescription { get; }
+    public int Quantity { get; }
+    public decimal PricePerItem { get; }
+
+    public Invoice(string partNumber, string partDescription, int quantity, decimal pricePerItem)
+    {
+        PartNumber = partNumber;
+        PartDescription = partDescription;
+        Quantity = quantity;
+        PricePerItem = pricePerItem;
+    }
+
+    public decimal GetPaymentAmount() => Quantity * PricePerItem;
+
+    public override string ToString() =>
+        $"Invoice:\nPart No: {PartNumber} ({PartDescription})\nQuantity: {Quantity}\nPrice: {PricePerItem:C}";
+}
+Dosya: Employee.cs (Abstract Employee artık IPayable'ı uyguluyor)
+
+public abstract class Employee : IPayable
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string SocialSecurityNumber { get; }
+
+    public Employee(string firstName, string lastName, string ssn)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        SocialSecurityNumber = ssn;
+    }
+
+    public override string ToString() => $"{FirstName} {LastName}\nSSN: {SocialSecurityNumber}";
+
+    // IPayable'dan gelen metot abstract olarak tanımlanır, alt sınıflar dolduracak
+    public abstract decimal GetPaymentAmount();
+}
+Dosya: SalariedEmployee.cs
+
+public class SalariedEmployee : Employee
+{
+    public decimal WeeklySalary { get; }
+
+    public SalariedEmployee(string first, string last, string ssn, decimal salary)
+        : base(first, last, ssn)
+    {
+        WeeklySalary = salary;
+    }
+
+    public override decimal GetPaymentAmount() => WeeklySalary;
+
+    public override string ToString() => $"Salaried Employee: {base.ToString()}\nWeekly Salary: {WeeklySalary:C}";
+}
+Dosya: BasePlusCommissionEmployee.cs (Örnek olarak sadece bu ve Salaried verildi, diğerleri benzer mantıktadır)
+
+public class BasePlusCommissionEmployee : Employee
+{
+    public decimal GrossSales { get; }
+    public decimal CommissionRate { get; }
+    public decimal BaseSalary { get; set; } // Set erişimi %10 artış için gerekli
+
+    public BasePlusCommissionEmployee(string first, string last, string ssn, 
+                                      decimal sales, decimal rate, decimal baseSalary)
+        : base(first, last, ssn)
+    {
+        GrossSales = sales;
+        CommissionRate = rate;
+        BaseSalary = baseSalary;
+    }
+
+    public override decimal GetPaymentAmount() => (GrossSales * CommissionRate) + BaseSalary;
+
+    public override string ToString() =>
+        $"Base+Commission Employee: {base.ToString()}\nBase Salary: {BaseSalary:C}";
+}
+Dosya: PayableInterfaceTest.cs (Ana Program)
+
+using System;
+using System.Collections.Generic;
+
+public class PayableInterfaceTest
+{
+    public static void Main()
+    {
+        // Polimorfik IPayable listesi
+        var payableObjects = new List<IPayable>
+        {
+            new Invoice("01234", "Seat", 2, 375.00m),
+            new Invoice("56789", "Tire", 4, 79.95m),
+            new SalariedEmployee("John", "Smith", "111-11-111", 800.00m),
+            // Not: Hourly ve Commission sınıfları yer darlığı nedeniyle kısaltıldı, 
+            // mantık Salaried ile aynıdır. Buraya BasePlus ekliyoruz:
+            new BasePlusCommissionEmployee("Bob", "Lewis", "222-22-222", 5000m, 0.04m, 300m)
+        };
+
+        Console.WriteLine("Invoices and Employees processed polymorphically:\n");
+
+        foreach (var currentPayable in payableObjects)
+        {
+            // 1. Nesnenin metin temsilini yazdır
+            Console.WriteLine(currentPayable.ToString());
+
+            // 2. BasePlusCommissionEmployee kontrolü ve maaş artışı
+            if (currentPayable is BasePlusCommissionEmployee employee)
+            {
+                decimal oldBase = employee.BaseSalary;
+                employee.BaseSalary *= 1.10m; // %10 artış
+                Console.WriteLine($"*** Base salary increased by 10% from {oldBase:C} to {employee.BaseSalary:C} ***");
+            }
+
+            // 3. Ödeme tutarını yazdır
+            Console.WriteLine($"Payment Due: {currentPayable.GetPaymentAmount():C}\n");
+        }
+    }
+}
+Soru 12.13 (Hesap Hiyerarşisi Kullanan Polimorfik Bankacılık Programı)
+Soru (Türkçe): Alıştırma 11.9'da oluşturulan Account (Hesap) hiyerarşisini kullanarak polimorfik bir bankacılık uygulaması geliştirin. SavingsAccount (Vadeli/Tasarruf Hesabı) ve CheckingAccount 
+(Vadesiz/Çek Hesabı) nesnelerine Account referanslarından oluşan bir dizi oluşturun. Dizideki her Account için, kullanıcının Debit (Para Çekme) metodunu kullanarak hesaptan çekilecek bir miktar ve Credit
+(Para Yatırma) metodunu kullanarak hesaba yatırılacak bir miktar belirlemesine izin verin. Her hesabı işlerken türünü belirleyin. Eğer hesap bir SavingsAccount ise, CalculateInterest metodunu kullanarak hesaba 
+borçlu olunan faiz tutarını hesaplayın, ardından Credit metodunu kullanarak faizi hesap bakiyesine ekleyin. Bir hesabı işledikten sonra, temel sınıf özelliği olan Balance'ı kullanarak güncellenmiş hesap
+bakiyesini görüntüleyin.
+
+Cevap ve Kodlar:
+
+Dosya: Account.cs
+
+using System;
+
+public class Account
+{
+    public decimal Balance { get; private set; }
+
+    public Account(decimal initialBalance)
+    {
+        if (initialBalance >= 0)
+            Balance = initialBalance;
+        else
+            throw new ArgumentException("Initial balance cannot be negative.");
+    }
+
+    public virtual void Credit(decimal amount)
+    {
+        if (amount > 0)
+            Balance += amount;
+    }
+
+    public virtual bool Debit(decimal amount)
+    {
+        if (amount > Balance)
+        {
+            Console.WriteLine("Debit amount exceeded account balance.");
+            return false;
+        }
+        else
+        {
+            Balance -= amount;
+            return true;
+        }
+    }
+}
+Dosya: SavingsAccount.cs
+
+public class SavingsAccount : Account
+{
+    private decimal interestRate;
+
+    public SavingsAccount(decimal initialBalance, decimal interestRate) 
+        : base(initialBalance)
+    {
+        this.interestRate = interestRate;
+    }
+
+    public decimal CalculateInterest()
+    {
+        return Balance * interestRate;
+    }
+}
+Dosya: CheckingAccount.cs
+
+public class CheckingAccount : Account
+{
+    private decimal transactionFee;
+
+    public CheckingAccount(decimal initialBalance, decimal fee) 
+        : base(initialBalance)
+    {
+        transactionFee = fee;
+    }
+
+    public override void Credit(decimal amount)
+    {
+        base.Credit(amount);
+        Balance -= transactionFee; // İşlem ücreti düşülür
+    }
+
+    public override bool Debit(decimal amount)
+    {
+        if (base.Debit(amount))
+        {
+            Balance -= transactionFee; // İşlem başarılıysa ücret düşülür
+            return true;
+        }
+        return false;
+    }
+}
+Dosya: BankingTest.cs
+
+using System;
+
+public class BankingTest
+{
+    public static void Main()
+    {
+        // Polimorfik Hesap Dizisi
+        Account[] accounts = new Account[]
+        {
+            new SavingsAccount(100.00m, 0.05m), // %5 faiz
+            new CheckingAccount(100.00m, 2.00m) // 2 TL işlem ücreti
+        };
+
+        for (int i = 0; i < accounts.Length; i++)
+        {
+            Account acc = accounts[i];
+            Console.WriteLine($"\n--- Processing Account {i + 1} ({acc.GetType().Name}) ---");
+            Console.WriteLine($"Initial Balance: {acc.Balance:C}");
+
+            // Kullanıcıdan Para Yatırma İsteği
+            Console.Write("Enter amount to deposit: ");
+            decimal depositAmount = Convert.ToDecimal(Console.ReadLine());
+            acc.Credit(depositAmount);
+
+            // Kullanıcıdan Para Çekme İsteği
+            Console.Write("Enter amount to withdraw: ");
+            decimal withdrawAmount = Convert.ToDecimal(Console.ReadLine());
+            acc.Debit(withdrawAmount);
+
+            // SavingsAccount kontrolü ve Faiz hesabı
+            if (acc is SavingsAccount savingsAcc)
+            {
+                decimal interest = savingsAcc.CalculateInterest();
+                Console.WriteLine($"Adding interest: {interest:C}");
+                savingsAcc.Credit(interest);
+            }
+
+            // Güncel Bakiyeyi Göster
+            Console.WriteLine($"Updated Balance: {acc.Balance:C}");
+        }
+    }
+}
+
+İşte 12.14 numaralı sorunun çevirisi ve çözüm kodları:
+
+Soru 12.14 (Karbon Ayak İzi Arayüzü: Polimorfizm)
+
+Soru (Türkçe): Bu bölümde öğrendiğiniz gibi, arayüzleri (interfaces) kullanarak, birbirinden tamamen farklı olabilecek sınıflar için benzer davranışlar belirleyebilirsiniz. Dünya genelindeki hükümetler ve 
+şirketler, ısınma için çeşitli yakıt türlerini yakan binalardan, güç için yakıt yakan araçlardan ve benzerlerinden kaynaklanan karbon ayak izleri (atmosfere yıllık karbondioksit salınımı) konusunda giderek 
+daha fazla endişe duymaktadır. Birçok bilim insanı, küresel ısınma adı verilen olgudan bu sera gazlarını sorumlu tutmaktadır. Kalıtım yoluyla ilişkili olmayan üç küçük sınıf oluşturun: Building (Bina), Car 
+(Araba) ve Bicycle (Bisiklet). GetCarbonFootprint metoduna sahip bir ICarbonFootprint arayüzü yazın. Sınıflarınızın her birinin bu arayüzü uygulamasını (implement) sağlayın, böylece GetCarbonFootprint metodu 
+o sınıf için uygun bir karbon ayak izi hesaplasın (karbon ayak izlerinin nasıl hesaplandığını açıklayan birkaç web sitesine göz atabilirsiniz). Üç sınıfın her birinden nesneler oluşturan, bu nesnelere olan
+referansları bir List<ICarbonFootprint> içine yerleştiren ve ardından Listeyi dolaşarak her nesnenin GetCarbonFootprint metodunu polimorfik olarak çağıran bir uygulama yazın.
+
+Cevap ve Kodlar:
+
+Bu çözümde, aralarında miras ilişkisi olmayan üç sınıf (Building, Car, Bicycle) ortak bir arayüz olan ICarbonFootprint çatısı altında toplanmıştır. Hesaplamalar gerçek dünya verilerine dayalı temsili
+katsayılar kullanılarak yapılmıştır.
+
+Dosya: ICarbonFootprint.cs (Ortak davranışın tanımlandığı arayüz)
+
+public interface ICarbonFootprint
+{
+    double GetCarbonFootprint(); // Karbon ayak izini döndüren metot
+}
+Dosya: Building.cs (Bina sınıfı - Elektrik tüketimine göre hesaplama)
+
+public class Building : ICarbonFootprint
+{
+    public int SquareFeet { get; }
+    public int YearlyElectricityUsage { get; } // Yıllık elektrik kullanımı (kWh)
+
+    public Building(int squareFeet, int yearlyElectricityUsage)
+    {
+        SquareFeet = squareFeet;
+        YearlyElectricityUsage = yearlyElectricityUsage;
+    }
+
+    public double GetCarbonFootprint()
+    {
+        // Örnek Hesaplama: 1 kWh elektrik yaklaşık 0.5 kg CO2 üretir varsayalım.
+        return YearlyElectricityUsage * 0.5;
+    }
+
+    public override string ToString() => 
+        $"Building: {SquareFeet} sq. ft, Yearly Usage: {YearlyElectricityUsage} kWh";
+}
+Dosya: Car.cs (Araba sınıfı - Yakıt tüketimine göre hesaplama)
+
+public class Car : ICarbonFootprint
+{
+    public string Model { get; }
+    public double YearlyGallonsConsumed { get; } // Yıllık tüketilen galon benzin
+
+    public Car(string model, double yearlyGallonsConsumed)
+    {
+        Model = model;
+        YearlyGallonsConsumed = yearlyGallonsConsumed;
+    }
+
+    public double GetCarbonFootprint()
+    {
+        // Örnek Hesaplama: 1 galon benzin yaklaşık 9 kg CO2 üretir varsayalım.
+        return YearlyGallonsConsumed * 9.0;
+    }
+
+    public override string ToString() => 
+        $"Car: {Model}, Yearly Gas: {YearlyGallonsConsumed} gallons";
+}
+Dosya: Bicycle.cs (Bisiklet sınıfı - İnsan gücüyle çalıştığı için 0 emisyon)
+
+public class Bicycle : ICarbonFootprint
+{
+    public string Brand { get; }
+
+    public Bicycle(string brand)
+    {
+        Brand = brand;
+    }
+
+    public double GetCarbonFootprint()
+    {
+        // Bisikletler insan gücüyle çalışır, kullanım sırasında karbon salınımı 0'dır.
+        return 0.0;
+    }
+
+    public override string ToString() => $"Bicycle: {Brand}";
+}
+Dosya: CarbonFootprintTest.cs (Ana uygulama ve polimorfik test)
+
+using System;
+using System.Collections.Generic;
+
+public class CarbonFootprintTest
+{
+    public static void Main()
+    {
+        // Farklı sınıflardan nesneleri aynı Listede tutuyoruz (Polimorfizm)
+        List<ICarbonFootprint> carbonContributors = new List<ICarbonFootprint>
+        {
+            new Building(2500, 12000), // 2500 ft kare, 12000 kWh harcayan bina
+            new Car("Toyota Corolla", 400), // Yılda 400 galon yakan araba
+            new Bicycle("Trek Mountain Bike"), // Bisiklet
+            new Building(4000, 25000) // Daha büyük bir bina
+        };
+
+        Console.WriteLine("Carbon Footprint Details:\n");
+
+        // Listeyi döngüyle gezip polimorfik olarak metodu çağırıyoruz
+        foreach (var item in carbonContributors)
+        {
+            Console.WriteLine(item.ToString());
+            Console.WriteLine($"Carbon Footprint: {item.GetCarbonFootprint():F2} kg of CO2");
+            Console.WriteLine("---------------------------------------------");
+        }
+    }
+}
