@@ -1,0 +1,781 @@
+15.1 Doğru/Yanlış
+a) Menüler ilgili sınıf gruplarını sağlar. Cevap: Yanlış (False). Açıklama: Menüler ilgili komutları (commands) gruplar, sınıfları değil.
+
+b) Menü öğeleri ComboBox'ları, onay işaretlerini ve erişim kısayollarını görüntüleyebilir. Cevap: Doğru (True). (Özellikle MenuStrip kontrolünde bu mümkündür).
+
+c) ListBox kontrolü yalnızca tekli seçime izin verir (bir RadioButton gibi). Cevap: Yanlış (False). Açıklama: ListBox kontrolü, SelectionMode özelliği değiştirilerek çoklu seçime (multiple selection) izin verebilir.
+
+d) Bir ComboBox kontrolü tipik olarak aşağı açılan bir listeye sahiptir. Cevap: Doğru (True).
+
+e) Bir TreeView kontrolünde bir ebeveyn düğümü silmek, onun alt düğümlerini de siler. Cevap: Doğru (True).
+
+f) Kullanıcı bir ListView kontrolünde yalnızca bir öğe seçebilir. Cevap: Yanlış (False). Açıklama: MultiSelect özelliği true olarak ayarlanırsa birden fazla öğe seçilebilir.
+
+g) Bir TabPage, RadioButton'lar için bir kapsayıcı (container) görevi görebilir. Cevap: Doğru (True).
+
+h) Bir MDI alt penceresi, kendi MDI alt pencerelerine sahip olabilir. Cevap: Yanlış (False). Açıklama: MDI (Multiple Document Interface) sadece tek seviyeli bir ebeveyn-çocuk ilişkisini destekler. Bir alt pencere başka pencerelerin ebeveyni olamaz.
+
+i) MDI alt pencereleri, ebeveyn pencerelerinin sınırlarının dışına taşınabilir. Cevap: Yanlış (False). Açıklama: MDI alt pencereleri, ebeveyn formun (MDI Parent) istemci alanı (client area) ile sınırlıdır.
+
+j) Özelleştirilmiş bir kontrol oluşturmanın iki temel yolu vardır. Cevap: Yanlış (False). Açıklama: Genellikle üç yol vardır:
+
+UserControl sınıfından türetmek (Bileşik kontroller).
+
+Mevcut bir kontrolden (örn. Button) türetmek.
+
+Doğrudan Control sınıfından türetmek.
+
+15.2 Boşluk Doldurma
+a) Process sınıfının Start metodu, Windows'taki Çalıştır... komutuna benzer şekilde dosyaları ve web sayfalarını açabilir.
+
+b) Eğer bir ComboBox'ta sığabileceğinden daha fazla eleman varsa, bir kaydırma çubuğu (scrollbar) görünür.
+
+c) Bir TreeView'daki en üst düzey düğüm kök (root) düğümdür.
+
+d) Bir ListView ve bir TreeView, bir ImageList kontrolünde bulunan simgeleri görüntüleyebilir.
+
+e) MdiWindowListItem özelliği, bir menünün aktif alt pencerelerin bir listesini görüntülemesini sağlar.
+
+f) UserControl sınıfı, birkaç kontrolü tek bir özel kontrol içinde birleştirmenize olanak tanır.
+
+g) TabControl, TabPage'leri üst üste katmanlayarak yerden tasarruf sağlar.
+
+h) Cascade (Basamaklı) pencere düzeni seçeneği, tüm MDI pencerelerini aynı boyuta getirir ve her başlık çubuğu görünecek şekilde (mümkünse) katmanlar.
+
+i) LinkLabels, tipik olarak diğer kaynaklara, dosyalara veya web sayfalarına köprüleri görüntülemek için kullanılır.
+
+Soru 15.3 (ComboBox'lara Ekleme ve Çıkarma)Soru (Türkçe):Ev dekorasyon ürünlerini bir ComboBox içinde görüntüleyen bir uygulama yazın. ComboBox'a öğe eklemek için bir metin kutusu (TextBox) ve bir düğme
+(Button) kullanılır. ComboBox'ta bir öğe seçildiğinde, bu öğe ComboBox'tan kaldırılır. Öğe sayısını görüntüleyin.
+Cevap ve Kodlar:Dosya: HomeDecorForm.cs
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class HomeDecorForm : Form
+{
+    private ComboBox cmbProducts;
+    private TextBox txtNewItem;
+    private Button btnAdd;
+    private Label lblCount;
+
+    public HomeDecorForm()
+    {
+        this.Text = "Home Décor Products";
+        this.Size = new Size(350, 200);
+
+        // ComboBox
+        cmbProducts = new ComboBox();
+        cmbProducts.Location = new Point(20, 20);
+        cmbProducts.Size = new Size(200, 25);
+        cmbProducts.SelectedIndexChanged += CmbProducts_SelectedIndexChanged;
+        this.Controls.Add(cmbProducts);
+
+        // Yeni Öğe Girişi
+        txtNewItem = new TextBox();
+        txtNewItem.Location = new Point(20, 60);
+        txtNewItem.Size = new Size(140, 25);
+        this.Controls.Add(txtNewItem);
+
+        // Ekle Butonu
+        btnAdd = new Button();
+        btnAdd.Text = "Add";
+        btnAdd.Location = new Point(170, 60);
+        btnAdd.Size = new Size(50, 23);
+        btnAdd.Click += BtnAdd_Click;
+        this.Controls.Add(btnAdd);
+
+        // Sayı Etiketi
+        lblCount = new Label();
+        lblCount.Location = new Point(20, 100);
+        lblCount.AutoSize = true;
+        this.Controls.Add(lblCount);
+
+        UpdateCount();
+    }
+
+    private void BtnAdd_Click(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(txtNewItem.Text))
+        {
+            cmbProducts.Items.Add(txtNewItem.Text);
+            txtNewItem.Clear();
+            UpdateCount();
+        }
+    }
+
+    private void CmbProducts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (cmbProducts.SelectedIndex != -1)
+        {
+            // Seçilen öğeyi kaldır
+            cmbProducts.Items.RemoveAt(cmbProducts.SelectedIndex);
+            UpdateCount();
+        }
+    }
+
+    private void UpdateCount()
+    {
+        lblCount.Text = $"Count: {cmbProducts.Items.Count}";
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new HomeDecorForm());
+    }
+}
+Soru 15.4 (ComboBox'tan ListBox'a Öğe Ekleme)Soru (Türkçe):Önceki alıştırmaya çözümünüzü bir ListBox ekleyerek değiştirin. Kullanıcı ComboBox'tan bir öğe seçtiğinde, öğeyi ComboBox'tan kaldırın ve ListBox'a
+ekleyin. Program, ComboBox'ın en az bir öğe içerdiğinden emin olmak için kontrol etmelidir. Eğer içermiyorsa, bir mesaj kutusu kullanarak bir mesaj görüntüleyin ve kullanıcı mesaj kutusunu kapattığında 
+programın çalışmasını sonlandırın.
+Cevap ve Kodlar:Dosya: MoveItemsForm.cs
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class MoveItemsForm : Form
+{
+    private ComboBox cmbProducts;
+    private ListBox lstMovedItems;
+    private TextBox txtNewItem;
+    private Button btnAdd;
+
+    public MoveItemsForm()
+    {
+        this.Text = "Move Items";
+        this.Size = new Size(400, 300);
+
+        // Başlangıç verisi ekleyelim
+        cmbProducts = new ComboBox();
+        cmbProducts.Items.AddRange(new object[] { "Vase", "Lamp", "Rug", "Curtain" });
+        cmbProducts.Location = new Point(20, 20);
+        cmbProducts.SelectedIndexChanged += CmbProducts_SelectedIndexChanged;
+        this.Controls.Add(cmbProducts);
+
+        lstMovedItems = new ListBox();
+        lstMovedItems.Location = new Point(20, 60);
+        lstMovedItems.Size = new Size(150, 150);
+        this.Controls.Add(lstMovedItems);
+
+        // Ekleme kısmı (Test edebilmek için)
+        txtNewItem = new TextBox();
+        txtNewItem.Location = new Point(200, 20);
+        this.Controls.Add(txtNewItem);
+
+        btnAdd = new Button();
+        btnAdd.Text = "Add to Combo";
+        btnAdd.Location = new Point(310, 18);
+        btnAdd.Click += (s, e) => {
+            if(!string.IsNullOrWhiteSpace(txtNewItem.Text)) 
+                cmbProducts.Items.Add(txtNewItem.Text);
+        };
+        this.Controls.Add(btnAdd);
+    }
+
+    private void CmbProducts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (cmbProducts.SelectedItem != null)
+        {
+            // ListBox'a ekle ve ComboBox'tan sil
+            object item = cmbProducts.SelectedItem;
+            lstMovedItems.Items.Add(item);
+            cmbProducts.Items.Remove(item);
+
+            // Kritik Kontrol
+            if (cmbProducts.Items.Count == 0)
+            {
+                MessageBox.Show("ComboBox is empty! The program will terminate.", 
+                                "Empty List", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Application.Exit();
+            }
+        }
+    }
+}
+Soru 15.5 (Dizeleri Sıralama)Soru (Türkçe):Kullanıcının bir TextBox'a dizeler (metinler) girmesine izin veren bir uygulama yazın. Her dize girişi bir ListBox'a eklenir. Her dize ListBox'a eklendiğinde,
+dizelerin sıralı olduğundan emin olun. [Not: Sorted özelliğini kullanın.]
+Cevap ve Kodlar:Dosya: SortedListForm.cs
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class SortedListForm : Form
+{
+    private TextBox txtInput;
+    private Button btnAdd;
+    private ListBox lstStrings;
+
+    public SortedListForm()
+    {
+        this.Text = "Sorted Strings";
+        
+        txtInput = new TextBox();
+        txtInput.Location = new Point(10, 10);
+        this.Controls.Add(txtInput);
+
+        btnAdd = new Button();
+        btnAdd.Text = "Add";
+        btnAdd.Location = new Point(120, 10);
+        btnAdd.Click += BtnAdd_Click;
+        this.Controls.Add(btnAdd);
+
+        lstStrings = new ListBox();
+        lstStrings.Location = new Point(10, 50);
+        lstStrings.Size = new Size(200, 150);
+        // Otomatik sıralama özelliği
+        lstStrings.Sorted = true; 
+        this.Controls.Add(lstStrings);
+    }
+
+    private void BtnAdd_Click(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(txtInput.Text))
+        {
+            lstStrings.Items.Add(txtInput.Text);
+            txtInput.Clear();
+            txtInput.Focus();
+        }
+    }
+}
+Soru 15.6 (Dosya Gezgini)Soru (Türkçe):Şekil 15.14, 15.28 ve 15.31'deki programlara dayalı bir dosya gezgini (Windows Gezgini'ne benzer) oluşturun. Dosya gezgini, kullanıcının dizinlere göz atmasına izin veren
+bir TreeView'a sahip olmalıdır. Ayrıca, göz atılan dizinin içeriğini (tüm alt dizinler ve dosyalar) görüntüleyen bir ListView olmalıdır. ListView'daki bir dosyaya çift tıklamak onu açmalı, ListView veya 
+TreeView'daki bir dizine çift tıklamak ise o dizine göz atmalıdır (içine girmelidir). Bir dosya veya dizine izin ayarları nedeniyle erişilemiyorsa kullanıcıyı bilgilendirin.Cevap ve Kodlar:Not: Bu kapsamlı bir 
+uygulamadır, aşağıda temel işlevselliği sağlayan sadeleştirilmiş bir iskelet verilmiştir.Dosya: FileBrowserForm.cs
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+
+public class FileBrowserForm : Form
+{
+    private SplitContainer splitContainer;
+    private TreeView treeView;
+    private ListView listView;
+
+    public FileBrowserForm()
+    {
+        this.Text = "File Browser";
+        this.Size = new Size(800, 600);
+
+        splitContainer = new SplitContainer { Dock = DockStyle.Fill };
+        
+        // TreeView Ayarları
+        treeView = new TreeView { Dock = DockStyle.Fill };
+        treeView.AfterSelect += TreeView_AfterSelect;
+        
+        // ListView Ayarları
+        listView = new ListView { Dock = DockStyle.Fill, View = View.Details };
+        listView.Columns.Add("Name", 200);
+        listView.Columns.Add("Type", 100);
+        listView.DoubleClick += ListView_DoubleClick;
+
+        splitContainer.Panel1.Controls.Add(treeView);
+        splitContainer.Panel2.Controls.Add(listView);
+        this.Controls.Add(splitContainer);
+
+        LoadDrives();
+    }
+
+    private void LoadDrives()
+    {
+        foreach (var drive in DriveInfo.GetDrives())
+        {
+            TreeNode node = new TreeNode(drive.Name);
+            node.Tag = drive.RootDirectory.FullName;
+            node.Nodes.Add("Dummy"); // Genişletme ikonu için
+            treeView.Nodes.Add(node);
+        }
+        treeView.BeforeExpand += TreeView_BeforeExpand;
+    }
+
+    private void TreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+    {
+        e.Node.Nodes.Clear();
+        string path = (string)e.Node.Tag;
+        try
+        {
+            foreach (string dir in Directory.GetDirectories(path))
+            {
+                TreeNode node = new TreeNode(Path.GetFileName(dir));
+                node.Tag = dir;
+                node.Nodes.Add("Dummy");
+                e.Node.Nodes.Add(node);
+            }
+        }
+        catch (UnauthorizedAccessException) { /* Erişim hatası yutulabilir veya loglanabilir */ }
+        catch (Exception) { }
+    }
+
+    private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
+    {
+        LoadListView((string)e.Node.Tag);
+    }
+
+    private void LoadListView(string path)
+    {
+        listView.Items.Clear();
+        try
+        {
+            // Klasörler
+            foreach (string dir in Directory.GetDirectories(path))
+            {
+                ListViewItem item = new ListViewItem(Path.GetFileName(dir));
+                item.SubItems.Add("Directory");
+                item.Tag = dir;
+                listView.Items.Add(item);
+            }
+            // Dosyalar
+            foreach (string file in Directory.GetFiles(path))
+            {
+                ListViewItem item = new ListViewItem(Path.GetFileName(file));
+                item.SubItems.Add("File");
+                item.Tag = file;
+                listView.Items.Add(item);
+            }
+        }
+        catch (UnauthorizedAccessException)
+        {
+            MessageBox.Show("Access denied to this folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void ListView_DoubleClick(object sender, EventArgs e)
+    {
+        if (listView.SelectedItems.Count > 0)
+        {
+            var item = listView.SelectedItems[0];
+            string path = (string)item.Tag;
+
+            if (item.SubItems[1].Text == "File")
+            {
+                try { Process.Start(path); } // Dosyayı varsayılan programla aç
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+            }
+            else // Directory
+            {
+                LoadListView(path);
+            }
+        }
+    }
+}
+Soru 15.7 (MDI Metin Editörü)Soru (Türkçe):Bir MDI metin editörü oluşturun. Her alt pencere (child window) çok satırlı bir RichTextBox içermelidir. MDI ebeveyni, aktif alt penceredeki metnin boyutunu, yazı
+tipini ve rengini kontrol etmek için alt menülere sahip bir Format menüsüne sahip olmalıdır. Her alt menü en az üç seçeneğe sahip olmalıdır. Ayrıca, ebeveynin Yeni (yeni bir alt oluştur), Kapat (aktif alt 
+pencereyi kapat) ve Çıkış (uygulamadan çık) menü öğelerine sahip bir Dosya menüsü olmalıdır. Ebeveyn, açık alt pencerelerin bir listesini ve düzen seçeneklerini görüntülemek için bir Pencere (Window) menüsüne 
+sahip olmalıdır.
+Cevap ve Kodlar:Dosya: MdiEditor.cs
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+// MDI Ebeveyn Formu
+public class MdiParentForm : Form
+{
+    public MdiParentForm()
+    {
+        this.Text = "MDI Text Editor";
+        this.Size = new Size(800, 600);
+        this.IsMdiContainer = true;
+
+        MenuStrip menuStrip = new MenuStrip();
+        this.MainMenuStrip = menuStrip;
+        this.Controls.Add(menuStrip);
+
+        // --- File Menüsü ---
+        ToolStripMenuItem fileMenu = new ToolStripMenuItem("File");
+        fileMenu.DropDownItems.Add("New", null, (s, e) => CreateNewChild());
+        fileMenu.DropDownItems.Add("Close Current", null, (s, e) => this.ActiveMdiChild?.Close());
+        fileMenu.DropDownItems.Add("Exit", null, (s, e) => Application.Exit());
+        menuStrip.Items.Add(fileMenu);
+
+        // --- Format Menüsü ---
+        ToolStripMenuItem formatMenu = new ToolStripMenuItem("Format");
+        
+        // Font Size
+        ToolStripMenuItem sizeMenu = new ToolStripMenuItem("Size");
+        sizeMenu.DropDownItems.Add("10", null, (s, e) => ChangeFontSize(10));
+        sizeMenu.DropDownItems.Add("14", null, (s, e) => ChangeFontSize(14));
+        sizeMenu.DropDownItems.Add("18", null, (s, e) => ChangeFontSize(18));
+        formatMenu.DropDownItems.Add(sizeMenu);
+
+        // Font Color
+        ToolStripMenuItem colorMenu = new ToolStripMenuItem("Color");
+        colorMenu.DropDownItems.Add("Red", null, (s, e) => ChangeFontColor(Color.Red));
+        colorMenu.DropDownItems.Add("Blue", null, (s, e) => ChangeFontColor(Color.Blue));
+        colorMenu.DropDownItems.Add("Black", null, (s, e) => ChangeFontColor(Color.Black));
+        formatMenu.DropDownItems.Add(colorMenu);
+
+        // Font Family
+        ToolStripMenuItem fontMenu = new ToolStripMenuItem("Font");
+        fontMenu.DropDownItems.Add("Arial", null, (s, e) => ChangeFontFamily("Arial"));
+        fontMenu.DropDownItems.Add("Times New Roman", null, (s, e) => ChangeFontFamily("Times New Roman"));
+        fontMenu.DropDownItems.Add("Courier New", null, (s, e) => ChangeFontFamily("Courier New"));
+        formatMenu.DropDownItems.Add(fontMenu);
+
+        menuStrip.Items.Add(formatMenu);
+
+        // --- Window Menüsü ---
+        ToolStripMenuItem windowMenu = new ToolStripMenuItem("Window");
+        windowMenu.DropDownItems.Add("Cascade", null, (s, e) => this.LayoutMdi(MdiLayout.Cascade));
+        windowMenu.DropDownItems.Add("Tile Horizontal", null, (s, e) => this.LayoutMdi(MdiLayout.TileHorizontal));
+        windowMenu.DropDownItems.Add("-"); // Ayırıcı
+        menuStrip.MdiWindowListItem = windowMenu; // Açık pencereleri listeler
+        menuStrip.Items.Add(windowMenu);
+    }
+
+    private void CreateNewChild()
+    {
+        Form child = new Form();
+        child.Text = "Document " + (this.MdiChildren.Length + 1);
+        RichTextBox rtb = new RichTextBox { Dock = DockStyle.Fill };
+        child.Controls.Add(rtb);
+        child.MdiParent = this;
+        child.Show();
+    }
+
+    // Yardımcı Metot: Aktif formun RichTextBox'ına ulaş
+    private RichTextBox GetActiveRTB()
+    {
+        if (this.ActiveMdiChild != null && this.ActiveMdiChild.Controls.Count > 0)
+            return this.ActiveMdiChild.Controls[0] as RichTextBox;
+        return null;
+    }
+
+    private void ChangeFontSize(float size)
+    {
+        var rtb = GetActiveRTB();
+        if (rtb != null && rtb.SelectionFont != null)
+            rtb.SelectionFont = new Font(rtb.SelectionFont.FontFamily, size, rtb.SelectionFont.Style);
+    }
+
+    private void ChangeFontColor(Color color)
+    {
+        var rtb = GetActiveRTB();
+        if (rtb != null) rtb.SelectionColor = color;
+    }
+
+    private void ChangeFontFamily(string family)
+    {
+        var rtb = GetActiveRTB();
+        if (rtb != null && rtb.SelectionFont != null)
+            rtb.SelectionFont = new Font(family, rtb.SelectionFont.Size, rtb.SelectionFont.Style);
+    }
+}
+Soru 15.8 (Giriş Kullanıcı Kontrolü)Soru (Türkçe):"Login:" dizesini gösteren bir Label (loginLabel), kullanıcının bir giriş adı girdiği bir TextBox (loginTextBox), "Password:" dizesini gösteren bir Label 
+(passwordLabel) ve son olarak kullanıcının bir şifre girdiği bir TextBox (passwordTextBox) (Özellikler penceresinde TextBox'ın PasswordChar özelliğini "*" olarak ayarlayın) içeren LoginPasswordUserControl 
+adlı bir UserControl oluşturun. LoginPasswordUserControl, bir uygulamanın loginTextBox ve passwordTextBox'tan kullanıcı girişini almasına izin veren genel (public) salt okunur Login ve Password özelliklerini
+sağlamalıdır. UserControl, kullanıcı tarafından LoginPasswordUserControl'e girilen değerleri görüntüleyen bir uygulamaya aktarılmalıdır.
+Cevap ve Kodlar:Dosya: LoginPasswordUserControl.cs
+using System.Drawing;
+using System.Windows.Forms;
+
+public class LoginPasswordUserControl : UserControl
+{
+    private Label loginLabel;
+    private TextBox loginTextBox;
+    private Label passwordLabel;
+    private TextBox passwordTextBox;
+
+    public LoginPasswordUserControl()
+    {
+        this.Size = new Size(200, 100);
+
+        loginLabel = new Label { Text = "Login:", Location = new Point(10, 10), AutoSize = true };
+        loginTextBox = new TextBox { Location = new Point(80, 10), Size = new Size(100, 20) };
+        
+        passwordLabel = new Label { Text = "Password:", Location = new Point(10, 40), AutoSize = true };
+        passwordTextBox = new TextBox { Location = new Point(80, 40), Size = new Size(100, 20), PasswordChar = '*' };
+
+        this.Controls.AddRange(new Control[] { loginLabel, loginTextBox, passwordLabel, passwordTextBox });
+    }
+
+    // Public Read-Only Properties
+    public string Login => loginTextBox.Text;
+    public string Password => passwordTextBox.Text;
+}
+Dosya: TestLoginForm.cs (Test Uygulaması)C#using System;
+using System.Windows.Forms;
+
+public class TestLoginForm : Form
+{
+    private LoginPasswordUserControl loginControl;
+    private Button btnShow;
+
+    public TestLoginForm()
+    {
+        this.Text = "Login Test";
+        loginControl = new LoginPasswordUserControl { Location = new System.Drawing.Point(10, 10) };
+        
+        btnShow = new Button { Text = "Show Info", Location = new System.Drawing.Point(50, 120) };
+        btnShow.Click += (s, e) => {
+            MessageBox.Show($"User: {loginControl.Login}\nPass: {loginControl.Password}");
+        };
+
+        this.Controls.Add(loginControl);
+        this.Controls.Add(btnShow);
+    }
+}
+Soru 15.9 (Restoran Hesap Hesaplayıcı)Soru (Türkçe):Bir restoran, bir masanın hesabını hesaplayan bir uygulama istiyor. Uygulama, Şekil 15.52'deki tüm menü öğelerini dört ComboBox içinde görüntülemelidir.
+Her ComboBox, restoran tarafından sunulan bir yiyecek kategorisini (İçecek, Başlangıç, Ana Yemek ve Tatlı) içermelidir. Kullanıcı, bir masanın hesabına bir öğe eklemek için bu ComboBox'lardan birinden seçim
+yapabilir. Her öğe ComboBox'larda seçildiğinde, o öğenin fiyatını hesaba ekleyin. Kullanıcı, Subtotal (Ara Toplam), Tax (Vergi) ve Total (Toplam) alanlarını $0.00'a geri yüklemek için Hesabı Temizle
+(Clear Bill) Düğmesine tıklayabilir. Ara toplam 500$'ı geçerse indirim için %5 kullanın. Vergi toplamın %15'i olarak hesaplanır.
+Cevap ve Kodlar:Dosya: RestaurantBillForm.cs
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class RestaurantBillForm : Form
+{
+    private ComboBox cmbBeverage, cmbAppetizer, cmbMain, cmbDessert;
+    private Label lblSubtotal, lblTax, lblTotal;
+    private Button btnClear;
+    private decimal currentSubtotal = 0;
+
+    // Helper class for menu items
+    private class MenuItem {
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public override string ToString() => $"{Name} (${Price})";
+    }
+
+    public RestaurantBillForm()
+    {
+        this.Text = "Restaurant Bill Calculator";
+        this.Size = new Size(400, 300);
+
+        int y = 20;
+        cmbBeverage = CreateCombo("Beverage", y); y += 40;
+        cmbAppetizer = CreateCombo("Appetizer", y); y += 40;
+        cmbMain = CreateCombo("Main Course", y); y += 40;
+        cmbDessert = CreateCombo("Dessert", y); y += 50;
+
+        lblSubtotal = CreateLabel("Subtotal: $0.00", y); y += 25;
+        lblTax = CreateLabel("Tax: $0.00", y); y += 25;
+        lblTotal = CreateLabel("Total: $0.00", y); y += 35;
+
+        btnClear = new Button { Text = "Clear Bill", Location = new Point(150, y), Size = new Size(100, 30) };
+        btnClear.Click += (s, e) => { currentSubtotal = 0; UpdateTotals(); };
+        this.Controls.Add(btnClear);
+
+        InitializeMenu();
+    }
+
+    private ComboBox CreateCombo(string category, int y) {
+        Label lbl = new Label { Text = category, Location = new Point(20, y), AutoSize = true };
+        this.Controls.Add(lbl);
+        ComboBox cmb = new ComboBox { Location = new Point(120, y), Width = 200 };
+        cmb.SelectedIndexChanged += ItemSelected;
+        this.Controls.Add(cmb);
+        return cmb;
+    }
+
+    private Label CreateLabel(string text, int y) {
+        Label lbl = new Label { Text = text, Location = new Point(120, y), AutoSize = true };
+        this.Controls.Add(lbl);
+        return lbl;
+    }
+
+    private void InitializeMenu() {
+        // Sample data loaded manually based on Fig 15.52 logic
+        cmbBeverage.Items.Add(new MenuItem { Name = "Soda", Price = 1.95m });
+        cmbBeverage.Items.Add(new MenuItem { Name = "Tea", Price = 1.50m });
+        
+        cmbAppetizer.Items.Add(new MenuItem { Name = "Buffalo Wings", Price = 5.95m });
+        cmbAppetizer.Items.Add(new MenuItem { Name = "Nachos", Price = 8.95m });
+
+        cmbMain.Items.Add(new MenuItem { Name = "Chicken Alfredo", Price = 13.95m });
+        cmbMain.Items.Add(new MenuItem { Name = "Prime Rib", Price = 20.95m });
+
+        cmbDessert.Items.Add(new MenuItem { Name = "Apple Pie", Price = 5.95m });
+        cmbDessert.Items.Add(new MenuItem { Name = "Sundae", Price = 3.95m });
+    }
+
+    private void ItemSelected(object sender, EventArgs e) {
+        ComboBox cmb = sender as ComboBox;
+        if (cmb != null && cmb.SelectedItem != null) {
+            MenuItem item = (MenuItem)cmb.SelectedItem;
+            currentSubtotal += item.Price;
+            UpdateTotals();
+            // Reset selection so user can pick same item again if needed, or keep it selected visually
+            // Prompt implies "As each item is selected... add". 
+        }
+    }
+
+    private void UpdateTotals() {
+        decimal subtotal = currentSubtotal;
+        
+        // Discount Logic (> $500 gets 5% off)
+        decimal discount = (subtotal > 500) ? subtotal * 0.05m : 0;
+        decimal discountedSubtotal = subtotal - discount;
+
+        decimal tax = discountedSubtotal * 0.15m;
+        decimal total = discountedSubtotal + tax;
+
+        lblSubtotal.Text = $"Subtotal: {subtotal:C}";
+        lblTax.Text = $"Tax: {tax:C}";
+        lblTotal.Text = $"Total: {total:C}";
+    }
+}
+Soru 15.10 (TabPages Kullanımı)Soru (Türkçe):Üç TabPage içeren bir uygulama oluşturun. İlk TabPage'de, altı öğe içeren bir CheckedListBox yerleştirin. İkinci TabPage'de, altı TextBox yerleştirin. 
+Son TabPage'de, altı LinkLabel yerleştirin. Kullanıcının ilk TabPage'deki seçimleri, altı LinkLabel'den hangilerinin görüntüleneceğini belirtmelidir. Bir LinkLabel'in değerini gizlemek veya görüntülemek için 
+Visible özelliğini kullanın. İkinci TabPage'i, LinkLabel'ler tarafından açılan web sayfasını değiştirmek için kullanın.
+Cevap ve Kodlar:Dosya: TabPageLinksForm.cs
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class TabPageLinksForm : Form
+{
+    private TabControl tabControl;
+    private CheckedListBox checkedListBox;
+    private TextBox[] urlInputs = new TextBox[6];
+    private LinkLabel[] linkLabels = new LinkLabel[6];
+
+    public TabPageLinksForm()
+    {
+        this.Text = "Tab Control Example";
+        this.Size = new Size(400, 300);
+
+        tabControl = new TabControl { Dock = DockStyle.Fill };
+        
+        // --- Page 1: Selection ---
+        TabPage page1 = new TabPage("Selection");
+        checkedListBox = new CheckedListBox { Location = new Point(20, 20), Size = new Size(200, 150) };
+        for (int i = 0; i < 6; i++) checkedListBox.Items.Add($"Link {i + 1}");
+        checkedListBox.ItemCheck += (s, e) => {
+            // Check işlemi tamamlanmadan olay tetiklenir, bu yüzden BeginInvoke ile UI thread'ine bırakıyoruz
+            this.BeginInvoke(new Action(() => UpdateLinkVisibility()));
+        };
+        page1.Controls.Add(checkedListBox);
+        tabControl.TabPages.Add(page1);
+
+        // --- Page 2: URLs ---
+        TabPage page2 = new TabPage("URLs");
+        for (int i = 0; i < 6; i++)
+        {
+            Label lbl = new Label { Text = $"Link {i + 1} URL:", Location = new Point(10, 20 + (i * 30)), AutoSize = true };
+            urlInputs[i] = new TextBox { Text = "http://www.google.com", Location = new Point(100, 20 + (i * 30)), Width = 200 };
+            urlInputs[i].TextChanged += (s, e) => UpdateLinkUrls(); // Dinamik güncelleme
+            page2.Controls.Add(lbl);
+            page2.Controls.Add(urlInputs[i]);
+        }
+        tabControl.TabPages.Add(page2);
+
+        // --- Page 3: Links ---
+        TabPage page3 = new TabPage("View Links");
+        for (int i = 0; i < 6; i++)
+        {
+            linkLabels[i] = new LinkLabel { Text = $"Go to Link {i + 1}", Location = new Point(20, 20 + (i * 30)), Visible = false };
+            int index = i; // Closure capture için
+            linkLabels[i].Click += (s, e) => {
+                try { Process.Start(urlInputs[index].Text); } catch { }
+            };
+            page3.Controls.Add(linkLabels[i]);
+        }
+        tabControl.TabPages.Add(page3);
+
+        this.Controls.Add(tabControl);
+    }
+
+    private void UpdateLinkVisibility()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            linkLabels[i].Visible = checkedListBox.GetItemChecked(i);
+        }
+    }
+    
+    private void UpdateLinkUrls()
+    {
+        // Link'e tıklandığında Textbox'tan en güncel değer alınıyor zaten (event handler içinde).
+        // Burası opsiyonel olarak Link Text'ini değiştirebilir.
+    }
+}
+Soru 15.11 (MDI Çizim Programları)Soru (Türkçe):Her biri çizim için bir Panel'e sahip alt pencereleri (child windows) olan bir MDI uygulaması oluşturun. MDI uygulamasına, kullanıcının boya fırçasının boyutunu
+ve rengini değiştirmesine izin veren menüler ekleyin. Bu uygulamayı çalıştırırken, pencerelerden biri diğerinin üzerine gelirse (örtüşürse), Panel'in temizleneceğinin farkında olun (Not: Bu, kalıcı çizim
+yapılmadığında standart GDI davranışıdır).
+Cevap ve Kodlar:Dosya: MdiDrawingApp.cs
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class MdiDrawingParent : Form
+{
+    // Global fırça ayarları
+    public static Color CurrentColor = Color.Black;
+    public static int CurrentSize = 4;
+
+    public MdiDrawingParent()
+    {
+        this.Text = "MDI Drawing App";
+        this.Size = new Size(800, 600);
+        this.IsMdiContainer = true;
+
+        MenuStrip menu = new MenuStrip();
+        
+        // File -> New
+        ToolStripMenuItem file = new ToolStripMenuItem("File");
+        file.DropDownItems.Add("New Canvas", null, (s, e) => {
+            DrawingChild child = new DrawingChild();
+            child.MdiParent = this;
+            child.Show();
+        });
+        menu.Items.Add(file);
+
+        // Settings -> Color
+        ToolStripMenuItem settings = new ToolStripMenuItem("Settings");
+        settings.DropDownItems.Add("Choose Color...", null, (s, e) => {
+            ColorDialog cd = new ColorDialog();
+            if (cd.ShowDialog() == DialogResult.OK) CurrentColor = cd.Color;
+        });
+
+        // Settings -> Size
+        ToolStripMenuItem sizeMenu = new ToolStripMenuItem("Brush Size");
+        sizeMenu.DropDownItems.Add("Small (2px)", null, (s, e) => CurrentSize = 2);
+        sizeMenu.DropDownItems.Add("Medium (5px)", null, (s, e) => CurrentSize = 5);
+        sizeMenu.DropDownItems.Add("Large (10px)", null, (s, e) => CurrentSize = 10);
+        settings.DropDownItems.Add(sizeMenu);
+
+        menu.Items.Add(settings);
+        this.MainMenuStrip = menu;
+        this.Controls.Add(menu);
+    }
+}
+
+public class DrawingChild : Form
+{
+    private Panel canvas;
+    private bool isDrawing = false;
+    private Point lastPoint;
+
+    public DrawingChild()
+    {
+        this.Text = "Canvas";
+        this.Size = new Size(300, 300);
+        
+        canvas = new Panel { Dock = DockStyle.Fill, BackColor = Color.White };
+        canvas.MouseDown += (s, e) => { isDrawing = true; lastPoint = e.Location; };
+        canvas.MouseUp += (s, e) => isDrawing = false;
+        canvas.MouseMove += Canvas_MouseMove;
+        
+        this.Controls.Add(canvas);
+    }
+
+    private void Canvas_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (isDrawing)
+        {
+            using (Graphics g = canvas.CreateGraphics())
+            {
+                using (Pen p = new Pen(MdiDrawingParent.CurrentColor, MdiDrawingParent.CurrentSize))
+                {
+                    p.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                    p.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    g.DrawLine(p, lastPoint, e.Location);
+                }
+            }
+            lastPoint = e.Location;
+        }
+    }
+}
