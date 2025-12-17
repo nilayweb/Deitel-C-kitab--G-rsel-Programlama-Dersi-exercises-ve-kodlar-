@@ -1,0 +1,984 @@
+14.1 Doğru/Yanlış
+a) KeyData özelliği, değiştirici tuşlar (modifier keys) hakkındaki verileri içerir. Cevap: Doğru (True).
+
+b) Bir Form bir kapsayıcıdır (container). Cevap: Doğru (True). (Formlar diğer kontrolleri içinde barındırır.)
+
+c) Tüm Formlar, bileşenler ve kontroller birer sınıftır (class). Cevap: Doğru (True).
+
+d) CheckBox'lar (Onay kutuları), birbirini dışlayan (mutually exclusive) bir seçenekler kümesini temsil etmek için kullanılır. Cevap: Yanlış (False). Açıklama: Birbirini dışlayan (sadece birinin seçilebildiği) seçenekler için RadioButtons kullanılır. CheckBox'lar birden fazla seçime izin verir.
+
+e) Bir Label (Etiket), uygulamayı çalıştıran bir kullanıcının düzenleyebileceği metni görüntüler. Cevap: Yanlış (False). Açıklama: Label kontrolü genellikle salt okunur metinler içindir. Kullanıcı girişi için TextBox kullanılır.
+
+f) Düğmeye basılması olaylar (events) oluşturur. Cevap: Doğru (True).
+
+g) Tüm fare olayları aynı olay argümanları sınıfını kullanır. Cevap: Yanlış (False). Açıklama: MouseEnter ve MouseLeave olayları EventArgs sınıfını kullanırken; MouseDown, MouseUp ve MouseMove gibi olaylar MouseEventArgs sınıfını kullanır.
+
+h) Visual Studio bir olayı kaydedebilir ve boş bir olay işleyici (event handler) oluşturabilir. Cevap: Doğru (True).
+
+i) NumericUpDown kontrolü, bir girdi değerleri aralığı belirtmek için kullanılır. Cevap: Doğru (True).
+
+j) Bir kontrolün ipucu metni (tool tip text), Control sınıfının ToolTip özelliği ile ayarlanır. Cevap: Yanlış (False). Açıklama: Windows Forms'da Control sınıfının doğrudan bir ToolTip özelliği yoktur. Bunun yerine bir ToolTip bileşeni (component) forma eklenir ve bu bileşen aracılığıyla diğer kontrollere ipucu metni atanır.
+
+14.2 Boşluk Doldurma
+a) Aktif kontrolün odağa (focus) sahip olduğu söylenir.
+
+b) Form, eklenen kontroller için bir kapsayıcı (container) görevi görür.
+
+c) GUI'ler (Grafiksel Kullanıcı Arayüzleri) olay (event) güdümlüdür.
+
+d) Aynı olayı işleyen her metot aynı imzaya (signature) sahip olmalıdır.
+
+e) Bir Password (Şifre) TextBox (veya UseSystemPasswordChar özelliği aktif olan TextBox), kullanıcı girişini tekrar tekrar kullanılan bir karakterle maskeler.
+
+f) GroupBox sınıfı ve Panel sınıfı, kontrolleri bir GUI üzerinde düzenlemeye yardımcı olur ve radyo düğmeleri için mantıksal gruplar sağlar.
+
+g) Tipik fare olayları MouseDown (tıklama/basma) ve MouseUp (bırakma) içerir (veya MouseMove, MouseHover vb.).
+
+h) Klavye (Key) olayları (KeyDown, KeyUp), klavyedeki bir tuşa basıldığında veya bırakıldığında oluşturulur.
+
+i) Değiştirici tuşlar Shift, Ctrl (Control) ve Alt tuşlarıdır.
+
+j) Birden fazla metodu çağırmak için bir multicast (çoklu yayın) olay veya temsilci (delegate) kullanılabilir.
+
+Soru 14.3 (Font Stili CheckBox Genişletmesi)
+Soru (Türkçe): Şekil 14.26'daki programı, her yazı tipi stili seçeneği için bir CheckBox (Onay Kutusu) içerecek şekilde genişletin. [İpucu: Her biti açıkça test etmek yerine mantıksal özel veya (^ - XOR) 
+kullanın.]
+
+Cevap ve Kodlar: Bu programda, Bold (Kalın), Italic (İtalik), Underline (Altı Çizili) ve Strikeout (Üstü Çizili) özellikleri için CheckBox'lar oluşturulmuştur. CheckBox'ların durumları değiştiğinde
+(CheckedChanged), ipucunda belirtildiği gibi XOR (^) operatörü kullanılarak mevcut font stili güncellenir.
+
+Dosya: FontStyleForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class FontStyleForm : Form
+{
+    private Label textLabel;
+    private CheckBox boldCheckBox;
+    private CheckBox italicCheckBox;
+    private CheckBox underlineCheckBox;
+    private CheckBox strikeoutCheckBox;
+
+    public FontStyleForm()
+    {
+        // Form Başlığı
+        Text = "Font Style CheckBoxes";
+        Size = new Size(350, 200);
+
+        // Örnek Metin Etiketi
+        textLabel = new Label();
+        textLabel.Text = "Watch the font style change";
+        textLabel.Location = new Point(20, 20);
+        textLabel.AutoSize = true;
+        textLabel.Font = new Font("Segoe UI", 14, FontStyle.Regular);
+        Controls.Add(textLabel);
+
+        // Bold CheckBox
+        boldCheckBox = new CheckBox();
+        boldCheckBox.Text = "Bold";
+        boldCheckBox.Location = new Point(20, 60);
+        boldCheckBox.CheckedChanged += new EventHandler(ApplyFontStyle);
+        Controls.Add(boldCheckBox);
+
+        // Italic CheckBox
+        italicCheckBox = new CheckBox();
+        italicCheckBox.Text = "Italic";
+        italicCheckBox.Location = new Point(100, 60);
+        italicCheckBox.CheckedChanged += new EventHandler(ApplyFontStyle);
+        Controls.Add(italicCheckBox);
+
+        // Underline CheckBox
+        underlineCheckBox = new CheckBox();
+        underlineCheckBox.Text = "Underline";
+        underlineCheckBox.Location = new Point(180, 60);
+        underlineCheckBox.CheckedChanged += new EventHandler(ApplyFontStyle);
+        Controls.Add(underlineCheckBox);
+
+        // Strikeout CheckBox
+        strikeoutCheckBox = new CheckBox();
+        strikeoutCheckBox.Text = "Strikeout";
+        strikeoutCheckBox.Location = new Point(260, 60);
+        strikeoutCheckBox.CheckedChanged += new EventHandler(ApplyFontStyle);
+        Controls.Add(strikeoutCheckBox);
+    }
+
+    // Tüm CheckBox'lar bu tek olay işleyicisini (event handler) kullanır
+    private void ApplyFontStyle(object sender, EventArgs e)
+    {
+        // Mevcut stili al
+        FontStyle style = textLabel.Font.Style;
+
+        // İpucundaki gibi XOR (^) kullanarak stili değiştiriyoruz.
+        // Hangi kutunun tetiklediğine bakarak ilgili biti tersine çeviriyoruz.
+        if (sender == boldCheckBox)
+        {
+            style ^= FontStyle.Bold;
+        }
+        else if (sender == italicCheckBox)
+        {
+            style ^= FontStyle.Italic;
+        }
+        else if (sender == underlineCheckBox)
+        {
+            style ^= FontStyle.Underline;
+        }
+        else if (sender == strikeoutCheckBox)
+        {
+            style ^= FontStyle.Strikeout;
+        }
+
+        // Yeni fontu uygula
+        textLabel.Font = new Font(textLabel.Font, style);
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new FontStyleForm());
+    }
+}
+Soru 14.4 (GUI Oluşturma)
+Soru (Türkçe): Şekil 14.41'deki GUI'yi oluşturun (işlevsellik sağlamanız gerekmez).
+
+Cevap ve Kodlar: Not: Kitabın bu baskısında Şekil 14.41 genellikle bir "Sıcaklık Dönüştürücü (Temperature Converter)" arayüzüne karşılık gelir. Aşağıdaki kod, bu arayüzün tasarımını (Label'lar, TextBox'lar ve
+Buton) kod tarafında oluşturur.
+
+Dosya: TemperatureGuiForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class TemperatureGuiForm : Form
+{
+    private Label instructionLabel;
+    private Label fahrenheitLabel;
+    private TextBox fahrenheitTextBox;
+    private Label celsiusLabel; // Sonucu göstermek için
+    private Button convertButton;
+
+    public TemperatureGuiForm()
+    {
+        // Form Ayarları
+        Text = "Temperature Converter"; // Şekil 14.41 Başlığı
+        Size = new Size(320, 180);
+        StartPosition = FormStartPosition.CenterScreen;
+
+        // Talimat Etiketi
+        instructionLabel = new Label();
+        instructionLabel.Text = "Enter Fahrenheit temperature:";
+        instructionLabel.Location = new Point(10, 10);
+        instructionLabel.AutoSize = true;
+        Controls.Add(instructionLabel);
+
+        // Fahrenheit Giriş Alanı (TextBox)
+        fahrenheitTextBox = new TextBox();
+        fahrenheitTextBox.Location = new Point(10, 35);
+        fahrenheitTextBox.Size = new Size(280, 20);
+        Controls.Add(fahrenheitTextBox);
+
+        // Dönüştürme Butonu
+        convertButton = new Button();
+        convertButton.Text = "Convert";
+        convertButton.Location = new Point(10, 70);
+        convertButton.Size = new Size(100, 30);
+        Controls.Add(convertButton);
+
+        // Sonuç Etiketi (Başlangıçta boş veya varsayılan metin)
+        fahrenheitLabel = new Label();
+        fahrenheitLabel.Text = "Temperature in Celsius:";
+        fahrenheitLabel.Location = new Point(10, 110);
+        fahrenheitLabel.AutoSize = true;
+        Controls.Add(fahrenheitLabel);
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new TemperatureGuiForm());
+    }
+}
+
+
+Soru 14.8 (Sayı Tahmin Oyunu)
+Soru (Türkçe): Aşağıdaki gibi "sayıyı tahmin et" oyunu oynayan bir program yazın: Programınız, 1–1000 aralığında rastgele bir int seçerek tahmin edilecek sayıyı belirler. Ardından program bir etikette (Label)
+şu metni görüntüler: "1 ile 1000 arasında bir sayım var--sayımı tahmin edebilir misin?" "Lütfen ilk tahmininizi girin." Tahmini girmek için bir TextBox kullanılmalıdır. Her tahmin girildiğinde, arka plan rengi 
+kırmızı veya maviye dönmelidir. Kırmızı, kullanıcının "daha sıcak" (yaklaştığını), mavi ise "daha soğuk" (uzaklaştığını) olduğunu belirtir. Bir Label, kullanıcının doğru cevaba odaklanmasına yardımcı olmak için 
+"Çok Yüksek" (Too High) veya "Çok Düşük" (Too Low) görüntülemelidir. Kullanıcı doğru cevabı tahmin ettiğinde, bir mesaj kutusunda "Doğru!" (Correct!) görüntüleyin, Formun arka plan rengini yeşile çevirin ve
+TextBox'ı devre dışı bırakın. Bir kontrolün Enabled özelliğini false yaparak devre dışı bırakılabileceğini unutmayın. Kullanıcının oyunu tekrar oynamasına izin veren bir Düğme (Button) sağlayın. Düğmeye
+tıklandığında, yeni bir rastgele sayı oluşturun, arka planı varsayılan renge değiştirin ve TextBox'ı etkinleştirin.
+
+Cevap ve Kodlar: Bu çözümde, "daha sıcak" (warmer) ve "daha soğuk" (colder) mantığı, kullanıcının şimdiki tahmininin önceki tahminine göre hedef sayıya ne kadar yakın olduğuyla belirlenir. İlk tahminde renk 
+değişmez.
+
+Dosya: GuessNumberGameForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class GuessNumberGameForm : Form
+{
+    private Label instructionsLabel;
+    private Label feedbackLabel;
+    private TextBox guessTextBox;
+    private Button playAgainButton;
+    
+    private int targetNumber;
+    private int previousDistance = 0; // Sıcak/Soğuk mantığı için
+    private Random random = new Random();
+    private Color defaultColor;
+
+    public GuessNumberGameForm()
+    {
+        this.Text = "Guess the Number Game";
+        this.Size = new Size(400, 300);
+        this.defaultColor = this.BackColor;
+
+        // Talimat Etiketi
+        instructionsLabel = new Label();
+        instructionsLabel.Text = "I have a number between 1 and 1000--\ncan you guess my number?\nPlease enter your first guess.";
+        instructionsLabel.Location = new Point(20, 20);
+        instructionsLabel.AutoSize = true;
+        this.Controls.Add(instructionsLabel);
+
+        // Tahmin Giriş Kutusu
+        guessTextBox = new TextBox();
+        guessTextBox.Location = new Point(150, 80);
+        guessTextBox.KeyDown += GuessTextBox_KeyDown; // Enter tuşunu dinle
+        this.Controls.Add(guessTextBox);
+
+        // Geri Bildirim Etiketi (Too High/Low)
+        feedbackLabel = new Label();
+        feedbackLabel.Text = "";
+        feedbackLabel.Location = new Point(150, 110);
+        feedbackLabel.AutoSize = true;
+        this.Controls.Add(feedbackLabel);
+
+        // Tekrar Oyna Butonu
+        playAgainButton = new Button();
+        playAgainButton.Text = "Play Again";
+        playAgainButton.Location = new Point(140, 150);
+        playAgainButton.Click += PlayAgainButton_Click;
+        playAgainButton.Visible = false; // Başlangıçta gizli
+        this.Controls.Add(playAgainButton);
+
+        // Oyunu başlat
+        InitializeGame();
+    }
+
+    private void InitializeGame()
+    {
+        targetNumber = random.Next(1, 1001);
+        guessTextBox.Enabled = true;
+        guessTextBox.Text = "";
+        guessTextBox.BackColor = Color.White;
+        this.BackColor = defaultColor;
+        feedbackLabel.Text = "";
+        playAgainButton.Visible = false;
+        previousDistance = 0; // Mesafeyi sıfırla
+        guessTextBox.Focus();
+    }
+
+    private void GuessTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter)
+        {
+            ProcessGuess();
+            // "Ding" sesini engellemek için
+            e.SuppressKeyPress = true; 
+        }
+    }
+
+    private void ProcessGuess()
+    {
+        if (!int.TryParse(guessTextBox.Text, out int guess))
+        {
+            feedbackLabel.Text = "Please enter a valid number!";
+            return;
+        }
+
+        if (guess == targetNumber)
+        {
+            // Doğru Tahmin
+            MessageBox.Show("Correct!", "Win", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.BackColor = Color.Green;
+            guessTextBox.Enabled = false;
+            playAgainButton.Visible = true;
+            feedbackLabel.Text = "Correct!";
+        }
+        else
+        {
+            // Yüksek/Düşük Kontrolü
+            if (guess > targetNumber)
+                feedbackLabel.Text = "Too High";
+            else
+                feedbackLabel.Text = "Too Low";
+
+            // Sıcak/Soğuk Renk Kontrolü
+            int currentDistance = Math.Abs(targetNumber - guess);
+
+            // Eğer bu ilk tahmin değilse (previousDistance 0 değilse veya mantığı kuralım)
+            // Not: İlk tahminde kıyaslama yapamayız, renk değişmez.
+            if (previousDistance != 0)
+            {
+                if (currentDistance < previousDistance)
+                {
+                    this.BackColor = Color.Red; // Warmer (Isınıyor/Yaklaşıyor)
+                }
+                else
+                {
+                    this.BackColor = Color.LightBlue; // Colder (Soğuyor/Uzaklaşıyor)
+                }
+            }
+
+            previousDistance = currentDistance;
+            guessTextBox.SelectAll(); // Kolay yeni giriş için
+        }
+    }
+
+    private void PlayAgainButton_Click(object sender, EventArgs e)
+    {
+        InitializeGame();
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new GuessNumberGameForm());
+    }
+}
+Soru 14.9 (Kırtasiye Merkezi)
+Soru (Türkçe): Kullanıcıların kırtasiye faturalarını işlemelerine olanak tanıyan bir uygulama yazın. Uygulama, geçerli indirimleri düştükten ve ardından satın alınan her bir ürünün fiyatını ve vergileri
+ekledikten sonra fiyatı hesaplamalıdır. Fatura numarası, sipariş numarası, müşteri adı ve ofis adresini girmek için TextBox'lar sağlanır. Başlangıçta, bu alanlar amaçlarını açıklayan metinler içerir. Öğeyi seçmek için CheckBox'lar ve satın alınacak öğe miktarlarını girmek için TextBox'lar sağlayın. Kullanıcı miktar alanlarının herhangi birinin değerini değiştirdiğinde, uygulama ara toplamı, (indirim düşüldükten sonraki) toplamı, vergiyi ve ödenecek tutarı güncellemelidir. Uygulama ayrıca tıklandığında tüm alanları orijinal değerlerine döndüren bir Düğme (Reset) içermelidir. Ara toplam 500$'ı geçerse indirim için %5 kullanın. Vergi, toplamın %15'i olarak hesaplanır. Tüm alanlar doldurulmalı ve kullanıcının o öğe için bir miktar girmesi için bir öğe işaretlenmelidir (checked).
+
+Cevap ve Kodlar: Bu çözümde, CheckBox işaretlendiğinde ilgili miktar kutusu (TextBox) etkinleşir. Miktar değiştiğinde hesaplama otomatik olarak güncellenir. Ayrıca "Placeholder" (yer tutucu) metin mantığı 
+uygulanmıştır.
+
+Dosya: StationeryHubForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class StationeryHubForm : Form
+{
+    // Giriş Alanları
+    private TextBox txtInvoiceNo, txtOrderNo, txtCustomerName, txtAddress;
+    
+    // Ürün Kontrolleri (Pen, Pencil, Notebook)
+    private CheckBox chkPen, chkPencil, chkNotebook;
+    private TextBox txtQtyPen, txtQtyPencil, txtQtyNotebook;
+    
+    // Fiyatlar (Sabit varsayalım)
+    private const decimal PRICE_PEN = 10.00m;
+    private const decimal PRICE_PENCIL = 5.00m;
+    private const decimal PRICE_NOTEBOOK = 20.00m;
+
+    // Sonuç Etiketleri
+    private Label lblSubtotalVal, lblDiscountVal, lblTaxVal, lblTotalDueVal;
+    
+    private Button btnReset;
+
+    public StationeryHubForm()
+    {
+        this.Text = "Stationery Hub";
+        this.Size = new Size(500, 600);
+        this.StartPosition = FormStartPosition.CenterScreen;
+
+        // --- Müşteri Bilgileri Bölümü ---
+        int yPos = 20;
+        txtInvoiceNo = CreatePlaceholderTextBox("Invoice Number", 20, yPos); yPos += 30;
+        txtOrderNo = CreatePlaceholderTextBox("Order Number", 20, yPos); yPos += 30;
+        txtCustomerName = CreatePlaceholderTextBox("Customer Name", 20, yPos); yPos += 30;
+        txtAddress = CreatePlaceholderTextBox("Office Address", 20, yPos); yPos += 50;
+
+        // --- Ürünler Bölümü (Header) ---
+        Label lblHeader = new Label() { Text = "Item (Check to buy)", Location = new Point(20, yPos), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) };
+        Label lblQtyHeader = new Label() { Text = "Quantity", Location = new Point(200, yPos), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) };
+        Label lblPriceHeader = new Label() { Text = "Price", Location = new Point(300, yPos), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) };
+        this.Controls.AddRange(new Control[] { lblHeader, lblQtyHeader, lblPriceHeader });
+        yPos += 30;
+
+        // Ürün 1: Pen ($10)
+        CreateItemRow("Pen", PRICE_PEN, ref chkPen, ref txtQtyPen, 20, yPos); yPos += 30;
+        // Ürün 2: Pencil ($5)
+        CreateItemRow("Pencil", PRICE_PENCIL, ref chkPencil, ref txtQtyPencil, 20, yPos); yPos += 30;
+        // Ürün 3: Notebook ($20)
+        CreateItemRow("Notebook", PRICE_NOTEBOOK, ref chkNotebook, ref txtQtyNotebook, 20, yPos); yPos += 50;
+
+        // --- Hesaplama Sonuçları Bölümü ---
+        CreateResultRow("Subtotal:", ref lblSubtotalVal, 20, ref yPos);
+        CreateResultRow("Discount (5% > $500):", ref lblDiscountVal, 20, ref yPos);
+        CreateResultRow("Tax (15%):", ref lblTaxVal, 20, ref yPos);
+        CreateResultRow("Amount Due:", ref lblTotalDueVal, 20, ref yPos);
+        lblTotalDueVal.Font = new Font(this.Font, FontStyle.Bold);
+
+        // --- Reset Butonu ---
+        yPos += 20;
+        btnReset = new Button() { Text = "Reset Form", Location = new Point(150, yPos), Size = new Size(150, 40) };
+        btnReset.Click += BtnReset_Click;
+        this.Controls.Add(btnReset);
+    }
+
+    // Yardımcı Metot: Yer tutucu metne sahip TextBox oluşturur
+    private TextBox CreatePlaceholderTextBox(string placeholder, int x, int y)
+    {
+        TextBox txt = new TextBox();
+        txt.Location = new Point(x, y);
+        txt.Size = new Size(250, 20);
+        txt.Text = placeholder;
+        txt.ForeColor = Color.Gray;
+        txt.Tag = placeholder; // Orijinal metni sakla
+
+        // Olaylar (Placeholder mantığı)
+        txt.Enter += (s, e) => {
+            if (txt.Text == (string)txt.Tag) {
+                txt.Text = "";
+                txt.ForeColor = Color.Black;
+            }
+        };
+        txt.Leave += (s, e) => {
+            if (string.IsNullOrWhiteSpace(txt.Text)) {
+                txt.Text = (string)txt.Tag;
+                txt.ForeColor = Color.Gray;
+            }
+        };
+        
+        this.Controls.Add(txt);
+        return txt;
+    }
+
+    // Yardımcı Metot: Bir ürün satırı oluşturur
+    private void CreateItemRow(string itemName, decimal price, ref CheckBox chk, ref TextBox qtyBox, int x, int y)
+    {
+        chk = new CheckBox() { Text = itemName, Location = new Point(x, y), AutoSize = true };
+        
+        qtyBox = new TextBox() { Location = new Point(x + 180, y), Size = new Size(50, 20), Enabled = false, Text = "0" };
+        
+        Label lblPrice = new Label() { Text = $"{price:C}", Location = new Point(x + 280, y), AutoSize = true };
+
+        // Olaylar
+        chk.CheckedChanged += (s, e) => {
+            qtyBox.Enabled = chk.Checked;
+            if (!chk.Checked) qtyBox.Text = "0";
+            else qtyBox.Focus();
+            CalculateTotals();
+        };
+
+        qtyBox.TextChanged += (s, e) => CalculateTotals();
+
+        this.Controls.Add(chk);
+        this.Controls.Add(qtyBox);
+        this.Controls.Add(lblPrice);
+    }
+
+    // Yardımcı Metot: Sonuç etiketi satırı
+    private void CreateResultRow(string labelText, ref Label valueLabel, int x, ref int y)
+    {
+        Label lbl = new Label() { Text = labelText, Location = new Point(x, y), AutoSize = true, Size = new Size(150, 20) };
+        valueLabel = new Label() { Text = "$0.00", Location = new Point(x + 200, y), AutoSize = true };
+        this.Controls.Add(lbl);
+        this.Controls.Add(valueLabel);
+        y += 25;
+    }
+
+    private void CalculateTotals()
+    {
+        // Önce iletişim alanlarının dolu olup olmadığını kontrol edebiliriz
+        // Ancak soru "değer değişince güncelle" dediği için hesaplamayı her türlü yapıyoruz.
+        
+        decimal subtotal = 0;
+
+        subtotal += GetLineTotal(chkPen, txtQtyPen, PRICE_PEN);
+        subtotal += GetLineTotal(chkPencil, txtQtyPencil, PRICE_PENCIL);
+        subtotal += GetLineTotal(chkNotebook, txtQtyNotebook, PRICE_NOTEBOOK);
+
+        decimal discount = 0;
+        if (subtotal > 500)
+        {
+            discount = subtotal * 0.05m;
+        }
+
+        decimal totalAfterDiscount = subtotal - discount;
+        decimal tax = totalAfterDiscount * 0.15m;
+        decimal amountDue = totalAfterDiscount + tax;
+
+        // Arayüzü Güncelle
+        lblSubtotalVal.Text = $"{subtotal:C}";
+        lblDiscountVal.Text = $"{discount:C}";
+        lblTaxVal.Text = $"{tax:C}";
+        lblTotalDueVal.Text = $"{amountDue:C}";
+    }
+
+    private decimal GetLineTotal(CheckBox chk, TextBox qtyBox, decimal price)
+    {
+        if (chk.Checked && int.TryParse(qtyBox.Text, out int qty) && qty > 0)
+        {
+            return qty * price;
+        }
+        return 0;
+    }
+
+    private void BtnReset_Click(object sender, EventArgs e)
+    {
+        // Tüm alanları sıfırla
+        ResetTextBox(txtInvoiceNo);
+        ResetTextBox(txtOrderNo);
+        ResetTextBox(txtCustomerName);
+        ResetTextBox(txtAddress);
+
+        chkPen.Checked = false;
+        chkPencil.Checked = false;
+        chkNotebook.Checked = false;
+
+        txtQtyPen.Text = "0";
+        txtQtyPencil.Text = "0";
+        txtQtyNotebook.Text = "0";
+
+        CalculateTotals();
+    }
+
+    private void ResetTextBox(TextBox txt)
+    {
+        txt.Text = (string)txt.Tag;
+        txt.ForeColor = Color.Gray;
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new StationeryHubForm());
+    }
+}
+
+Soru (Türkçe): Ecofont—SPRANQ (Hollanda merkezli bir şirket) tarafından geliştirilen—baskı için kullanılan mürekkep miktarını %20'ye kadar azaltmak, böylece kullanılan mürekkep kartuşu sayısını ve üretim ile 
+nakliye süreçlerinin çevresel etkisini (daha az enerji kullanımı, nakliye için daha az yakıt vb.) düşürmek için tasarlanmış bir yazı tipidir. Sans-serif Verdana tabanlı olan bu yazı tipi, harflerin içinde, 
+sıkça kullanılan 9 veya 10 punto gibi küçük boyutlarda görünmeyen küçük dairesel "delikler" barındırır. Ecofont'un ücretsiz sürümünü indirin, ardından Ecofont web sitesindeki talimatları kullanarak
+ecofont_vera_sans_regular.ttf yazı tipi dosyasını yükleyin.
+
+Daha sonra, bir TextBox (Metin Kutusu) içine yazdığınız metnin Ecofont ile görüntülenmesini sağlayan GUI tabanlı bir program geliştirin. Yazı tipini her seferinde bir punto yukarı veya aşağı ölçeklendirmenizi
+sağlayan "Yazı Tipi Boyutunu Artır" (Increase Font Size) ve "Yazı Tipi Boyutunu Azalt" (Decrease Font Size) düğmeleri oluşturun. TextBox'ın Font özelliğini 9 punto Ecofont olarak ayarlayın. Kullanıcının birden 
+fazla satır metin girebilmesi için TextBox'ın MultiLine özelliğini true olarak ayarlayın. Yazı tipini büyüttükçe harflerdeki delikleri daha net görebileceksiniz. Küçülttükçe delikler daha az belirgin olacaktır. 
+TextBox'ın yazı tipini programatik olarak değiştirmek için şu biçimde bir ifade kullanın: inputTextBox.Font = new Font(inputTextBox.Font.FontFamily, inputTextBox.Font.SizeInPoints + 1); Bu, TextBox'ın Font
+özelliğini, TextBox'ın mevcut yazı tipini kullanan ancak yazı tipi boyutunu artırmak için SizeInPoints özelliğine 1 ekleyen yeni bir Font nesnesine değiştirir. Yazı tipi boyutunu azaltmak için de benzer bir
+ifade kullanılabilir. Delikleri fark etmeye başladığınız en küçük yazı tipi boyutu nedir?
+
+Cevap ve Kodlar:
+
+Not: Bu kodun düzgün çalışabilmesi için bilgisayarınızda "Ecofont Vera Sans" yazı tipinin yüklü olması gerekmektedir. Eğer yüklü değilse, sistem varsayılan bir yazı tipi (genellikle Microsoft Sans Serif) 
+kullanacaktır ve delik efekti görünmeyecektir.
+
+Dosya: EcofontTestForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class EcofontTestForm : Form
+{
+    private TextBox inputTextBox;
+    private Button btnIncrease;
+    private Button btnDecrease;
+    private Label lblCurrentSize;
+
+    // Ecofont'un sistemdeki Aile Adı (Family Name).
+    // Dosya adı "ecofont_vera_sans_regular.ttf" olsa da sistemde bu adla görünür.
+    private const string FONT_FAMILY_NAME = "Ecofont Vera Sans";
+
+    public EcofontTestForm()
+    {
+        this.Text = "Ecofont Tester";
+        this.Size = new Size(500, 400);
+        this.StartPosition = FormStartPosition.CenterScreen;
+
+        // --- Kontrollerin Oluşturulması ---
+
+        // 1. Bilgi Etiketi (Mevcut Boyutu Görmek İçin)
+        lblCurrentSize = new Label();
+        lblCurrentSize.Location = new Point(20, 10);
+        lblCurrentSize.AutoSize = true;
+        lblCurrentSize.Text = "Current Font Size: 9pt";
+        this.Controls.Add(lblCurrentSize);
+
+        // 2. Metin Kutusu (TextBox)
+        inputTextBox = new TextBox();
+        inputTextBox.Location = new Point(20, 40);
+        inputTextBox.Size = new Size(440, 250);
+        inputTextBox.Multiline = true; // Çok satırlı özellik
+        inputTextBox.ScrollBars = ScrollBars.Vertical;
+        // Varsayılan metin
+        inputTextBox.Text = "Ecofont saves ink by placing small holes in the letters.\r\n" +
+                            "Type here to test readability.\r\n" +
+                            "Increase the size to see the holes!";
+        
+        // Font Ayarlaması: Sistemde yüklü olan "Ecofont Vera Sans"ı kullanmaya çalışır.
+        // Eğer yüklü değilse varsayılan bir font kullanır.
+        try
+        {
+            inputTextBox.Font = new Font(FONT_FAMILY_NAME, 9);
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("Ecofont font not found! Using default font.", "Warning");
+            inputTextBox.Font = new Font("Arial", 9);
+        }
+        this.Controls.Add(inputTextBox);
+
+        // 3. Boyut Artırma Butonu
+        btnIncrease = new Button();
+        btnIncrease.Text = "Increase Font Size (+)";
+        btnIncrease.Location = new Point(20, 310);
+        btnIncrease.Size = new Size(150, 30);
+        btnIncrease.Click += BtnIncrease_Click;
+        this.Controls.Add(btnIncrease);
+
+        // 4. Boyut Azaltma Butonu
+        btnDecrease = new Button();
+        btnDecrease.Text = "Decrease Font Size (-)";
+        btnDecrease.Location = new Point(180, 310);
+        btnDecrease.Size = new Size(150, 30);
+        btnDecrease.Click += BtnDecrease_Click;
+        this.Controls.Add(btnDecrease);
+    }
+
+    // Yazı Tipi Boyutunu Artırma Olayı
+    private void BtnIncrease_Click(object sender, EventArgs e)
+    {
+        float currentSize = inputTextBox.Font.SizeInPoints;
+        
+        // Mevcut font ailesini koruyarak boyutu 1 artırıyoruz
+        inputTextBox.Font = new Font(inputTextBox.Font.FontFamily, currentSize + 1);
+        
+        UpdateSizeLabel();
+    }
+
+    // Yazı Tipi Boyutunu Azaltma Olayı
+    private void BtnDecrease_Click(object sender, EventArgs e)
+    {
+        float currentSize = inputTextBox.Font.SizeInPoints;
+
+        // Font boyutu 1'den küçük olamaz kontrolü
+        if (currentSize > 1)
+        {
+            inputTextBox.Font = new Font(inputTextBox.Font.FontFamily, currentSize - 1);
+            UpdateSizeLabel();
+        }
+    }
+
+    private void UpdateSizeLabel()
+    {
+        lblCurrentSize.Text = $"Current Font Size: {inputTextBox.Font.SizeInPoints}pt";
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new EcofontTestForm());
+    }
+}
+Gözlem Sorusu Cevabı: Deliklerin görünürlüğü ekran çözünürlüğünüze (DPI) göre değişmekle birlikte, genellikle 12 ile 14 punto civarında ekranda pikselli boşluklar olarak fark edilmeye başlanır.
+20 punto ve üzerinde delikler çok net bir şekilde daireler olarak görülebilir.
+
+
+Soru 14.11 (Proje: Yazma Eğitmeni—Bilgisayar Çağında Kritik Bir Beceriyi Geliştirmek)
+
+Soru (Türkçe): Hızlı ve doğru yazmak, bilgisayarlar ve İnternet ile etkili bir şekilde çalışmak için temel bir beceridir. Bu alıştırmada, kullanıcıların "dokunarak yazmayı" (yani klavyeye bakmadan doğru şekilde
+yazmayı) öğrenmelerine yardımcı olabilecek bir uygulama oluşturacaksınız. Uygulama, bilgisayarınızdakini taklit eden sanal bir klavye görüntülemeli ve kullanıcının gerçek klavyeye bakmadan ekranda ne yazdığını 
+izlemesine izin vermelidir. Tuşları temsil etmek için Düğmeler (Button) kullanın. Kullanıcı her tuşa bastığında, uygulama karşılık gelen Düğmeyi vurgulamalı ve kullanıcının o ana kadar yazdıklarını gösteren bir
+TextBox'a karakteri eklemelidir. [İpucu: Bir Düğmeyi vurgulamak için, arka plan rengini değiştirmek üzere BackColor özelliğini kullanın. Tuş bırakıldığında, orijinal arka plan rengini sıfırlayın.] Programınızı
+bir pangram—alfabenin her harfini en az bir kez içeren bir cümle—yazarak test edebilirsiniz; örneğin "The quick brown fox jumped over a lazy dog." (veya Türkçe: "Pijamalı hasta yağız şoföre çabucak güvendi").
+Web'de başka pangramlar da bulabilirsiniz. Programı daha ilginç hale getirmek için kullanıcının doğruluğunu izleyebilirsiniz. Kullanıcının, programınızda önceden sakladığınız ve sanal klavyenin üzerindeki
+ekranda görüntülediğiniz belirli ifadeleri yazmasını sağlayabilirsiniz. Kullanıcının kaç tuşa doğru bastığını ve kaçının yanlış yazıldığını takip edebilirsiniz. Ayrıca kullanıcının hangi tuşlarda zorlandığını 
+takip edebilir ve bu tuşları gösteren bir rapor görüntüleyebilirsiniz.
+
+Cevap ve Kodlar:
+
+Bu çözümde, dinamik olarak oluşturulan bir sanal klavye kullanılır. Kullanıcı klavyeden bir tuşa bastığında (KeyDown), ekrandaki ilgili sanal tuşun rengi değişir; tuş bırakıldığında (KeyUp) eski rengine döner. 
+Ayrıca bir hedef cümle (Pangram) belirlenir ve kullanıcının ne kadar doğru yazdığı KeyPress olayı üzerinden hesaplanır.
+
+Dosya: TypingTutorForm.cs
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class TypingTutorForm : Form
+{
+    private TextBox inputTextBox;
+    private Label targetLabel;
+    private Label statsLabel;
+    private Label infoLabel;
+    private Button btnReset;
+
+    // Tuşları yönetmek için sözlük (Keys Enum -> Button Nesnesi)
+    private Dictionary<Keys, Button> keyButtons = new Dictionary<Keys, Button>();
+
+    // İstatistikler
+    private string targetPhrase = "THE QUICK BROWN FOX JUMPED OVER A LAZY DOG";
+    private int correctKeystrokes = 0;
+    private int totalKeystrokes = 0;
+    private int errors = 0;
+
+    // Klavye Düzeni (Basitleştirilmiş QWERTY satırları)
+    // Not: Karakterleri Keys enum'ına çevirmek için özel mantık kullanacağız.
+    private readonly string[] rows = {
+        "1234567890",
+        "QWERTYUIOP",
+        "ASDFGHJKL",
+        "ZXCVBNM"
+    };
+
+    public TypingTutorForm()
+    {
+        this.Text = "Typing Tutor";
+        this.Size = new Size(800, 500);
+        this.StartPosition = FormStartPosition.CenterScreen;
+        this.KeyPreview = true; // Formun tuş olaylarını önce almasını sağlar
+
+        InitializeUI();
+        InitializeKeyboard();
+    }
+
+    private void InitializeUI()
+    {
+        // 1. Hedef Cümle Etiketi
+        Label lblInstruction = new Label();
+        lblInstruction.Text = "Type the following text (Press Enter to clear):";
+        lblInstruction.Location = new Point(20, 10);
+        lblInstruction.AutoSize = true;
+        this.Controls.Add(lblInstruction);
+
+        targetLabel = new Label();
+        targetLabel.Text = targetPhrase;
+        targetLabel.Location = new Point(20, 35);
+        targetLabel.AutoSize = true;
+        targetLabel.Font = new Font("Consolas", 14, FontStyle.Bold);
+        targetLabel.ForeColor = Color.DarkBlue;
+        this.Controls.Add(targetLabel);
+
+        // 2. Kullanıcı Giriş Kutusu
+        inputTextBox = new TextBox();
+        inputTextBox.Location = new Point(20, 70);
+        inputTextBox.Size = new Size(740, 100);
+        inputTextBox.Multiline = true;
+        inputTextBox.Font = new Font("Consolas", 12, FontStyle.Regular);
+        // Olayları Bağla
+        inputTextBox.KeyDown += InputTextBox_KeyDown;
+        inputTextBox.KeyUp += InputTextBox_KeyUp;
+        inputTextBox.KeyPress += InputTextBox_KeyPress;
+        this.Controls.Add(inputTextBox);
+
+        // 3. İstatistik Etiketi
+        statsLabel = new Label();
+        statsLabel.Text = "Accuracy: 100% | Errors: 0";
+        statsLabel.Location = new Point(20, 180);
+        statsLabel.AutoSize = true;
+        statsLabel.Font = new Font("Arial", 10, FontStyle.Bold);
+        this.Controls.Add(statsLabel);
+
+        // 4. Bilgi
+        infoLabel = new Label();
+        infoLabel.Text = "Note: Focus must be on the text box. Watch the virtual keyboard below.";
+        infoLabel.Location = new Point(300, 180);
+        infoLabel.AutoSize = true;
+        infoLabel.ForeColor = Color.Gray;
+        this.Controls.Add(infoLabel);
+
+        // 5. Sıfırla Butonu
+        btnReset = new Button();
+        btnReset.Text = "Reset / New Phrase";
+        btnReset.Location = new Point(650, 175);
+        btnReset.Size = new Size(110, 30);
+        btnReset.Click += (s, e) => ResetGame();
+        this.Controls.Add(btnReset);
+    }
+
+    private void InitializeKeyboard()
+    {
+        int startX = 60;
+        int startY = 220;
+        int keySize = 50;
+        int gap = 5;
+
+        // Harf ve Rakam Tuşlarını Oluştur
+        for (int r = 0; r < rows.Length; r++)
+        {
+            string currentRow = rows[r];
+            int currentX = startX + (r * 20); // Hafif girinti (indentation)
+            int currentY = startY + (r * (keySize + gap));
+
+            foreach (char c in currentRow)
+            {
+                Button btn = CreateKeyButton(c.ToString(), currentX, currentY, keySize);
+                
+                // Dictionary'e ekle
+                Keys key = (Keys)Enum.Parse(typeof(Keys), c.ToString()); // 'A' -> Keys.A
+                // Rakamlar için özel durum (D0, D1...)
+                if (char.IsDigit(c))
+                {
+                    key = (Keys)Enum.Parse(typeof(Keys), "D" + c); 
+                }
+
+                if (!keyButtons.ContainsKey(key))
+                    keyButtons.Add(key, btn);
+
+                currentX += keySize + gap;
+            }
+        }
+
+        // Space (Boşluk) Tuşunu Manuel Ekle
+        Button btnSpace = new Button();
+        btnSpace.Text = "SPACE";
+        btnSpace.Size = new Size(300, keySize);
+        btnSpace.Location = new Point(startX + 150, startY + (4 * (keySize + gap)));
+        btnSpace.BackColor = Color.WhiteSmoke;
+        btnSpace.Enabled = false; // Tıklanamaz, sadece görsel
+        this.Controls.Add(btnSpace);
+        keyButtons.Add(Keys.Space, btnSpace);
+
+        // Backspace Tuşunu Manuel Ekle
+        Button btnBack = new Button();
+        btnBack.Text = "BACK";
+        btnBack.Size = new Size(80, keySize);
+        btnBack.Location = new Point(startX + (10 * (keySize + gap)), startY); // 1. satır sonu
+        btnBack.BackColor = Color.WhiteSmoke;
+        btnBack.Enabled = false;
+        this.Controls.Add(btnBack);
+        keyButtons.Add(Keys.Back, btnBack);
+    }
+
+    private Button CreateKeyButton(string text, int x, int y, int size)
+    {
+        Button btn = new Button();
+        btn.Text = text;
+        btn.Size = new Size(size, size);
+        btn.Location = new Point(x, y);
+        btn.BackColor = Color.WhiteSmoke;
+        btn.Font = new Font("Arial", 10, FontStyle.Bold);
+        btn.Enabled = false; // Kullanıcı bunlara tıklamasın, sadece izlesin
+        this.Controls.Add(btn);
+        return btn;
+    }
+
+    // --- OLAY İŞLEYİCİLERİ ---
+
+    // 1. Tuşa basıldığında: Rengi değiştir (Görsel Geri Bildirim)
+    private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        // Dictionary'de bu tuş var mı? Varsa rengini değiştir.
+        if (keyButtons.ContainsKey(e.KeyCode))
+        {
+            keyButtons[e.KeyCode].BackColor = Color.LightSkyBlue;
+        }
+        else if (keyButtons.ContainsKey(e.Modifiers | e.KeyCode)) 
+        {
+            // Kombinasyonlar için basit bir kontrol
+        }
+    }
+
+    // 2. Tuş bırakıldığında: Rengi eski haline getir
+    private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (keyButtons.ContainsKey(e.KeyCode))
+        {
+            keyButtons[e.KeyCode].BackColor = Color.WhiteSmoke;
+        }
+    }
+
+    // 3. Karakter girildiğinde: Doğruluk kontrolü (Oyun Mantığı)
+    private void InputTextBox_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        // Backspace karakterini sayma veya silme işlemini yönet
+        if (e.KeyChar == (char)Keys.Back)
+        {
+            return;
+        }
+
+        // Enter'a basılırsa temizle
+        if (e.KeyChar == (char)Keys.Enter)
+        {
+            inputTextBox.Clear();
+            ResetStats();
+            e.Handled = true;
+            return;
+        }
+
+        totalKeystrokes++;
+
+        // Mevcut pozisyondaki harfi kontrol et
+        int currentPos = inputTextBox.Text.Length;
+
+        if (currentPos < targetPhrase.Length)
+        {
+            char expectedChar = targetPhrase[currentPos];
+            char typedChar = char.ToUpper(e.KeyChar); // Büyük/küçük harf duyarlılığını kaldırmak için
+
+            // Boşlukları ve harfleri karşılaştır
+            if (typedChar == expectedChar)
+            {
+                correctKeystrokes++;
+            }
+            else
+            {
+                errors++;
+            }
+        }
+        else
+        {
+            // Cümle bitti ama kullanıcı yazmaya devam ediyor -> Hata sayılır
+            errors++;
+        }
+
+        UpdateStats();
+    }
+
+    private void UpdateStats()
+    {
+        double accuracy = 0;
+        if (totalKeystrokes > 0)
+        {
+            accuracy = ((double)(totalKeystrokes - errors) / totalKeystrokes) * 100;
+        }
+        
+        // Negatif doğruluk olmaması için
+        if (accuracy < 0) accuracy = 0;
+
+        statsLabel.Text = $"Accuracy: {accuracy:F1}% | Errors: {errors} | Total: {totalKeystrokes}";
+        
+        // Hata varsa etiketi kırmızı yap
+        if (errors > 0) statsLabel.ForeColor = Color.Red;
+        else statsLabel.ForeColor = Color.Black;
+    }
+
+    private void ResetGame()
+    {
+        inputTextBox.Clear();
+        ResetStats();
+        inputTextBox.Focus();
+    }
+
+    private void ResetStats()
+    {
+        correctKeystrokes = 0;
+        totalKeystrokes = 0;
+        errors = 0;
+        UpdateStats();
+        statsLabel.ForeColor = Color.Black;
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new TypingTutorForm());
+    }
+}
