@@ -1,0 +1,862 @@
+16.1 Doğru/Yanlış
+
+a) Dizeler (strings) == ile karşılaştırıldığında, eğer dizeler aynı değerleri içeriyorsa sonuç doğrudur (true). Cevap: Doğru (True). Açıklama: C#'ta string sınıfı için == operatörü aşırı yüklenmiştir (overloaded) ve referansları değil, dizelerin içerdiği metin değerlerini karşılaştırır.
+
+b) Bir dize (string) oluşturulduktan sonra değiştirilebilir. Cevap: Yanlış (False). Açıklama: C#'ta String nesneleri değiştirilemezdir (immutable). Bir dize oluşturulduktan sonra içeriği değiştirilemez. Bir dizeyi değiştiriyor gibi görünen metotlar aslında bellekte değiştirilmiş yeni bir dize nesnesi oluşturur ve döndürür.
+
+c) StringBuilder sınıfının EnsureCapacity metodu, StringBuilder örneğinin uzunluğunu (length) argümanın değerine ayarlar. Cevap: Yanlış (False). Açıklama: EnsureCapacity metodu, StringBuilder'ın kapasitesini (bellekte ayrılan yer miktarını) garanti altına alır, uzunluğunu (içindeki karakter sayısını) değiştirmez. Uzunluğu değiştirmek için Length özelliği kullanılır.
+
+d) Equals metodu ve eşitlik operatörü (==) dizeler için aynı şekilde çalışır. Cevap: Doğru (True). Açıklama: String sınıfı için her ikisi de içeriğin eşitliğini (değer karşılaştırması) kontrol eder.
+
+e) Trim metodu, bir dizenin başındaki ve sonundaki tüm boşluk karakterlerini kaldırır. Cevap: Doğru (True).
+f) Her zaman StringBuilder yerine string kullanmak daha iyidir, çünkü aynı değeri içeren stringler aynı nesneye referans verir (string interning). Cevap: Yanlış (False). Açıklama: Evet, string değişmezleri (literals) havuzlanır, ancak stringler değiştirilemez (immutable) olduğu için, döngüler içinde sürekli string birleştirme yapmak her seferinde yeni nesneler oluşturur ve performansı ciddi şekilde düşürür. Yoğun metin manipülasyonu için StringBuilder daha iyidir.
+
+g) String metodu ToUpper, yalnızca ilk harfi büyük olan yeni bir dize oluşturur. Cevap: Yanlış (False). Açıklama: ToUpper metodu, dizedeki tüm harfleri büyük harfe dönüştürür.
+16.2 Boşluk Doldurma
+
+a) Dizeleri birleştirmek için + (veya +=) operatörü, StringBuilder metodu Append veya string metodu Concat (veya Join) kullanılır.
+
+b) StringBuilder metodu AppendFormat, önce belirtilen dizeyi biçimlendirir, ardından StringBuilder'ın sonuna ekler.
+
+c) Bir Substring metodu çağrısındaki argümanlar aralık dışındaysa, bir ArgumentOutOfRangeException istisnası fırlatılır.
+
+d) Bir biçim dizesindeki C, sayının para birimi (currency) olarak çıktı verilmesi anlamına gelir.
+Soru 16.3 (Alt Dizeleri Görüntüleme)
+Soru (Türkçe): Kullanıcı tarafından girilen bir dizenin içindeki olası tüm alt dizeleri (substrings) Substring metodunu kullanarak bir ListBox içinde görüntüleyen bir uygulama yazın. Ayrıca tüm alanları 
+sıfırlamak için bir Temizle (Clear) düğmesi oluşturun.
+
+Cevap ve Kodlar:
+
+Dosya: SubstringsForm.cs
+
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class SubstringsForm : Form
+{
+    private TextBox inputTextBox;
+    private ListBox substringsListBox;
+    private Button generateButton;
+    private Button clearButton;
+    private Label promptLabel;
+
+    public SubstringsForm()
+    {
+        this.Text = "Substrings Generator";
+        this.Size = new Size(350, 400);
+
+        // Etiket
+        promptLabel = new Label();
+        promptLabel.Text = "Enter a string:";
+        promptLabel.Location = new Point(10, 10);
+        this.Controls.Add(promptLabel);
+
+        // Giriş Kutusu
+        inputTextBox = new TextBox();
+        inputTextBox.Location = new Point(10, 35);
+        inputTextBox.Size = new Size(200, 20);
+        this.Controls.Add(inputTextBox);
+
+        // Oluştur Butonu
+        generateButton = new Button();
+        generateButton.Text = "Generate";
+        generateButton.Location = new Point(220, 33);
+        generateButton.Click += GenerateButton_Click;
+        this.Controls.Add(generateButton);
+
+        // ListBox
+        substringsListBox = new ListBox();
+        substringsListBox.Location = new Point(10, 70);
+        substringsListBox.Size = new Size(310, 230);
+        this.Controls.Add(substringsListBox);
+
+        // Temizle Butonu
+        clearButton = new Button();
+        clearButton.Text = "Clear";
+        clearButton.Location = new Point(10, 310);
+        clearButton.Click += ClearButton_Click;
+        this.Controls.Add(clearButton);
+    }
+
+    private void GenerateButton_Click(object sender, EventArgs e)
+    {
+        substringsListBox.Items.Clear();
+        string input = inputTextBox.Text;
+
+        // Çift döngü ile tüm olasılıkları bulma
+        // i: Başlangıç indeksi
+        for (int i = 0; i < input.Length; i++)
+        {
+            // j: Alt dizenin uzunluğu
+            for (int j = 1; j <= input.Length - i; j++)
+            {
+                // Substring(başlangıç, uzunluk)
+                string sub = input.Substring(i, j);
+                substringsListBox.Items.Add(sub);
+            }
+        }
+    }
+
+    private void ClearButton_Click(object sender, EventArgs e)
+    {
+        inputTextBox.Clear();
+        substringsListBox.Items.Clear();
+        inputTextBox.Focus();
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new SubstringsForm());
+    }
+}
+Soru 16.4 (Rastgele Cümleler ve Hikaye Yazarı)
+Soru (Türkçe): Cümleler oluşturmak için rastgele sayı üretimini kullanan bir uygulama yazın. article (tanımlık), noun (isim), verb (fiil) ve preposition (edat) adında dört dize dizisi kullanın. Her diziden
+rastgele bir kelime seçerek şu sırayla bir cümle oluşturun: article, noun, verb, preposition, article, noun. Her kelime seçildiğinde, cümredeki önceki kelimelerle birleştirin. Kelimeler boşluklarla ayrılmalıdır.
+Cümle çıktı olarak verildiğinde büyük harfle başlamalı ve noktayla bitmelidir. Program 10 cümle üretmeli ve bunları bir metin kutusuna yazdırmalıdır. Diziler şu şekilde doldurulmalıdır:
+
+Article: "the", "a", "one", "some", "any"
+
+Noun: "boy", "girl", "dog", "town", "car"
+
+Verb: "drove", "jumped", "ran", "walked", "skipped"
+
+Preposition: "to", "from", "over", "under", "on"
+
+Cevap ve Kodlar:
+
+Dosya: RandomSentencesForm.cs
+
+using System;
+using System.Drawing;
+using System.Text; // StringBuilder için
+using System.Windows.Forms;
+
+public class RandomSentencesForm : Form
+{
+    private Button generateButton;
+    private TextBox outputTextBox;
+    
+    // Kelime Dizileri
+    private string[] articles = { "the", "a", "one", "some", "any" };
+    private string[] nouns = { "boy", "girl", "dog", "town", "car" };
+    private string[] verbs = { "drove", "jumped", "ran", "walked", "skipped" };
+    private string[] prepositions = { "to", "from", "over", "under", "on" };
+    
+    private Random random = new Random();
+
+    public RandomSentencesForm()
+    {
+        this.Text = "Story Writer";
+        this.Size = new Size(400, 300);
+
+        generateButton = new Button();
+        generateButton.Text = "Generate Story";
+        generateButton.Location = new Point(10, 10);
+        generateButton.Size = new Size(120, 30);
+        generateButton.Click += GenerateButton_Click;
+        this.Controls.Add(generateButton);
+
+        outputTextBox = new TextBox();
+        outputTextBox.Location = new Point(10, 50);
+        outputTextBox.Size = new Size(360, 200);
+        outputTextBox.Multiline = true;
+        outputTextBox.ScrollBars = ScrollBars.Vertical;
+        this.Controls.Add(outputTextBox);
+    }
+
+    private void GenerateButton_Click(object sender, EventArgs e)
+    {
+        outputTextBox.Clear();
+        StringBuilder story = new StringBuilder();
+
+        // 10 adet cümle üret
+        for (int i = 0; i < 10; i++)
+        {
+            // Cümle yapısı: Article Noun Verb Preposition Article Noun
+            string sentence = 
+                $"{GetRandomWord(articles)} " +
+                $"{GetRandomWord(nouns)} " +
+                $"{GetRandomWord(verbs)} " +
+                $"{GetRandomWord(prepositions)} " +
+                $"{GetRandomWord(articles)} " +
+                $"{GetRandomWord(nouns)}";
+
+            // İlk harfi büyüt
+            sentence = char.ToUpper(sentence[0]) + sentence.Substring(1);
+            
+            // Nokta ekle
+            sentence += ".";
+
+            // Hikayeye ekle (ve yeni satır)
+            story.AppendLine(sentence);
+        }
+
+        outputTextBox.Text = story.ToString();
+    }
+
+    private string GetRandomWord(string[] words)
+    {
+        int index = random.Next(words.Length);
+        return words[index];
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new RandomSentencesForm());
+    }
+}
+Soru 16.5 (Pig Latin)
+Soru (Türkçe): İngilizce ifadeleri Pig Latin'e kodlayan bir uygulama yazın. Pig Latin, genellikle eğlence amaçlı kullanılan bir kodlanmış dil biçimidir. Basitlik adına şu algoritmayı kullanın: Her İngilizce 
+kelimeyi bir Pig Latin kelimesine çevirmek için, İngilizce kelimenin ilk harfini kelimenin sonuna yerleştirin ve "ay" harflerini ekleyin. Böylece, "jump" kelimesi "umpjay", "the" kelimesi "hetay" ve "computer" 
+kelimesi "omputercay" olur. Kelimeler arasındaki boşluklar boşluk olarak kalır. Şunları varsayın: İngilizce ifade boşluklarla ayrılmış kelimelerden oluşur, noktalama işareti yoktur ve tüm kelimeler iki veya 
+daha fazla harfe sahiptir. Kullanıcının bir cümle girmesini sağlayın. Cümleyi ayrı kelimelere bölmek için bu bölümde tartışılan teknikleri kullanın. GetPigLatin metodu tek bir kelimeyi Pig Latin'e çevirmelidir.
+Dönüştürülen tüm cümlelerin çalışan bir görüntüsünü bir metin kutusunda tutun.
+
+Cevap ve Kodlar:
+
+Dosya: PigLatinForm.cs
+
+using System;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+public class PigLatinForm : Form
+{
+    private TextBox inputTextBox;
+    private TextBox outputTextBox;
+    private Button translateButton;
+    private Label inputLabel;
+    private Label outputLabel;
+
+    public PigLatinForm()
+    {
+        this.Text = "Pig Latin Translator";
+        this.Size = new Size(400, 350);
+
+        inputLabel = new Label { Text = "Enter English Sentence:", Location = new Point(10, 10), AutoSize = true };
+        this.Controls.Add(inputLabel);
+
+        inputTextBox = new TextBox { Location = new Point(10, 30), Size = new Size(360, 20) };
+        this.Controls.Add(inputTextBox);
+
+        translateButton = new Button { Text = "Translate", Location = new Point(10, 60), Size = new Size(100, 30) };
+        translateButton.Click += TranslateButton_Click;
+        this.Controls.Add(translateButton);
+
+        outputLabel = new Label { Text = "Pig Latin Output (History):", Location = new Point(10, 100), AutoSize = true };
+        this.Controls.Add(outputLabel);
+
+        outputTextBox = new TextBox { Location = new Point(10, 120), Size = new Size(360, 180), Multiline = true, ScrollBars = ScrollBars.Vertical, ReadOnly = true };
+        this.Controls.Add(outputTextBox);
+    }
+
+    private void TranslateButton_Click(object sender, EventArgs e)
+    {
+        string sentence = inputTextBox.Text.Trim();
+
+        if (string.IsNullOrEmpty(sentence))
+            return;
+
+        // Cümleyi kelimelere böl (Boşluklara göre)
+        string[] words = sentence.Split(' ');
+        StringBuilder pigLatinSentence = new StringBuilder();
+
+        foreach (string word in words)
+        {
+            if (!string.IsNullOrWhiteSpace(word))
+            {
+                pigLatinSentence.Append(GetPigLatin(word) + " ");
+            }
+        }
+
+        // Sonucu geçmişe ekle
+        outputTextBox.AppendText(pigLatinSentence.ToString().Trim() + Environment.NewLine);
+        
+        // Giriş kutusunu temizle ve odakla
+        inputTextBox.Clear();
+        inputTextBox.Focus();
+    }
+
+    // İstenen Metot: Tek bir kelimeyi çevirir
+    private string GetPigLatin(string word)
+    {
+        // Kelimenin en az 2 harfli olduğu varsayılıyor.
+        if (word.Length < 2) return word;
+
+        char firstLetter = word[0];
+        string restOfWord = word.Substring(1);
+
+        return restOfWord + firstLetter + "ay";
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new PigLatinForm());
+    }
+}
+Soru 16.6 (Beş Harfli Kelimeden Olası Üç Harfli Kelimeler)
+Soru (Türkçe): Kullanıcıdan beş harfli bir kelime okuyan ve bu beş harfli kelimenin harflerinden türetilebilecek tüm olası üç harfli kombinasyonları üreten bir program yazın. Örneğin, "bathe" kelimesinden 
+üretilen üç harfli kelimeler arasında yaygın olarak kullanılan "ate", "bat", "bet", "tab", "hat", "the" ve "tea" kelimeleri ile "bth", "eab" vb. gibi 3 harfli kombinasyonlar yer alır.
+
+Cevap ve Kodlar: Bu problem bir permütasyon problemidir. 5 harfimiz var ve sıranın önemli olduğu 3 harfli kombinasyonlar oluşturuyoruz. Basit bir yaklaşımla, iç içe üç döngü kullanarak harflerin çakışmadığı
+(aynı indisteki harfin tekrar kullanılmadığı) durumları listeleyebiliriz.
+
+Dosya: ThreeLetterWordsForm.cs
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class ThreeLetterWordsForm : Form
+{
+    private TextBox inputTextBox;
+    private ListBox resultsListBox;
+    private Button generateButton;
+    private Label infoLabel;
+
+    public ThreeLetterWordsForm()
+    {
+        this.Text = "Word Permutation Generator";
+        this.Size = new Size(350, 400);
+
+        infoLabel = new Label { Text = "Enter a 5-letter word:", Location = new Point(10, 10), AutoSize = true };
+        this.Controls.Add(infoLabel);
+
+        inputTextBox = new TextBox { Location = new Point(10, 30), Size = new Size(150, 20), MaxLength = 5 };
+        this.Controls.Add(inputTextBox);
+
+        generateButton = new Button { Text = "Generate", Location = new Point(170, 28) };
+        generateButton.Click += GenerateButton_Click;
+        this.Controls.Add(generateButton);
+
+        resultsListBox = new ListBox { Location = new Point(10, 60), Size = new Size(310, 280) };
+        this.Controls.Add(resultsListBox);
+    }
+
+    private void GenerateButton_Click(object sender, EventArgs e)
+    {
+        string word = inputTextBox.Text;
+
+        // Doğrulama: Kelime tam 5 harfli olmalı
+        if (word.Length != 5)
+        {
+            MessageBox.Show("Please enter exactly 5 letters.", "Input Error");
+            return;
+        }
+
+        resultsListBox.Items.Clear();
+
+        // 3 harfli kombinasyonlar için 3 seviyeli iç içe döngü
+        // i: 1. harfin indisi
+        // j: 2. harfin indisi
+        // k: 3. harfin indisi
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    // Aynı indeksteki harfi tekrar kullanmamak için kontrol
+                    if (i != j && i != k && j != k)
+                    {
+                        // Karakterleri birleştirip string yap
+                        string combination = "" + word[i] + word[j] + word[k];
+                        resultsListBox.Items.Add(combination);
+                    }
+                }
+            }
+        }
+
+        MessageBox.Show($"Generated {resultsListBox.Items.Count} combinations.", "Done");
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new ThreeLetterWordsForm());
+    }
+}
+Soru 16.7 (Sesli ve Sessiz Harfleri Sayma)
+Soru (Türkçe): Verilen bir dizedeki sesli harflerin, sessiz harflerin ve özel karakterlerin sayısını hesaplayan bir program yazın. Bunu kullanıcı tarafından girilen rastgele bir dize için yapmasını sağlayın.
+
+Cevap ve Kodlar: Bu programda girilen metin karakter karakter taranır. Önce karakterin bir harf olup olmadığı (char.IsLetter), ardından sesli harfler kümesinde bulunup bulunmadığı kontrol edilir. Harf olmayan
+her şey (boşluklar, noktalama işaretleri, rakamlar) "özel karakter" olarak sayılır.
+
+Dosya: CharacterCounterForm.cs
+
+using System;
+using System.Drawing;
+using System.Linq; // Contains metodu için
+using System.Windows.Forms;
+
+public class CharacterCounterForm : Form
+{
+    private TextBox inputTextBox;
+    private Button countButton;
+    private Label resultsLabel;
+
+    public CharacterCounterForm()
+    {
+        this.Text = "Vowel & Consonant Counter";
+        this.Size = new Size(400, 300);
+
+        Label lblPrompt = new Label { Text = "Enter text to analyze:", Location = new Point(10, 10), AutoSize = true };
+        this.Controls.Add(lblPrompt);
+
+        inputTextBox = new TextBox { Location = new Point(10, 35), Size = new Size(360, 100), Multiline = true };
+        this.Controls.Add(inputTextBox);
+
+        countButton = new Button { Text = "Analyze Text", Location = new Point(10, 145), Size = new Size(100, 30) };
+        countButton.Click += CountButton_Click;
+        this.Controls.Add(countButton);
+
+        resultsLabel = new Label { Location = new Point(10, 190), AutoSize = true, Font = new Font("Arial", 10, FontStyle.Bold) };
+        resultsLabel.Text = "Vowels: 0\nConsonants: 0\nSpecial Characters: 0";
+        this.Controls.Add(resultsLabel);
+    }
+
+    private void CountButton_Click(object sender, EventArgs e)
+    {
+        string text = inputTextBox.Text;
+        int vowels = 0;
+        int consonants = 0;
+        int specials = 0;
+
+        // Sesli harfleri tanımla (Büyük/Küçük harf)
+        string vowelSet = "aeiouAEIOU";
+
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                // Eğer harf ise sesli mi sessiz mi kontrol et
+                if (vowelSet.Contains(c))
+                {
+                    vowels++;
+                }
+                else
+                {
+                    consonants++;
+                }
+            }
+            else
+            {
+                // Harf değilse (Rakam, Boşluk, Noktalama vb.) özel karakter say
+                // İsterseniz boşlukları (IsWhiteSpace) ayrı tutabilirsiniz, 
+                // ancak soru harf olmayanları özel karakter grubuna itiyor.
+                specials++;
+            }
+        }
+
+        resultsLabel.Text = $"Vowels: {vowels}\n" +
+                            $"Consonants: {consonants}\n" +
+                            $"Special Characters: {specials}";
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new CharacterCounterForm());
+    }
+}
+
+Soru 16.8 (Proje: Daha Sağlıklı Malzemelerle Yemek Pişirme)
+Soru (Türkçe): Amerika Birleşik Devletleri'nde obezite endişe verici bir oranda artmaktadır. Son 20 yıldaki obezite eğilimlerini gösteren Hastalık Kontrol ve Önleme Merkezleri (CDC) haritasını inceleyin.
+Obezite arttıkça, ilgili sorunların (örneğin kalp hastalığı, yüksek tansiyon, yüksek kolesterol, tip 2 diyabet) görülme sıklığı da artmaktadır. Kullanıcıların yemek pişirirken daha sağlıklı malzemeler
+seçmelerine yardımcı olan ve belirli yiyeceklere (örneğin fındık, glüten) alerjisi olanların ikamelerini bulmalarına yardımcı olan bir program yazın. Program, kullanıcıdan bir tarif okumalı ve bazı malzemeler 
+için daha sağlıklı alternatifler önermelidir. Basitlik adına, programınız tarifin çay kaşığı (teaspoon), fincan (cup) ve yemek kaşığı (tablespoon) gibi ölçüler için kısaltmalar içermediğini ve miktarlar için 
+yazıyla yazmak (bir yumurta) yerine sayısal rakamlar (1 yumurta, 2 fincan) kullandığını varsaymalıdır. Bazı yaygın ikameler Şekil 16.16'da (soruda verilen tablo) gösterilmektedir. Programınız, "Diyetinizde 
+önemli değişiklikler yapmadan önce daima doktorunuza danışın" gibi bir uyarı görüntülemelidir.
+
+Programınız, ikamelerin her zaman birebir olmadığını dikkate almalıdır. Örneğin, bir kek tarifi üç yumurta gerektiriyorsa, bunun yerine altı yumurta akı kullanmak makul olabilir. Programınız, yüksek kolesterol,
+yüksek tansiyon, kilo kaybı, glüten alerjisi vb. gibi kullanıcının sağlık endişelerini dikkate almalıdır. Yüksek kolesterol için program yumurta ve süt ürünleri için ikameler önermelidir; kullanıcı kilo vermek
+istiyorsa şeker gibi malzemeler için düşük kalorili ikameler önerilmelidir.
+
+Cevap ve Kodlar:
+
+Bu çözümde, malzemeleri, bunların sağlıklı alternatiflerini ve dönüşüm oranlarını saklayan bir yapı kullanılmıştır. Regex (Düzenli İfadeler) kullanılarak tarif satırındaki miktar ve birim ayrıştırılır.
+
+Dosya: HealthyCookingForm.cs
+
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+public class HealthyCookingForm : Form
+{
+    private TextBox txtRecipeInput;
+    private TextBox txtRecipeOutput;
+    private CheckedListBox chkHealthConcerns;
+    private Button btnConvert;
+    private Label lblWarning;
+
+    // Malzeme İkame Sınıfı
+    private class IngredientSub
+    {
+        public string OriginalName { get; set; }
+        public string SubstituteName { get; set; }
+        public double Ratio { get; set; } // Örn: 1 yumurta -> 2 yumurta akı ise oran 2.0
+        public string Category { get; set; } // "Cholesterol", "WeightLoss", "Gluten", "General"
+
+        public IngredientSub(string orig, string sub, double ratio, string cat)
+        {
+            OriginalName = orig; SubstituteName = sub; Ratio = ratio; Category = cat;
+        }
+    }
+
+    private List<IngredientSub> substitutions = new List<IngredientSub>();
+
+    public HealthyCookingForm()
+    {
+        this.Text = "Healthy Cooking Assistant";
+        this.Size = new Size(600, 500);
+
+        // Veri tabanını doldur (Şekil 16.16 ve eklemeler)
+        InitializeSubstitutions();
+
+        // Arayüz
+        lblWarning = new Label() { 
+            Text = "WARNING: Always consult your physician before making significant changes to your diet.",
+            ForeColor = Color.Red, Dock = DockStyle.Top, TextAlign = ContentAlignment.MiddleCenter, Height = 30
+        };
+        this.Controls.Add(lblWarning);
+
+        Label lblInput = new Label() { Text = "Enter Recipe (one ingredient per line, e.g., '1 cup sugar'):", Location = new Point(10, 40), AutoSize = true };
+        this.Controls.Add(lblInput);
+
+        txtRecipeInput = new TextBox() { Location = new Point(10, 60), Size = new Size(250, 200), Multiline = true, ScrollBars = ScrollBars.Vertical };
+        // Varsayılan metin
+        txtRecipeInput.Text = "1 cup sour cream\r\n1 cup sugar\r\n1 egg\r\n1 cup white bread flour";
+        this.Controls.Add(txtRecipeInput);
+
+        Label lblConcerns = new Label() { Text = "Select Health Concerns:", Location = new Point(280, 40), AutoSize = true };
+        this.Controls.Add(lblConcerns);
+
+        chkHealthConcerns = new CheckedListBox() { Location = new Point(280, 60), Size = new Size(200, 100) };
+        chkHealthConcerns.Items.AddRange(new object[] { "High Cholesterol", "Weight Loss", "Gluten Allergy" });
+        this.Controls.Add(chkHealthConcerns);
+
+        btnConvert = new Button() { Text = "Suggest Healthier Alternatives", Location = new Point(280, 180), Size = new Size(200, 40) };
+        btnConvert.Click += BtnConvert_Click;
+        this.Controls.Add(btnConvert);
+
+        Label lblOutput = new Label() { Text = "Healthier Recipe:", Location = new Point(10, 270), AutoSize = true };
+        this.Controls.Add(lblOutput);
+
+        txtRecipeOutput = new TextBox() { Location = new Point(10, 290), Size = new Size(560, 150), Multiline = true, ScrollBars = ScrollBars.Vertical, ReadOnly = true };
+        this.Controls.Add(txtRecipeOutput);
+    }
+
+    private void InitializeSubstitutions()
+    {
+        // Kilo Verme (Şeker/Yağ azaltma)
+        substitutions.Add(new IngredientSub("sour cream", "yogurt", 1.0, "Weight Loss"));
+        substitutions.Add(new IngredientSub("sugar", "honey", 0.5, "Weight Loss")); // 1 cup sugar -> 1/2 cup honey
+        substitutions.Add(new IngredientSub("butter", "yogurt", 1.0, "Weight Loss"));
+        substitutions.Add(new IngredientSub("oil", "applesauce", 1.0, "Weight Loss"));
+
+        // Kolesterol (Yumurta/Süt ürünleri)
+        substitutions.Add(new IngredientSub("egg", "egg whites", 2.0, "High Cholesterol")); // 1 egg -> 2 whites
+        substitutions.Add(new IngredientSub("milk", "soy milk", 1.0, "High Cholesterol"));
+        substitutions.Add(new IngredientSub("whole milk", "skim milk", 1.0, "High Cholesterol"));
+
+        // Glüten
+        substitutions.Add(new IngredientSub("flour", "rice flour", 1.0, "Gluten Allergy"));
+        substitutions.Add(new IngredientSub("white bread", "gluten-free bread", 1.0, "Gluten Allergy"));
+        substitutions.Add(new IngredientSub("rye", "corn flour", 1.0, "Gluten Allergy"));
+    }
+
+    private void BtnConvert_Click(object sender, EventArgs e)
+    {
+        txtRecipeOutput.Clear();
+        string[] lines = txtRecipeInput.Lines;
+        
+        // Seçilen sağlık endişeleri
+        List<string> selectedConcerns = new List<string>();
+        foreach (var item in chkHealthConcerns.CheckedItems)
+            selectedConcerns.Add(item.ToString());
+
+        foreach (string line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string processedLine = line;
+            bool substituted = false;
+
+            // Satırı ayrıştır: "1 cup sugar" -> Miktar: 1, Birim: cup, Malzeme: sugar
+            // Regex: Başlangıçtaki sayıyı (ondalık olabilir) yakalar
+            Match match = Regex.Match(line.Trim(), @"^(\d+(\.\d+)?)\s+(.*)$");
+
+            if (match.Success)
+            {
+                double quantity = double.Parse(match.Groups[1].Value);
+                string restOfLine = match.Groups[3].Value; // "cup sugar" gibi
+
+                // Malzemeyi bulmaya çalış
+                foreach (var sub in substitutions)
+                {
+                    // Eğer malzeme adı satırda geçiyorsa VE kullanıcının endişesine uygunsa
+                    if (restOfLine.Contains(sub.OriginalName) && selectedConcerns.Contains(sub.Category))
+                    {
+                        double newQuantity = quantity * sub.Ratio;
+                        
+                        // Birim ve malzeme adını değiştir
+                        // Basit string replace yapıyoruz, birim sabit kalıyor varsayımıyla (veya birimi de içeren metin)
+                        string newRestOfLine = restOfLine.Replace(sub.OriginalName, sub.SubstituteName);
+                        
+                        processedLine = $"{newQuantity} {newRestOfLine} (Substituted for {sub.OriginalName})";
+                        substituted = true;
+                        break; // Bir satır için tek değişiklik yeterli
+                    }
+                }
+            }
+
+            txtRecipeOutput.AppendText(processedLine + "\r\n");
+        }
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new HealthyCookingForm());
+    }
+}
+Soru 16.9 (Proje: İstenmeyen Posta Tarayıcısı)
+Soru (Türkçe): Spam (veya istenmeyen e-posta), ABD kuruluşlarına spam önleme yazılımı, ekipman, ağ kaynakları, bant genişliği ve verimlilik kaybı açısından yılda milyarlarca dolara mal olmaktadır. En yaygın 
+spam e-posta mesajlarından ve kelimelerinden bazılarını çevrimiçi olarak araştırın ve kendi önemsiz e-posta klasörünüzü kontrol edin. Spam mesajlarında yaygın olarak bulunan 30 kelime ve ifadeden oluşan bir
+liste oluşturun. Kullanıcının bir e-posta mesajı girdiği bir uygulama yazın. Ardından, mesajı 30 anahtar kelime veya ifadenin her biri için tarayın. Bunlardan birinin mesaj içinde her geçtiği yer için 
+mesajın
+"spam puanına" bir puan ekleyin. Ardından, aldığı puan sayısına göre mesajın spam olma olasılığını derecelendirin.
+
+Cevap ve Kodlar:
+
+Dosya: SpamScannerForm.cs
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+public class SpamScannerForm : Form
+{
+    private TextBox txtEmailBody;
+    private Button btnScan;
+    private Label lblResult;
+    private ListBox lstDetailedReport;
+
+    // Spam Anahtar Kelimeleri (30 adet örnek)
+    private List<string> spamKeywords = new List<string>
+    {
+        "free", "winner", "guarantee", "credit card", "buy now", 
+        "click here", "subscribe", "bonus", "prize", "urgent",
+        "limited time", "offer", "investment", "refinance", "mortgage",
+        "debt", "rates", "loans", "pharmacy", "medication",
+        "viagra", "cialis", "weight loss", "casino", "lottery",
+        "millions", "cash", "bank account", "password", "verify"
+    };
+
+    public SpamScannerForm()
+    {
+        this.Text = "Spam Scanner";
+        this.Size = new Size(500, 450);
+
+        Label lblPrompt = new Label() { Text = "Paste Email Content Below:", Location = new Point(10, 10), AutoSize = true };
+        this.Controls.Add(lblPrompt);
+
+        txtEmailBody = new TextBox() { Location = new Point(10, 30), Size = new Size(460, 200), Multiline = true, ScrollBars = ScrollBars.Vertical };
+        // Test için örnek metin
+        txtEmailBody.Text = "Congratulations! You are a winner. Click here to claim your free cash prize. This is a limited time offer.";
+        this.Controls.Add(txtEmailBody);
+
+        btnScan = new Button() { Text = "Scan for Spam", Location = new Point(10, 240), Size = new Size(150, 30) };
+        btnScan.Click += BtnScan_Click;
+        this.Controls.Add(btnScan);
+
+        lblResult = new Label() { Text = "Score: 0 - Rating: Unknown", Location = new Point(180, 245), AutoSize = true, Font = new Font("Arial", 10, FontStyle.Bold) };
+        this.Controls.Add(lblResult);
+
+        lstDetailedReport = new ListBox() { Location = new Point(10, 280), Size = new Size(460, 120) };
+        this.Controls.Add(lstDetailedReport);
+    }
+
+    private void BtnScan_Click(object sender, EventArgs e)
+    {
+        string emailContent = txtEmailBody.Text.ToLower(); // Küçük harfe çevir
+        int spamScore = 0;
+        lstDetailedReport.Items.Clear();
+
+        foreach (string keyword in spamKeywords)
+        {
+            // Regex ile tam kelime veya ifade eşleşmesi say (case-insensitive)
+            // \b kelime sınırını belirtir ancak "click here" gibi ifadeler için direkt contains veya matches daha güvenlidir.
+            // Basitlik için Regex.Matches kullanıyoruz.
+            
+            int count = Regex.Matches(emailContent, Regex.Escape(keyword)).Count;
+
+            if (count > 0)
+            {
+                spamScore += count;
+                lstDetailedReport.Items.Add($"Found '{keyword}': {count} time(s)");
+            }
+        }
+
+        // Değerlendirme
+        string rating = "Low";
+        Color ratingColor = Color.Green;
+
+        if (spamScore >= 1 && spamScore < 5)
+        {
+            rating = "Moderate";
+            ratingColor = Color.Orange;
+        }
+        else if (spamScore >= 5)
+        {
+            rating = "High - Likely Spam!";
+            ratingColor = Color.Red;
+        }
+
+        lblResult.Text = $"Spam Score: {spamScore} | Likelihood: {rating}";
+        lblResult.ForeColor = ratingColor;
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new SpamScannerForm());
+    }
+}
+Soru 16.10 (Proje: SMS Dili)
+Soru (Türkçe): Kısa Mesaj Servisi (SMS), cep telefonları arasında 160 veya daha az karakterden oluşan metin mesajlarının gönderilmesini sağlayan bir iletişim hizmetidir. Dünya çapında cep telefonu kullanımının 
+yaygınlaşmasıyla birlikte SMS, birçok gelişmekte olan ülkede siyasi amaçlarla (örneğin fikir ve muhalefeti dile getirmek), doğal afetlerle ilgili haberleri bildirmek vb. için kullanılmaktadır. SMS mesajlarının 
+uzunluğu sınırlı olduğundan, mobil metin mesajlarında, e-postalarda, anlık mesajlarda vb. yaygın sözcüklerin ve ifadelerin kısaltmaları olan SMS Dili sıklıkla kullanılır. Örneğin, SMS Dilinde "bence"
+(in my opinion), "IMO" dur. SMS Dilini çevrimiçi araştırın. Kullanıcının SMS Dilini kullanarak bir mesaj girebileceği ve programın bunu İngilizceye (veya kendi dilinize - burada Türkçe yapacağız) çevirdiği bir 
+program yazın. Ayrıca İngilizce (veya Türkçe) yazılmış metni SMS Diline çevirmek için bir mekanizma sağlayın. Olası bir sorun, bir SMS kısaltmasının çeşitli ifadelere genişleyebilmesidir. Örneğin, IMO (yukarıda
+kullanıldığı gibi) aynı zamanda "Uluslararası Denizcilik Örgütü" (International Maritime Organization), "anısına" (in memory of) vb. anlamına da gelebilir.
+
+Cevap ve Kodlar: Çözümde Türkçe SMS dili örnekleri (slm -> selam, nbr -> ne haber) ve evrensel örnekler (lol) kullanılarak çift yönlü bir çevirici hazırlanmıştır.
+
+Dosya: SmsTranslatorForm.cs
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+public class SmsTranslatorForm : Form
+{
+    private TextBox txtInput;
+    private TextBox txtOutput;
+    private Button btnToTurkish;
+    private Button btnToSms;
+
+    // Sözlük: Key = SMS Kısaltması, Value = Tam Türkçe Karşılığı
+    private Dictionary<string, string> smsDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        {"slm", "selam"},
+        {"nbr", "ne haber"},
+        {"kib", "kendine iyi bak"},
+        {"aeo", "Allah'a emanet ol"},
+        {"tmm", "tamam"},
+        {"ok", "tamam"},
+        {"mrb", "merhaba"},
+        {"tşk", "teşekkürler"},
+        {"cnm", "canım"},
+        {"hg", "hoş geldin"},
+        {"hb", "hoş bulduk"},
+        {"imo", "bence"}, // In my opinion
+        {"lol", "sesli gülüyorum"}, // Laughing out loud
+        {"as", "aleyküm selam"}
+    };
+
+    public SmsTranslatorForm()
+    {
+        this.Text = "SMS Language Translator";
+        this.Size = new Size(500, 400);
+
+        Label lblInput = new Label() { Text = "Input Text:", Location = new Point(10, 10), AutoSize = true };
+        this.Controls.Add(lblInput);
+
+        txtInput = new TextBox() { Location = new Point(10, 30), Size = new Size(460, 100), Multiline = true };
+        this.Controls.Add(txtInput);
+
+        btnToTurkish = new Button() { Text = "SMS -> Turkish (Translate)", Location = new Point(10, 140), Size = new Size(220, 30) };
+        btnToTurkish.Click += BtnToTurkish_Click;
+        this.Controls.Add(btnToTurkish);
+
+        btnToSms = new Button() { Text = "Turkish -> SMS (Shorten)", Location = new Point(250, 140), Size = new Size(220, 30) };
+        btnToSms.Click += BtnToSms_Click;
+        this.Controls.Add(btnToSms);
+
+        Label lblOutput = new Label() { Text = "Output Text:", Location = new Point(10, 180), AutoSize = true };
+        this.Controls.Add(lblOutput);
+
+        txtOutput = new TextBox() { Location = new Point(10, 200), Size = new Size(460, 100), Multiline = true, ReadOnly = true };
+        this.Controls.Add(txtOutput);
+    }
+
+    // SMS'ten Tam Metne Çeviri
+    private void BtnToTurkish_Click(object sender, EventArgs e)
+    {
+        string input = txtInput.Text;
+        // Kelimeleri ayır (noktalama işaretlerini koruyarak ayırmak daha karmaşıktır, burada basit split kullanıyoruz)
+        // Daha iyi sonuç için Regex ile kelime sınırları kullanılabilir.
+        string[] words = input.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        // Basit string replace yerine kelime bazlı işlem yapmalıyız
+        string result = input;
+
+        // Her sözlük girişi için metindeki tam kelimeyi bulup değiştir
+        foreach (var entry in smsDictionary)
+        {
+            // \b kelime sınırıdır. Sadece "slm"ı bulur, "slm" içeren başka kelimeyi bozmaz.
+            string pattern = $@"\b{Regex.Escape(entry.Key)}\b";
+            result = Regex.Replace(result, pattern, entry.Value, RegexOptions.IgnoreCase);
+        }
+
+        txtOutput.Text = result;
+    }
+
+    // Tam Metinden SMS'e Çeviri
+    private void BtnToSms_Click(object sender, EventArgs e)
+    {
+        string input = txtInput.Text;
+        string result = input;
+
+        // Dictionary'yi Value'ya göre tersten tarıyoruz
+        foreach (var entry in smsDictionary)
+        {
+            // Tam ifadeyi kısaltma ile değiştir
+            // "kendine iyi bak" -> "kib"
+            string pattern = $@"\b{Regex.Escape(entry.Value)}\b";
+            result = Regex.Replace(result, pattern, entry.Key, RegexOptions.IgnoreCase);
+        }
+
+        txtOutput.Text = result;
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new SmsTranslatorForm());
+    }
+}
