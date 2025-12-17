@@ -1,0 +1,452 @@
+13.1 Boşluk Doldurma
+a) Bir metot bir sorun tespit ettiğinde bir istisna fırlattığı (throw) söylenir.
+
+b) Mevcut olduğunda, bir try bloğu ile ilişkili finally bloğu her zaman çalışır.
+
+c) İstisna sınıfları Exception sınıfından türetilir.
+
+d) Bir istisnayı fırlatan ifadeye, istisnanın fırlatma noktası (throw point) denir.
+
+e) C#, istisna işlemenin kaldığı yerden devam etme (resumption) modeli yerine sonlandırma (termination) modelini kullanır.
+
+f) Bir metotta yakalanmamış bir istisna, metodun metot çağrı yığınından geri sarılmasına / çıkarılmasına (stack unwinding) neden olur.
+
+g) int.Parse metodu, argümanı geçerli bir tamsayı değeri değilse bir FormatException fırlatabilir.
+
+h) Null koşullu (null-conditional ?.) operatörü, yalnızca operatörün sol işleneni null değilse bir özelliğe erişir veya bir metodu çağırır.
+
+i) Null birleştirme (null-coalescing ??) operatörünü kullanan bir ifade, eğer null değilse operatörün sol işlenenini; aksi takdirde sağ işlenenini değerlendirir.
+
+13.2 Doğru/Yanlış
+a) İstisnalar her zaman istisnayı ilk tespit eden metotta işlenir. Cevap: Yanlış (False). Açıklama: İstisnalar çağrı yığınında (stack) yukarı doğru iletilebilir ve sorunun oluştuğu metodu çağıran başka bir metotta yakalanabilir.
+
+b) Kullanıcı tanımlı istisna sınıfları SystemException sınıfını genişletmelidir. Cevap: Yanlış (False). Açıklama: Kullanıcı tanımlı istisnalar genellikle doğrudan Exception sınıfından türetilmelidir. SystemException sınıfı genellikle CLR (Common Language Runtime) tarafından fırlatılan sistem istisnaları içindir.
+
+c) Dizi sınırları dışındaki bir indekse erişmek, CLR'nin bir istisna fırlatmasına neden olur. Cevap: Doğru (True). (IndexOutOfRangeException fırlatılır.)
+
+d) Herhangi bir ilgili catch bloğu olmayan bir try bloğundan sonra finally bloğu isteğe bağlıdır. Cevap: Yanlış (False). Açıklama: Bir try bloğu tek başına bulunamaz. Eğer catch bloğu yoksa, bir finally bloğu bulunmak zorundadır.
+
+e) Bir finally bloğunun çalışması garanti edilir. Cevap: Doğru (True). (Programın try bloğuna girmesi ve işletim sistemi çökmesi gibi ekstrem durumlar haricinde her zaman çalışır.)
+
+f) return anahtar kelimesini kullanarak bir istisnanın fırlatma noktasına (throw point) geri dönmek mümkündür. Cevap: Yanlış (False). Açıklama: C# istisna yönetiminde "sonlandırma modeli" kullanır. İstisna oluştuğunda kontrol akışı o noktadan kopar ve uygun catch veya finally bloğuna geçer; hata oluşan satıra geri dönülmez.
+
+g) İstisnalar yeniden fırlatılabilir (rethrown). Cevap: Doğru (True).
+
+h) Exception sınıfının Message özelliği, istisnanın fırlatıldığı metodu belirten bir dize döndürür. Cevap: Yanlış (False). Açıklama: Message özelliği hatanın açıklamasını içerir. İstisnanın hangi metottan fırlatıldığını StackTrace (Yığın İzleme) özelliği belirtir.
+
+i) Bir when yantümcesi, bir catch yantümcesine bir istisna filtresi ekler. Cevap: Doğru (True).
+
+j) Null yapılabilir (nullable) türdeki bir değişkenin Value özelliği her zaman temel değeri döndürür. Cevap: Yanlış (False). Açıklama: Eğer değişkenin değeri null (yani HasValue false) ise, Value özelliğine erişmek bir InvalidOperationException fırlatır.
+
+İşte 13.3'ten 13.11'e kadar olan soruların çevirileri ve istenen kod çözümleri. Soruların çokluğu nedeniyle, her bir konsepti net ve kısa bir şekilde gösteren kodlar hazırladım.
+
+Soru 13.3 (İstisna Kalıtım Hiyerarşisi)
+Soru (Türkçe): Türetilmiş sınıf istisnalarını ve temel sınıf istisnalarını hiyerarşinin her seviyesinde yakalamayı göstermek için bir kalıtım hiyerarşisi oluşturun. ExceptionInheritance, farklı try
+bloğu seviyelerinde türetilmiş sınıf istisnalarını fırlatır ve yakalar.
+
+Cevap ve Kodlar: Burada, ExceptionA (Temel) ve ExceptionB (Türetilmiş) sınıfları oluşturulmuş ve hiyerarşik yakalama gösterilmiştir.
+
+Dosya: ExceptionInheritanceTest.cs
+
+using System;
+
+// Temel İstisna Sınıfı
+public class ExceptionA : Exception
+{
+    public ExceptionA(string message) : base(message) { }
+}
+
+// Türetilmiş İstisna Sınıfı
+public class ExceptionB : ExceptionA
+{
+    public ExceptionB(string message) : base(message) { }
+}
+
+public class ExceptionInheritanceTest
+{
+    public static void Main()
+    {
+        // Durum 1: Türetilmiş istisnayı kendi türüyle yakalamak
+        try
+        {
+            throw new ExceptionB("ExceptionB thrown");
+        }
+        catch (ExceptionB ex)
+        {
+            Console.WriteLine($"Caught specific exception: {ex.Message}");
+        }
+        catch (ExceptionA ex)
+        {
+            Console.WriteLine($"Caught via base exception A: {ex.Message}");
+        }
+
+        // Durum 2: Türetilmiş istisnayı temel sınıf referansıyla yakalamak (Polimorfizm)
+        try
+        {
+            throw new ExceptionB("ExceptionB thrown again");
+        }
+        catch (ExceptionA ex)
+        {
+            Console.WriteLine($"Caught via base exception A: {ex.Message}");
+        }
+    }
+}
+Soru 13.4 (Sınır Dışı İstisnalar)
+Soru (Türkçe): Bir istisna kalıtım sınıfının nasıl sınırların dışına çıktığını gösteren bir program yazın (VariousExceptionsCatch kullanarak). (Not: Soru metni biraz muğlak olsa da, genellikle dizi sınırlarının
+aşılması kastedilmektedir.)
+
+Cevap ve Kodlar:
+
+Dosya: VariousExceptionsCatch.cs
+
+using System;
+
+public class VariousExceptionsCatch
+{
+    public static void Main()
+    {
+        int[] numbers = { 1, 2, 3 };
+
+        try
+        {
+            Console.WriteLine("Attempting to access out of bounds index...");
+            // Dizi sınırları dışına erişim
+            Console.WriteLine(numbers[5]);
+        }
+        catch (IndexOutOfRangeException ex)
+        {
+            Console.WriteLine($"\nException Caught: {ex.GetType().Name}");
+            Console.WriteLine($"Message: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Genel istisna yakalayıcı (buraya düşmez çünkü üstteki daha spesifik)
+            Console.WriteLine($"Generic Exception: {ex.Message}");
+        }
+    }
+}
+Soru 13.5 (İstisna İşleyicilerin Sırası)
+Soru (Türkçe): İstisna işleyicilerin (catch bloklarının) sırasının önemini göstermek için iki program yazın: biri doğru sıralamaya sahip (yani, temel sınıf istisna işleyicisini tüm türetilmiş sınıf 
+işleyicilerinden sonraya yerleştirin) ve diğeri yanlış sıralamaya sahip (yani, temel sınıf işleyicisini türetilmiş sınıf işleyicilerinden önceye yerleştirin). İkinci programı derlemeye çalıştığınızda ne olur?
+
+Cevap: İkinci programı (yanlış sıralama) derlemeye çalıştığınızda derleyici hatası (Compiler Error) alırsınız. Çünkü temel sınıf catch bloğu tüm türetilmiş hataları zaten yakalayacağı için, altındaki türetilmiş
+catch bloğuna asla ulaşılamaz (unreachable code).
+
+Dosya: ExceptionOrderTest.cs
+
+using System;
+
+public class ExceptionA : Exception { }
+public class ExceptionB : ExceptionA { }
+
+public class ExceptionOrderTest
+{
+    public static void Main()
+    {
+        // --- DOĞRU SIRALAMA ---
+        try
+        {
+            throw new ExceptionB();
+        }
+        catch (ExceptionB) // Önce en spesifik (türetilmiş) olan
+        {
+            Console.WriteLine("Correct Order: Caught ExceptionB");
+        }
+        catch (ExceptionA) // Sonra daha genel (temel) olan
+        {
+            Console.WriteLine("Correct Order: Caught ExceptionA");
+        }
+
+        // --- YANLIŞ SIRALAMA (Yorum satırına alındı çünkü derlenmez) ---
+        /*
+        try
+        {
+            throw new ExceptionB();
+        }
+        catch (ExceptionA) // HATA: Bu blok ExceptionB'yi de yakalar!
+        {
+            Console.WriteLine("Wrong Order");
+        }
+        catch (ExceptionB) // HATA: Bu bloğa asla ulaşılamaz (CS0160 Hatası).
+        {
+            Console.WriteLine("Unreachable Code");
+        }
+        */
+    }
+}
+Soru 13.6 (Yapıcı Metot Başarısızlığı)
+Soru (Türkçe): İstisnalar, bir nesne oluşturulurken meydana gelen sorunları belirtmek için kullanılabilir. Bir kurucunun (constructor), yapıcı başarısızlığı hakkındaki bilgileri bir istisna işleyiciye
+geçirdiğini gösteren bir program yazın. Fırlatılan istisna, kurucuya gönderilen argümanları da içermelidir.
+
+Cevap ve Kodlar:
+
+Dosya: ConstructorFailure.cs
+
+
+using System;
+
+// Kurucu hatası için özel istisna
+public class ConstructorException : Exception
+{
+    public object InvalidArgument { get; }
+
+    public ConstructorException(string message, object invalidArgument) 
+        : base(message)
+    {
+        InvalidArgument = invalidArgument;
+    }
+}
+
+public class Item
+{
+    public int Quantity { get; }
+
+    public Item(int quantity)
+    {
+        // Negatif miktar kontrolü
+        if (quantity < 0)
+        {
+            throw new ConstructorException("Quantity cannot be negative.", quantity);
+        }
+        Quantity = quantity;
+    }
+}
+
+public class ConstructorFailureTest
+{
+    public static void Main()
+    {
+        try
+        {
+            Console.WriteLine("Creating item with quantity -5...");
+            Item myItem = new Item(-5);
+        }
+        catch (ConstructorException ex)
+        {
+            Console.WriteLine($"\nException Caught: {ex.Message}");
+            Console.WriteLine($"Invalid Argument Value was: {ex.InvalidArgument}");
+        }
+    }
+}
+Soru 13.7 (İstisnayı Yeniden Fırlatma)
+Soru (Türkçe): Bir istisnayı yeniden fırlatmayı (rethrowing) gösteren bir program yazın.
+
+Cevap ve Kodlar:
+
+Dosya: RethrowException.cs
+
+
+using System;
+
+public class RethrowException
+{
+    public static void Main()
+    {
+        try
+        {
+            MethodA();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Main caught rethrown exception: {ex.Message}");
+            Console.WriteLine("Stack Trace in Main:");
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+    static void MethodA()
+    {
+        try
+        {
+            Console.WriteLine("MethodA is calling MethodB...");
+            MethodB();
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("MethodA caught exception. Doing some logging...");
+            Console.WriteLine("MethodA rethrowing exception...");
+            throw; // İstisnayı yığın izini (stack trace) koruyarak yeniden fırlatır
+        }
+    }
+
+    static void MethodB()
+    {
+        throw new Exception("Error occurred in MethodB");
+    }
+}
+Soru 13.8 (Gözden Kaçan İstisnalar)
+Soru (Türkçe): Bazı istisnaların bir metot tarafından kaçırıldığını (yakalanmadığını) gösteren bir program yazın. Bir metodun olası tüm istisnaları yakalaması gerekmez. Bu tür istisnalar, kodun birden fazla
+bloğunda kontroller uygulanarak işlenebilir.
+
+Cevap ve Kodlar:
+
+Dosya: MissedException.cs
+
+
+using System;
+
+public class MissedException
+{
+    public static void Main()
+    {
+        try
+        {
+            MethodWithLimitedCatch();
+        }
+        catch (DivideByZeroException ex)
+        {
+            // MethodWithLimitedCatch bu hatayı yakalamadığı için buraya düşer
+            Console.WriteLine($"Main caught the missed exception: {ex.Message}");
+        }
+    }
+
+    static void MethodWithLimitedCatch()
+    {
+        try
+        {
+            int zero = 0;
+            int result = 10 / zero; // DivideByZeroException oluşur
+        }
+        catch (NullReferenceException)
+        {
+            // Bu blok sadece NullReference hatalarını yakalar
+            Console.WriteLine("Caught NullReferenceException inside method.");
+        }
+        finally
+        {
+            Console.WriteLine("Finally block in MethodWithLimitedCatch executed.");
+        }
+        // DivideByZeroException burada yakalanmadı, yukarı fırlatılır.
+    }
+}
+Soru 13.9 (Derinlemesine İç İçe Metottan İstisna)
+Soru (Türkçe): Derinlemesine iç içe geçmiş bir metottan bir istisna fırlatan bir program yazın. Catch bloğu, çağrı zincirini kapsayan try bloğunu takip etmelidir. Yakalanan istisna, kendi tanımladığınız bir
+istisna olmalıdır. İstisnayı yakalarken, istisnanın mesajını ve yığın izini (stack trace) görüntüleyin.
+
+Cevap ve Kodlar:
+
+Dosya: DeepNestedException.cs
+
+using System;
+
+public class MyCustomException : Exception
+{
+    public MyCustomException(string message) : base(message) { }
+}
+
+public class DeepNestedException
+{
+    public static void Main()
+    {
+        try
+        {
+            Method1();
+        }
+        catch (MyCustomException ex)
+        {
+            Console.WriteLine("--- Exception Caught in Main ---");
+            Console.WriteLine($"Message: {ex.Message}");
+            Console.WriteLine($"\nStack Trace:\n{ex.StackTrace}");
+        }
+    }
+
+    static void Method1() => Method2();
+    static void Method2() => Method3();
+    static void Method3()
+    {
+        throw new MyCustomException("Something went wrong deep inside Method3!");
+    }
+}
+Soru 13.10 (FormatExceptions - Biçim İstisnaları)
+Soru (Türkçe): Gidilen mili ve kullanılan galonu girdi olarak alan ve mil/galon (MPG) oranını hesaplayan bir uygulama oluşturun. Örnek, girdi dizelerini (string) double türüne dönüştürürken oluşan FormatException
+hatalarını işlemek için istisna işlemeyi kullanmalıdır. Eğer geçersiz veri girilirse, kullanıcıyı bilgilendiren bir mesaj görüntüleyin.
+
+Cevap ve Kodlar:
+
+Dosya: MilesPerGallon.cs
+
+using System;
+
+public class MilesPerGallon
+{
+    public static void Main()
+    {
+        while (true) // Doğru giriş yapılana kadar veya çıkışa kadar döngü
+        {
+            try
+            {
+                Console.Write("Enter miles driven (or -1 to quit): ");
+                string milesInput = Console.ReadLine();
+                if (milesInput == "-1") break;
+
+                Console.Write("Enter gallons used: ");
+                string gallonsInput = Console.ReadLine();
+
+                double miles = double.Parse(milesInput);
+                double gallons = double.Parse(gallonsInput);
+
+                if (gallons == 0)
+                {
+                    Console.WriteLine("Gallons cannot be zero. Try again.\n");
+                    continue;
+                }
+
+                double mpg = miles / gallons;
+                Console.WriteLine($"Miles per gallon: {mpg:F2}\n");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid Input: Please enter numeric values.\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}\n");
+            }
+        }
+    }
+}
+Soru 13.11 (Çoklu Catch Blokları)
+Soru (Türkçe): Tek bir ifadenin farklı türde istisnalar fırlatabileceğini ve bunların farklı catch bloklarında yakalandığını gösteren bir program yazın.
+
+Cevap ve Kodlar:
+
+Dosya: MultipleCatchBlocks.cs
+
+using System;
+
+public class MultipleCatchBlocks
+{
+    public static void Main()
+    {
+        // Test için bu değerleri değiştirebilirsiniz:
+        // "10", "0" -> DivideByZeroException
+        // "10", "abc" -> FormatException
+        string input1 = "10"; 
+        string input2 = "0"; 
+
+        Console.WriteLine($"Attempting division: {input1} / {input2}");
+
+        try
+        {
+            int numerator = int.Parse(input1);
+            int denominator = int.Parse(input2);
+
+            // Bölme işlemi (Denominator 0 ise DivideByZero fırlatır)
+            int result = numerator / denominator;
+            
+            Console.WriteLine($"Result: {result}");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Error: Please enter valid integers.");
+        }
+        catch (DivideByZeroException)
+        {
+            Console.WriteLine("Error: Cannot divide by zero.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: Some other exception occurred ({ex.Message})");
+        }
+    }
+}
